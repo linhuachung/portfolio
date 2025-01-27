@@ -27,7 +27,7 @@ function Photo() {
                             ease: "easeInOut"
                         }
                     }}
-                    className="w-[270pc] h-[270pc] xl:w-[450px] xl:h-[450px] mix-blend-lighten absolute"
+                    className="w-[270px] h-[270px] xl:w-[450px] xl:h-[450px] mix-blend-lighten absolute"
                 >
                     <Image
                         src="/assets/avatar.png"
