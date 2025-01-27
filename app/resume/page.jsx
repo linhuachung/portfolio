@@ -109,6 +109,7 @@ function Resume() {
                                 <ScrollArea className="h-[400px]">
                                     <ul className="grid grid-cols-1 lg:grid-cols-2 gap-[30px]">
                                         {experience.items.map((item, index) => {
+                                            console.log(item)
                                             return (
                                                 <li key={index}
                                                     className="bg-[#232329] h-[184px] py-6 px-8 rounded-xl flex flex-col justify-center items-center lg:items-start gap-1">
@@ -124,7 +125,11 @@ function Resume() {
                                                     <div className="flex items-center gap-3">
                                                         <span
                                                             className="w-[6px] h-[6px] rounded-full bg-accent"></span>
-                                                        <p className="text-white/60">{item.position}</p>
+                                                        <DialogDocument
+                                                            content={item.info}
+                                                            title={item.position}
+                                                            contentSyled="md:max-w-[768px]"
+                                                        />
                                                     </div>
                                                 </li>
                                             )

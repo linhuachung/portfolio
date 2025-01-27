@@ -9,14 +9,14 @@ import {
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
+import ProjectInfo from "@/app/work/components/ProjectInfo";
 
-export function DialogDocument({styledTitle, file, title, content}) {
+export function DialogDocument({styledTitle, contentSyled, file, title, content}) {
     const [open, setOpen] = useState(false);
-
     const handleOpenChange = (isOpen) => {
         setOpen(isOpen);
     };
-
+    console.log(content)
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
@@ -30,9 +30,17 @@ export function DialogDocument({styledTitle, file, title, content}) {
                     {title}
                 </p>
             </DialogTrigger>
-            <DialogContent className="max-w-[375px] sm:max-w-[600px] bg-primary rounded-md">
+            <DialogContent className={
+                cn(
+                    "max-w-[375px] sm:max-w-[600px] bg-primary rounded-md",
+                    contentSyled
+                )
+            }>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
+                    {content && (
+                        <p className="text-white/60 text-base">{content.duration}</p>
+                    )}
                 </DialogHeader>
                 <div className="mt-5">
                     {file && (
@@ -42,13 +50,10 @@ export function DialogDocument({styledTitle, file, title, content}) {
                         />
                     )}
                     {content && (
-                        <iframe
-                            src={`${file}#toolbar=0`}
-                            className="h-[400px] w-full sm:min-h-[760px] border-none"
-                        />
+                        <ProjectInfo info={content}/>
                     )}
                     {!content && !file && (
-                        <div>No content here</div>
+                        <div>No content found!!</div>
                     )}
                 </div>
                 <DialogFooter>

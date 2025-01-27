@@ -11,6 +11,7 @@ import Image from "next/image";
 import WorkSliderBtns from "@/components/WorkSliderBtns";
 import {projects} from "./data";
 import {DialogDocument} from "@/components/DialogDocument";
+import ProjectInfo from "@/app/work/components/ProjectInfo";
 
 
 function Page() {
@@ -42,7 +43,12 @@ function Page() {
                             <div
                                 className="text-8xl leading-none font-extrabold text-transparent text-outline">{project.num}</div>
                             <h2 className="text-[42px] font-bold leading-none text-white group-hover:text-accent transition-all duration-500 capitalize">
-                                <DialogDocument styledTitle="text-white" title={project.title}/>
+                                <DialogDocument
+                                    styledTitle="text-white"
+                                    contentSyled="md:max-w-[1024px]"
+                                    title={project.title}
+                                    content={project.info}
+                                />
                             </h2>
                             <p className="text-white/60">{project.description}</p>
                             <ul className="flex gap-4 flex-wrap">
