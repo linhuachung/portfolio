@@ -50,21 +50,45 @@ export const experience = {
             company: "Mercatus Technologies",
             position: "Frontend Developer",
             duration: "03/2024 - Present",
-            link: "https://www.linkedin.com/company/mercatus-technologies-inc-/posts/?feedView=all"
+            link: "https://www.linkedin.com/company/mercatus-technologies-inc-/posts/?feedView=all",
+            info: {
+                duration: "03/2024 - Present",
+                "rolesAndResponsibilities": [
+                    "Key contributor, lead new member.",
+                    "Develop web application user interfaces using HTML, CSS and JavaScript.",
+                    "Collaborate with over 30 members to ensure product quality and efficiency.",
+                ]
+            }
         },
         {
             company: "BAP IT Co., JSC",
             position: "Fullstack Developer",
             duration: "02/2022- 02/2024",
-            link: "https://www.linkedin.com/company/bap-it-jsc/"
+            link: "https://www.linkedin.com/company/bap-it-jsc/",
+            info: {
+                duration: "02/2022- 02/2024",
+                "rolesAndResponsibilities": [
+                    "Key contributor.",
+                    "Develop both Frontend and Backend for web applications using JavaScript, NodeJS and ReactJS.",
+                    "Analyze and provide solutions directly for customers.",
+                    "Collaborate with over 10 members to ensure product quality and efficiency."
+                ]
+            }
         },
         {
             company: " FPT Software",
             position: "Frontend Developer",
             duration: "09/2021- 01/2022",
-            link: "https://www.linkedin.com/company/fpt-software/posts/?feedView=all"
+            link: "https://www.linkedin.com/company/fpt-software/posts/?feedView=all",
+            info: {
+                duration: "09/2021- 01/2022",
+                "rolesAndResponsibilities": [
+                    "Develop internal applications for managing customer information.",
+                    "Develop UIs using HTML, CSS, JavaScript, and Websqure5.",
+                ]
+            }
         },
-    ]
+    ],
 }
 
 export const education = {
@@ -93,7 +117,7 @@ export const education = {
             file: "/assets/files/BangDaiHọc_LinHuaChung.pdf",
             duration: "2016 - 2021"
         },
-    ]
+    ],
 }
 
 export const skills = {
