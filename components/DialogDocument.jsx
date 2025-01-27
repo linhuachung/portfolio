@@ -46,7 +46,7 @@ export function DialogDocument({styledTitle, contentSyled, file, title, content}
                     {file && (
                         <iframe
                             src={`${file}#toolbar=0`}
-                            className="h-[400px] w-[200px] sm:w-full sm:min-h-[760px] border-none"
+                            className="h-[400px] l`w-full sm:min-h-[760px] border-none"
                         />
                     )}
                     {content && (
