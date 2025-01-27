@@ -39,7 +39,7 @@ export const projects = [
                 name: "AntDesign"
             },
         ],
-        image: '/assets/work/dronex.jpg',
+        image: '/assets/work/droneX.png',
         live: '',
         github: '',
     },
