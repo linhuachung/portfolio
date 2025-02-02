@@ -16,7 +16,6 @@ export function DialogDocument({styledTitle, contentSyled, file, title, content}
     const handleOpenChange = (isOpen) => {
         setOpen(isOpen);
     };
-    console.log(content)
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
@@ -46,7 +45,7 @@ export function DialogDocument({styledTitle, contentSyled, file, title, content}
                     {file && (
                         <iframe
                             src={`${file}#toolbar=0`}
-                            className="h-[400px] l`w-full sm:min-h-[760px] border-none"
+                            className="h-[400px] w-full sm:min-h-[760px] border-none"
                         />
                     )}
                     {content && (

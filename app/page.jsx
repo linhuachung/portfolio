@@ -8,7 +8,7 @@ import Stats from "@/components/Stats";
 function Home() {
     const handleClick = () => {
         const link = document.createElement("a")
-        link.href = "/assets/resume/CV_FrontendDeveloper_Lin_Hua_Chung.pdf"
+        link.href = "/assets/resume/CV_Frontend_LinHuaChung.pdf"
         link.download = "CV_FrontendDeveloper_Lin_Hua_Chung.pdf"
         link.click();
     }
