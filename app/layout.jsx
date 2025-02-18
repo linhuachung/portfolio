@@ -19,9 +19,6 @@ export const metadata = {
 export default function RootLayout({children}) {
     return (
         <html lang="en">
-        <head>
-            <link rel="icon" href="/assets/avatar.png" type="image/x-icon" sizes="500x500"/>
-        </head>
         <Toast.Provider>
             <body
                 className={jetbrainsMono.variable}
