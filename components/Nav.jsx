@@ -3,9 +3,29 @@
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {LINKS} from "@/constants/route";
+import {useEffect} from "react";
 
 function Nav() {
     const pathName = usePathname();
+
+    useEffect(() => {
+        const getTitleByPath = (path) => {
+            switch (path) {
+                case "/":
+                    return "Home";
+                case "/resume":
+                    return "Resume";
+                case "/work":
+                    return "Work";
+                case "/contact":
+                    return "Contact";
+                default:
+                    return "ChungLH Portfolio";
+            }
+        };
+
+        document.title = getTitleByPath(pathName);
+    }, [pathName]);
     return (
         <nav className="flex gap-8">
             {LINKS.map(({name, path}) => {
