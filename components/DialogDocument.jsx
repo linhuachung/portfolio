@@ -31,12 +31,12 @@ export function DialogDocument({styledTitle, contentSyled, file, title, content}
             </DialogTrigger>
             <DialogContent className={
                 cn(
-                    "max-w-[375px] sm:max-w-[600px] bg-primary rounded-md",
+                    "max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl",
                     contentSyled
                 )
             }>
                 <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle className="px-3 sm:px-0">{title}</DialogTitle>
                     {content && (
                         <p className="text-white/60 text-base">{content.duration}</p>
                     )}

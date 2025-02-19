@@ -15,8 +15,9 @@ function MobileNav() {
             </SheetTrigger>
             <SheetContent className="flex flex-col">
                 <div className="mt-32 mb-40 text-center text-2xl">
-                    <Link href="/" className="text-4xl font-semibold">
-                        Test<span className="text-accent">.</span>
+                    <Link href="/"
+                          className="text-4xl font-semibold hover:text-accent transition-all group">
+                        Chung<span className="text-accent group-hover:text-white">.</span>
                     </Link>
                 </div>
                 <nav className="flex flex-col justify-center items-center gap-8">
