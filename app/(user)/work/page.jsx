@@ -11,7 +11,7 @@ import Image from "next/image";
 import WorkSliderBtns from "@/components/WorkSliderBtns";
 import {projects} from "./data";
 import {DialogDocument} from "@/components/DialogDocument";
-import ProjectInfo from "@/app/work/components/ProjectInfo";
+import ProjectInfo from "@/app/(user)/work/components/ProjectInfo";
 
 
 function Page() {

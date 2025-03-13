@@ -2,7 +2,7 @@
 
 import {FaEnvelope, FaMapMarkedAlt, FaPhoneAlt} from "react-icons/fa";
 import {motion} from "framer-motion";
-import FormContainer from "@/app/contact/components/FormContainer";
+import FormContainer from "@/app/(user)/contact/components/FormContainer";
 
 const info = [
     {
