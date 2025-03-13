@@ -2,7 +2,7 @@ import React from 'react'
 
 function AdminLayout({children}) {
     return (
-        <div>
+        <div className={"h-screen"}>
             {children}
         </div>
     )
