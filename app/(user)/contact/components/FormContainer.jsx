@@ -5,7 +5,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import emailjs from "@emailjs/browser";
 import {Button} from "@/components/ui/button";
-import {InputField} from "./InputField";
+import {InputField} from "@/components/InputField";
 import {SelectField} from "./SelectField";
 import {TextareaField} from "./TextareaField";
 import {ToastSuccess} from "./ToastSuccess";
