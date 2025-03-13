@@ -9,7 +9,7 @@ import {
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
-import ProjectInfo from "@/app/work/components/ProjectInfo";
+import ProjectInfo from "@/app/(user)/work/components/ProjectInfo";
 
 export function DialogDocument({styledTitle, contentSyled, file, title, content}) {
     const [open, setOpen] = useState(false);
