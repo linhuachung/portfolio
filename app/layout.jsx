@@ -1,6 +1,7 @@
 import {JetBrains_Mono} from "next/font/google";
 import "./globals.css";
-import * as Toast from "@radix-ui/react-toast";
+import {ToastContainer} from "react-toastify";
+import StoreProvider from "@/app/StoreProvider";
 
 const jetbrainsMono = JetBrains_Mono({
     subsets: ["latin"],
@@ -16,13 +17,14 @@ export const metadata = {
 export default function RootLayout({children}) {
     return (
         <html lang="en">
-        <Toast.Provider>
-            <body
-                className={jetbrainsMono.variable}
-            >
+        <body
+            className={jetbrainsMono.variable}
+        >
+        <StoreProvider>
             {children}
-            </body>
-        </Toast.Provider>
+            <ToastContainer/>
+        </StoreProvider>
+        </body>
         </html>
     );
 }

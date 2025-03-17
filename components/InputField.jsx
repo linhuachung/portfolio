@@ -1,9 +1,20 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 
-export function InputField({name, register, errors, placeholder, onBlur}) {
+export function InputField({name, register, errors, placeholder, onBlur, type, ...props}) {
     const [isFocused, setIsFocused] = useState(false);
+    useEffect(() => {
+        setTimeout(function () {
+            const inputs = document.querySelectorAll("input");
+            inputs.forEach((input) => {
+                if (window.getComputedStyle(input, null).getPropertyValue("appearance") === "menulist-button") {
+                    setIsFocused(true)
+                }
+            });
+        }, 300);
+
+    }, [])
 
     return (
         <div className="relative w-full">
@@ -25,6 +36,7 @@ export function InputField({name, register, errors, placeholder, onBlur}) {
                     setIsFocused(e.target.value !== "");
                     onBlur && onBlur(e);
                 }}
+                type={type ? type : "text"}
             />
             {errors[name] && (
                 <p className="text-red-500 text-sm mt-2 ml-1">{errors[name]?.message}</p>

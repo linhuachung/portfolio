@@ -8,8 +8,8 @@ import {Button} from "@/components/ui/button";
 import {InputField} from "@/components/InputField";
 import {SelectField} from "./SelectField";
 import {TextareaField} from "./TextareaField";
-import {ToastSuccess} from "./ToastSuccess";
 import {useRef, useState} from "react";
+import {EmailSubmit} from "@/lib/email";
 
 const validationSchema = Yup.object().shape({
     firstname: Yup.string()
@@ -38,19 +38,12 @@ function FormContainer() {
         resolver: yupResolver(validationSchema),
     });
 
-    const [open, setOpen] = useState(false);
     const form = useRef();
 
-    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
     const onSubmit = async () => {
         try {
-            await emailjs.sendForm(serviceID, templateID, form.current, {
-                publicKey,
-            });
-            setOpen(true);
+            await EmailSubmit(form.current)
             reset();
         } catch (error) {
             console.error("Error sending email:", error);
@@ -126,7 +119,6 @@ function FormContainer() {
                     {isSubmitting ? "Sending..." : "Send message"}
                 </Button>
             </form>
-            <ToastSuccess open={open} setOpen={setOpen}/>
         </>
     );
 }
