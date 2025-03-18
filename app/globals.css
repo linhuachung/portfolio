@@ -26,5 +26,18 @@
     .text-outline-hover {
         -webkit-text-stroke: 1px #00ff99;
     }
+}
 
+@layer utilities {
+    .input-autofill:-webkit-autofill {
+        @apply bg-[#27272c] text-white border border-[#00ff99];
+        -webkit-box-shadow: 0 0 0 50px #27272c inset;
+        -webkit-text-fill-color: white;
+    }
+
+    .input-autofill:-webkit-autofill:focus {
+        @apply border-accent;
+        -webkit-box-shadow: 0 0 0 50px #27272c inset;
+        -webkit-text-fill-color: white;
+    }
 }
