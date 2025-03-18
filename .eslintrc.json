@@ -1,13 +1,39 @@
 {
   "extends": "next/core-web-vitals",
+  "plugins": [
+    "react-refresh"
+  ],
   "rules": {
-    "react/no-unescaped-entities": "off",
-    "@typescript-eslint/quotes": "off",
+    "react-refresh/only-export-components": "warn",
+    "react/jsx-curly-spacing": ["error", { "when": "always", "children": true }],
     "quotes": [
-      0
+      "error",
+      "double"
     ],
-    "avoidEscape": 0,
-    "allowTemplateLiterals": 0,
-    "no-useless-escape": 0
+    "object-curly-spacing": [
+      1,
+      "always",
+      {
+        "objectsInObjects": true
+      }
+    ],
+    "no-unused-vars": "off",
+    "space-in-parens": [
+      "error",
+      "always"
+    ],
+    "space-before-blocks": ["error", "always"],
+    "array-bracket-spacing": 1,
+    "linebreak-style": 0,
+    "no-unexpected-multiline": "warn",
+    "keyword-spacing": 1,
+    "comma-dangle": 1,
+    "comma-spacing": 1,
+    "arrow-spacing": 1,
+    "indent": ["warn", 2],
+    "semi": [1, "always"],
+    "no-trailing-spaces": 1,
+    "no-multi-spaces": 1,
+    "no-multiple-empty-lines": 1
   }
 }
