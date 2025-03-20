@@ -2,7 +2,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useInputFocus } from "@/lib/hooks";
 
-export function TextareaField( { name, control, register, errors, placeholder, onBlur, isSubmitting, ...props } ) {
+export function TextareaField( {
+  name,
+  control,
+  register,
+  errors,
+  placeholder,
+  onBlur,
+  isSubmitting,
+  className,
+  ...props
+} ) {
   const { isFocused, setIsFocused } = useInputFocus( name, isSubmitting );
 
   return (
@@ -10,7 +20,7 @@ export function TextareaField( { name, control, register, errors, placeholder, o
       control={ control }
       name={ name }
       render={ ( { field } ) => (
-        <FormItem className="relative w-full">
+        <FormItem className={ `${className} space-y-0 relative w-full` }>
           <FormLabel
             htmlFor={ name }
             className={ `absolute left-3 transition-all text-gray-500 ${

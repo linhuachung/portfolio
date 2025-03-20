@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
+import Header from "@/components/Header";
+import { ADMIN_LINKS } from "@/constants/route";
 
 function AdminLayout( { children } ) {
   const router = useRouter();
@@ -20,7 +22,17 @@ function AdminLayout( { children } ) {
     }
   }, [pathname, router] );
 
-  return <div className="h-screen">{ children }</div>;
+  return (
+    <div className="h-screen">
+      <Header
+        isAdmin={ true }
+        title="Admin"
+        links={ ADMIN_LINKS }
+      />
+      { children }
+    </div>
+  );
+
 }
 
 export default AdminLayout;

@@ -4,9 +4,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CiMenuFries } from "react-icons/ci";
-import { LINKS } from "@/constants/route";
 
-function MobileNav() {
+function MobileNav( { links, isAdmin, title } ) {
   const pathname = usePathname();
   return (
     <Sheet>
@@ -17,11 +16,12 @@ function MobileNav() {
         <div className="mt-32 mb-40 text-center text-2xl">
           <Link href="/"
             className="text-4xl font-semibold hover:text-accent transition-all group">
-                        Chung<span className="text-accent group-hover:text-white">.</span>
+            { !isAdmin ? "Chung" : title }
+            <span className="text-accent group-hover:text-white">.</span>
           </Link>
         </div>
         <nav className="flex flex-col justify-center items-center gap-8">
-          { LINKS.map( ( { name, path } ) => {
+          { links.map( ( { name, path } ) => {
             return <Link
               href={ path }
               key={ path }

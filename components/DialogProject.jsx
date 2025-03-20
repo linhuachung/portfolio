@@ -9,8 +9,9 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ProjectInfo from "@/app/(user)/work/components/ProjectInfo";
 
-export function DialogDocument( { styledTitle, contentStyled, file, title, content } ) {
+export function DialogProject( { styledTitle, contentStyled, title, content } ) {
   const [open, setOpen] = useState( false );
   const handleOpenChange = ( isOpen ) => {
     setOpen( isOpen );
@@ -18,27 +19,22 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
   return (
     <Dialog open={ open } onOpenChange={ handleOpenChange }>
       <DialogTrigger asChild>
-        <div className="flex items-baseline gap-3 justify-center">
-          <span className="w-[6px] h-[6px] rounded-full bg-accent"></span>
-          <p
-            className={
-              cn(
-                "hover:cursor-pointer text-white/60 hover:text-accent transition-all duration-300",
-                styledTitle
-              ) }
-          >
-            { title }
-
-          </p>
-        </div>
-
+        <p
+          className={
+            cn(
+              "hover:cursor-pointer text-white/60 hover:text-accent transition-all duration-300",
+              styledTitle
+            ) }
+        >
+          { title }
+        </p>
       </DialogTrigger>
       <DialogContent className={
         cn(
           "max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl",
           contentStyled
         )
-      } aria-describedby={ undefined }>
+      }>
         <DialogHeader>
           <DialogTitle className="px-3 sm:px-0">{ title }</DialogTitle>
           { content && (
@@ -47,14 +43,11 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
           ) }
         </DialogHeader>
         <div className="mt-5">
-          { content?.file && (
-            <iframe
-              src={ `${content.file}?embedded=true#toolbar=0` }
-              className="h-[400px] w-full sm:min-h-[760px] border-none"
-            />
+          { content && (
+            <ProjectInfo info={ content }/>
           ) }
-          { !content?.file && (
-            <div>No certificate found!!</div>
+          { !content && (
+            <div>No content found!!</div>
           ) }
         </div>
         <DialogFooter>

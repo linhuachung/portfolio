@@ -1,8 +1,8 @@
 "use client";
 
 import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from "react-icons/fa";
-import { motion } from "framer-motion";
 import FormContainer from "@/app/(user)/contact/components/FormContainer";
+import MotionWrapper from "@/components/MotionWrapper";
 
 const info = [
   {
@@ -90,16 +90,7 @@ function Contact() {
     }
   };
   return (
-    <motion.section
-      initial={ { opacity: 0 } }
-      animate={ {
-        opacity: 1,
-        transition: {
-          delay: 2.4,
-          duration: 0.4,
-          ease: "easeIn"
-        }
-      } }
+    <MotionWrapper
       className="py-6"
     >
       <div className="container mxauto">
@@ -115,7 +106,7 @@ function Contact() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </MotionWrapper>
   );
 }
 

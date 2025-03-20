@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const validationSchema = Yup.object().shape( {
+export const validationContactSchema = Yup.object().shape( {
   firstname: Yup.string()
     .required( "Firstname is required" )
     .matches( /^[a-zA-Z\s]+$/, "Please enter a valid firstname (letters only)" ),
@@ -20,4 +20,10 @@ export const validationAdminLoginSchema = Yup.object().shape( {
     .required( "username is required" ),
   password: Yup.string()
     .required( "password is required" )
+} );
+
+export const validationEditProfileSchema = Yup.object().shape( {
+  email: Yup.string().email( "Invalid email" ).required( "Email is required" ),
+  name: Yup.string().required( "Name is required" ),
+  bio: Yup.string()
 } );
