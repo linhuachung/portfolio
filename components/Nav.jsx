@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { LINKS } from "@/constants/route";
 import { useEffect } from "react";
 
-function Nav() {
+function Nav( { links } ) {
   const pathName = usePathname();
 
   useEffect( () => {
@@ -19,6 +19,16 @@ function Nav() {
         return "Work";
       case "/contact":
         return "Contact";
+      case "/admin":
+        return "Dashboard";
+      case "/admin/user":
+        return "User";
+      case "/admin/experience":
+        return "Experience";
+      case "/admin/education":
+        return "Education";
+      case "/admin/project":
+        return "Project";
       default:
         return "ChungLH Portfolio";
       }
@@ -28,7 +38,7 @@ function Nav() {
   }, [pathName] );
   return (
     <nav className="flex gap-8">
-      { LINKS.map( ( { name, path } ) => {
+      { links?.map( ( { name, path } ) => {
         return <Link href={ path } key={ path }
           className={ `${path === pathName && "text-accent border-b-2 border-accent"} capitalize font-medium hover:text-accent transition-all` }>
           { name }

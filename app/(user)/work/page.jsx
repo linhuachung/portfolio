@@ -1,8 +1,8 @@
 "use client";
-import { motion } from "framer-motion";
 import React, { useState } from "react";
 
 import "swiper/css";
+import MotionWrapper from "@/components/MotionWrapper";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { BsArrowUpRight, BsGithub } from "react-icons/bs";
@@ -23,16 +23,7 @@ function Page() {
   };
 
   return (
-    <motion.section
-      initial={ { opacity: 0 } }
-      animate={ {
-        opacity: 1,
-        transition: {
-          delay: 2.4,
-          duration: 0.4,
-          ease: "easeIn"
-        }
-      } }
+    <MotionWrapper
       className="min-h-[80vh] flex flex-col justify-center py-12 xl:px-0"
     >
       <div className="container mx-auto">
@@ -125,7 +116,7 @@ function Page() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </MotionWrapper>
   );
 }
 
