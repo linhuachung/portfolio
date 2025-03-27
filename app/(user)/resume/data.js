@@ -49,7 +49,7 @@ export const experience = {
     {
       company: "Mercatus Technologies",
       position: "Frontend Developer",
-      duration: "03/2024 - Present",
+      duration: "03/2024 - 03/2025",
       link: "https://www.linkedin.com/company/mercatus-technologies-inc-/posts/?feedView=all",
       info: {
         duration: "03/2024 - Present",
