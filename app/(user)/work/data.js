@@ -22,7 +22,7 @@ export const projects = [
     github: "",
     info: {
       "projectName": "Mercatus",
-      "duration": "03/2024 - Present",
+      "duration": "03/2024 - 03/2024",
       "company": "Mercatus Technologies Inc",
       "projectDescription": "An e-commerce platform for US and Canadian customers, operating as an online supermarket. Enabled efficient shopping and order tracking with integrated transaction management. Delivered a seamless user experience through a user-friendly interface.",
       "teamSize": "30+",
