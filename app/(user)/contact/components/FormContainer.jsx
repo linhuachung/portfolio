@@ -8,11 +8,11 @@ import { SelectField } from "@/components/SelectField";
 import { TextareaField } from "@/components/TextareaField";
 import { EmailSubmit } from "@/lib/email";
 import FormWrapper from "@/components/FormWrapper";
-import { validationSchema } from "@/services/schema";
+import { validationContactSchema } from "@/services/schema";
 
 function FormContainer() {
   const form = useForm( {
-    resolver: yupResolver( validationSchema ),
+    resolver: yupResolver( validationContactSchema ),
     mode: "onChange"
   } );
 
@@ -56,9 +56,9 @@ function FormContainer() {
       >
         <h3 className="text-4xl text-accent">Let&apos;s work together</h3>
         <p className="text-white/60 mt-5 mb-5">
-                    Excited to collaborate on impactful projects, I bring expertise in
-                    ReactJS, NextJS, and modern frontend development. Let’s connect to
-                    create seamless and engaging digital experiences together!
+          Excited to collaborate on impactful projects, I bring expertise in
+          ReactJS, NextJS, and modern frontend development. Let’s connect to
+          create seamless and engaging digital experiences together!
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <InputField
