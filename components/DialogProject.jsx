@@ -31,7 +31,7 @@ export function DialogProject( { styledTitle, contentStyled, title, content } ) 
       </DialogTrigger>
       <DialogContent className={
         cn(
-          "max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl",
+          "max-w-[375px] sm:max-w-[1024px] bg-primary rounded-2xl overflow-auto md:max-h-[70vh] max-h-[50vh]",
           contentStyled
         )
       }>
@@ -39,7 +39,7 @@ export function DialogProject( { styledTitle, contentStyled, title, content } ) 
           <DialogTitle className="px-3 sm:px-0">{ title }</DialogTitle>
           { content && (
             <p
-              className="text-white/60 text-base">{ content.startdate } - { content.isCurrent ? "Present" : content.enddate }</p>
+              className="text-white/60 text-base">{ content.startDate } - { content.isCurrent ? "Present" : content.endDate }</p>
           ) }
         </DialogHeader>
         <div className="mt-5">
