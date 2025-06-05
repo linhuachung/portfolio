@@ -17,8 +17,8 @@ function Education() {
               title={ item.school }
               index={ index }
               type={ "school" }
-              startdate={ item.startdate }
-              enddate={ item.enddate }
+              startDate={ item.startDate }
+              endDate={ item.endDate }
               isCurrent={ item.isCurrent }
               location={ item.location }
               info={ item.degree }

@@ -82,8 +82,8 @@ model Experience {
   company        String
   position       String
   description    String
-  startdate      DateTime
-  enddate        DateTime?
+  startDate      DateTime
+  endDate        DateTime?
   isCurrent      Boolean
   location       String
   companyLogo    String?
@@ -130,8 +130,8 @@ model Education {
   userId       String    @db.ObjectId
   school       String
   field        String
-  startdate    DateTime
-  enddate      DateTime?
+  startDate    DateTime
+  endDate      DateTime?
   isCurrent    Boolean
   grade        String?
   achievements String?

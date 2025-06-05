@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 
 function Time( {
   color,
-  startdate,
-  enddate,
+  startDate,
+  endDate,
   isCurrent,
   type,
   ...props
@@ -20,7 +20,7 @@ function Time( {
         viewport={ { once: false } }
         { ...props }
       >
-        { startdate } - { isCurrent ? "Present" : enddate }
+        { startDate } - { isCurrent ? "Present" : endDate }
       </motion.div>
       <motion.div
         className={ `${color} hidden sm:block w-px h-full translate-x-5 translate-y-10 opacity-30` }
