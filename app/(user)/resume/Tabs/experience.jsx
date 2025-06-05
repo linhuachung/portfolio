@@ -23,6 +23,7 @@ function Experience() {
             techStack={ item.techStack }
             link={ item.link }
             info={ item }
+            logo={ item?.logo }
           />
         ) ) }
       </ScrollArea>
