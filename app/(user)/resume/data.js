@@ -47,6 +47,23 @@ export const experience = {
   workExperiences: [
     {
       id: 1,
+      company: "NAB Innovation Centre Vietnam",
+      position: "Software Engineer",
+      startdate: "03/2025",
+      isCurrent: true,
+      location: "Ho Chi Minh City, Vietnam",
+      link: "https://www.linkedin.com/company/nabvietnam/posts/?feedView=all",
+      rolesAndResponsibilities: [
+        "Develop and maintain user interfaces using ReactJS with clean, reusable components.",
+        "Integrate RESTful APIs and handle asynchronous data rendering.",
+        "Collaborate with cross-functional teams to deliver features aligned with business goals.",
+        "Participate in code reviews to ensure high code quality and consistency.",
+        "Contribute to sprint planning and technical discussions to clarify requirements and propose solutions."
+      ],
+      techStack: ["JavaScript", "TypeScript", "HTML", "CSS", "ReactJS", "JestJS"]
+    },
+    {
+      id: 2,
       company: "Mercatus Technologies",
       position: "Frontend Developer",
       startdate: "03/2024",
@@ -62,7 +79,7 @@ export const experience = {
       techStack: ["JavaScript", "HTML", "CSS", "AngularJS", "ReactJS", "NextJS"]
     },
     {
-      id: 2,
+      id: 3,
       company: "BAP IT Co., JSC",
       position: "Fullstack Developer",
       startdate: "02/2022",
@@ -79,7 +96,7 @@ export const experience = {
       techStack: ["JavaScript", "HTML", "CSS", "ReactJS", "NodeJS", "ExpressJS"]
     },
     {
-      id: 3,
+      id: 4,
       company: " FPT Software",
       position: "Frontend Developer",
       startdate: "09/2021",

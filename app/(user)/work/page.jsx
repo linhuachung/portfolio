@@ -12,6 +12,7 @@ import WorkSliderBtns from "@/components/WorkSliderBtns";
 import { projects } from "./data";
 import { DialogDocument } from "@/components/DialogDocument";
 import ProjectInfo from "@/app/(user)/work/components/ProjectInfo";
+import { DialogProject } from "@/components/DialogProject";
 
 
 function Page() {
@@ -33,8 +34,9 @@ function Page() {
             <div className="flex flex-col gap-[30px] h-[50%]">
               <div
                 className="text-8xl leading-none font-extrabold text-transparent text-outline">{ project.num }</div>
-              <h2 className="text-[42px] font-bold leading-none text-white group-hover:text-accent transition-all duration-500 capitalize">
-                <DialogDocument
+              <h2
+                className="text-[42px] font-bold leading-none text-white group-hover:text-accent transition-all duration-500 capitalize">
+                <DialogProject
                   styledTitle="text-white"
                   contentSyled="md:max-w-[1024px]"
                   title={ project.title }
