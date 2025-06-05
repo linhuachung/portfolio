@@ -22,6 +22,8 @@ function Education() {
               isCurrent={ item.isCurrent }
               location={ item.location }
               info={ item.degree }
+              logo={ item?.logo }
+              link={ item?.link }
             />
           );
         } ) }

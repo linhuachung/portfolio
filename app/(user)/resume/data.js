@@ -53,6 +53,7 @@ export const experience = {
       isCurrent: true,
       location: "Ho Chi Minh City, Vietnam",
       link: "https://www.linkedin.com/company/nabvietnam/posts/?feedView=all",
+      logo: "/assets/resume/companyIcons/nabvietnam.jpg",
       rolesAndResponsibilities: [
         "Develop and maintain user interfaces using ReactJS with clean, reusable components.",
         "Integrate RESTful APIs and handle asynchronous data rendering.",
@@ -71,6 +72,7 @@ export const experience = {
       isCurrent: false,
       location: "Ho Chi Minh City, Vietnam",
       link: "https://www.linkedin.com/company/mercatus-technologies-inc-/posts/?feedView=all",
+      logo: "/assets/resume/companyIcons/mercatus.jpg",
       rolesAndResponsibilities: [
         "Key contributor, lead new member.",
         "Develop web application user interfaces using HTML, CSS and JavaScript.",
@@ -87,6 +89,7 @@ export const experience = {
       isCurrent: false,
       location: "Ho Chi Minh City, Vietnam",
       link: "https://www.linkedin.com/company/bap-it-jsc/",
+      logo: "/assets/resume/companyIcons/bap_it.jpg",
       rolesAndResponsibilities: [
         "Key contributor.",
         "Develop both Frontend and Backend for web applications using JavaScript, NodeJS and ReactJS.",
@@ -104,6 +107,7 @@ export const experience = {
       isCurrent: false,
       location: "Ho Chi Minh City, Vietnam",
       link: "https://www.linkedin.com/company/fpt-software/posts/?feedView=all",
+      logo: "/assets/resume/companyIcons/fpt_software.jpg",
       rolesAndResponsibilities: [
         "Develop internal applications for managing customer information.",
         "Develop UIs using HTML, CSS, JavaScript, and WebSquare5."
@@ -130,7 +134,9 @@ export const education = {
       startDate: "2016",
       endDate: "2022",
       isCurrent: false,
-      location: "Ho Chi Minh City, Vietnam"
+      location: "Ho Chi Minh City, Vietnam",
+      logo: "/assets/resume/shoolIcons/ou.jpg",
+      link: "https://www.linkedin.com/school/ou-edu-vn/"
     },
     {
       degree: [
@@ -147,7 +153,9 @@ export const education = {
       startDate: "2020",
       endDate: "2021",
       isCurrent: false,
-      location: "Ho Chi Minh City, Vietnam"
+      location: "Ho Chi Minh City, Vietnam",
+      logo: "/assets/resume/shoolIcons/cyber_soft.jpg",
+      link: "https://www.linkedin.com/company/cseduvn/"
     }
   ]
 };
