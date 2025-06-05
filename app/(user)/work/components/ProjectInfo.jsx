@@ -30,7 +30,8 @@ function ProjectInfo( { info } ) {
     teamSize,
     position,
     technologies,
-    rolesAndResponsibilities
+    rolesAndResponsibilities,
+    link
   } = info;
   return (
     <div className="bg-primary border border-white/20 shadow-lg rounded-2xl mb-6">
@@ -44,7 +45,15 @@ function ProjectInfo( { info } ) {
         { company && (
           <Row>
             <Title>Company:</Title>
-            <Info>{ company }</Info>
+            <Info>
+              <a
+                href={ link }
+                target="_blank"
+                className="hover:text-accent/60 transition-all duration-300"
+              >
+                { company }
+              </a>
+            </Info>
           </Row>
         ) }
         { projectDescription && (

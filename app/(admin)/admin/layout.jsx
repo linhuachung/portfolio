@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import Header from "@/components/Header";
@@ -9,6 +9,7 @@ import { ADMIN_LINKS } from "@/constants/route";
 function AdminLayout( { children } ) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isLogin, setIsLogin] = useState( null );
 
   useEffect( () => {
     const token = Cookies.get( "token" );
@@ -20,15 +21,17 @@ function AdminLayout( { children } ) {
     if ( token && pathname === "/admin/login" ) {
       router.replace( "/admin" );
     }
+    setIsLogin( token );
   }, [pathname, router] );
 
   return (
     <div className="h-screen">
-      <Header
+      { isLogin && <Header
         isAdmin={ true }
         title="Admin"
         links={ ADMIN_LINKS }
-      />
+      /> }
+
       { children }
     </div>
   );
