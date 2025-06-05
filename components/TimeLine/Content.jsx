@@ -45,7 +45,7 @@ function Content( { color, title, index, description, techStack, type, location,
             return (
               <DialogDocument
                 key={ item.name }
-                content={ { startdate: props.startdate, enddate: props.enddate, ...item } }
+                content={ { startDate: props.startDate, endDate: props.endDate, ...item } }
                 title={ item.name }
                 styledTitle="text-white text-lg width-fit text-left w-72"
                 contentStyled="sm:max-w-[760px]"

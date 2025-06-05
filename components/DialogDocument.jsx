@@ -43,7 +43,7 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
           <DialogTitle className="px-3 sm:px-0">{ title }</DialogTitle>
           { content && (
             <p
-              className="text-white/60 text-base">{ content.startdate } - { content.isCurrent ? "Present" : content.enddate }</p>
+              className="text-white/60 text-base">{ content.startDate } - { content.isCurrent ? "Present" : content.endDate }</p>
           ) }
         </DialogHeader>
         <div className="mt-5">
