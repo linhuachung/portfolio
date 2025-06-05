@@ -5,8 +5,8 @@ import Content from "@/components/TimeLine/Content";
 function Timeline( {
   index,
   type = "work",
-  startdate,
-  enddate,
+  startDate,
+  endDate,
   isCurrent,
   title,
   location,
@@ -27,8 +27,8 @@ function Timeline( {
         viewport={ { once: false, amount: 0.2 } }
       >
         <Time
-          startdate={ startdate }
-          enddate={ enddate }
+          startDate={ startDate }
+          endDate={ endDate }
           isCurrent={ isCurrent }
           type={ type }
           color={ color }
@@ -42,8 +42,8 @@ function Timeline( {
           techStack={ techStack }
           link={ link }
           type={ type }
-          startdate={ startdate }
-          enddate={ enddate }
+          startDate={ startDate }
+          endDate={ endDate }
           { ...props }
         />
       </motion.div>

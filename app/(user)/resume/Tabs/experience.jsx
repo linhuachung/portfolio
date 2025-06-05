@@ -15,8 +15,8 @@ function Experience() {
             title={ item.company }
             index={ index }
             type={ "work" }
-            startdate={ item.startdate }
-            enddate={ item.enddate }
+            startDate={ item.startDate }
+            endDate={ item.endDate }
             isCurrent={ item.isCurrent }
             location={ item.location }
             description={ item.position }
