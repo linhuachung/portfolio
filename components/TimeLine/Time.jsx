@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 function Time( {
   color,
@@ -7,6 +8,8 @@ function Time( {
   endDate,
   isCurrent,
   type,
+  logo,
+  link,
   ...props
 } ) {
   const schoolIcon = "/assets/school.svg";
@@ -30,13 +33,16 @@ function Time( {
         viewport={ { once: false } }
         { ...props }
       ></motion.div>
-      <motion.img
-        src={ type === "school" ? schoolIcon : workIcon }
+      <motion.a
+        href={ link }
         alt="icon"
-        className={ `${color} hidden sm:block w-10 p-1 rounded-lg z-20` }
+        target="_blank"
+        className={ `${color} hidden sm:block p-0 rounded-lg z-20 bg-transparent` }
         transition={ { duration: 0.3 } }
         { ...props }
-      />
+      >
+        <Image src={ logo } alt="logo" width={ 40 } height={ 40 } className=" w-12"/>
+      </motion.a>
       <motion.div
         className={ `${color} hidden sm:block h-px w-2 translate-y-5 opacity-30` }
         initial={ { width: 0 } }

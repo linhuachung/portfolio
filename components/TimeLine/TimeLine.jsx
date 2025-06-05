@@ -13,6 +13,7 @@ function Timeline( {
   description,
   techStack,
   link,
+  logo,
   ...props
 } ) {
   const color = "bg-accent";
@@ -32,6 +33,8 @@ function Timeline( {
           isCurrent={ isCurrent }
           type={ type }
           color={ color }
+          logo={ logo }
+          link={ link }
           { ...props }
         />
         <Content
