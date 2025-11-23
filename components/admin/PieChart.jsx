@@ -1,48 +1,78 @@
 'use client';
 
 import {
-  PieChart as RechartsPieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
+  Chart as ChartJS,
+  ArcElement,
   Tooltip,
   Legend
-} from 'recharts';
+} from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
-const COLORS = ['#00ff99', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#10b981'];
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend
+);
+
+const COLORS = [
+  '#00ff99',
+  '#3b82f6',
+  '#a855f7',
+  '#f59e0b'
+];
 
 export default function PieChart( { data, dataKey = 'count', nameKey = 'status' } ) {
+  const chartData = {
+    labels: data.map( ( item ) => item[nameKey] ),
+    datasets: [
+      {
+        data: data.map( ( item ) => item[dataKey] || 0 ),
+        backgroundColor: data.map( ( _, index ) => COLORS[index % COLORS.length] ),
+        borderColor: 'transparent',
+        borderWidth: 0
+      }
+    ]
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#ffffff80',
+          padding: 15,
+          font: {
+            size: 12
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: '#27272c',
+        borderColor: '#ffffff20',
+        borderWidth: 1,
+        borderRadius: 8,
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        padding: 12,
+        displayColors: true,
+        callbacks: {
+          label: function( context ) {
+            const label = context.label || '';
+            const value = context.parsed || 0;
+            const total = context.dataset.data.reduce( ( a, b ) => a + b, 0 );
+            const percentage = ( ( value / total ) * 100 ).toFixed( 0 );
+            return `${label}: ${percentage}%`;
+          }
+        }
+      }
+    }
+  };
+
   return (
-    <ResponsiveContainer width="100%" height={ 300 }>
-      <RechartsPieChart>
-        <Pie
-          data={ data }
-          cx="50%"
-          cy="50%"
-          labelLine={ false }
-          label={ ( { name, percent } ) => `${name}: ${( percent * 100 ).toFixed( 0 )}%` }
-          outerRadius={ 80 }
-          fill="#8884d8"
-          dataKey={ dataKey }
-          nameKey={ nameKey }
-        >
-          { data.map( ( entry, index ) => (
-            <Cell key={ `cell-${index}` } fill={ COLORS[index % COLORS.length] }/>
-          ) ) }
-        </Pie>
-        <Tooltip
-          contentStyle={ {
-            backgroundColor: '#27272c',
-            border: '1px solid #ffffff20',
-            borderRadius: '8px',
-            color: '#fff'
-          } }
-        />
-        <Legend
-          wrapperStyle={ { color: '#ffffff80' } }
-        />
-      </RechartsPieChart>
-    </ResponsiveContainer>
+    <div style={ { height: '300px' } }>
+      <Pie data={ chartData } options={ options } />
+    </div>
   );
 }
-

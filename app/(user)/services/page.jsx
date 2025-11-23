@@ -57,14 +57,14 @@ function Services() {
                   </div>
                   <Link
                     href={ service.href }
-                    className="w-[70px] h-[70px] rounded-full bg-white group-hover:bg-accent transition-all duration-500 flex justify-center items-center hover:-rotate-45"
+                    className="w-[70px] h-[70px] rounded-full bg-gray-800 dark:bg-white group-hover:bg-accent-light dark:group-hover:bg-accent transition-all duration-500 flex justify-center items-center hover:-rotate-45"
                   >
-                    <BsArrowDownRight className="text-primary text-3xl"/>
+                    <BsArrowDownRight className="text-white dark:text-primary text-3xl"/>
                   </Link>
                 </div>
-                <h2 className="text-[42px] font-bold leading-none text-white group-hover:text-accent transition-all duration-500">{ service.title }</h2>
-                <p className="text-white/60">{ service.description }</p>
-                <div className="border-b border-white/20 w-full"></div>
+                <h2 className="text-[42px] font-bold leading-none text-gray-900 dark:text-white group-hover:text-accent-light dark:group-hover:text-accent transition-all duration-500">{ service.title }</h2>
+                <p className="text-gray-700 dark:text-white/60">{ service.description }</p>
+                <div className="border-b border-gray-300 dark:border-white/20 w-full"></div>
               </div>
             );
           } ) }

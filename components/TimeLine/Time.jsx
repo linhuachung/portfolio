@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -16,7 +15,7 @@ function Time( {
   return (
     <div className=" block items-start w-56 pt-0.5 relative sm:flex">
       <motion.div
-        className="w-4/5 text-left text-accent text-sm self-center mb-3 sm:mb-0"
+        className="w-4/5 text-left text-accent-light dark:text-accent text-sm self-center mb-3 sm:mb-0"
         transition={ { duration: 1.2, ease: 'easeInOut' } }
         viewport={ { once: false } }
         { ...props }

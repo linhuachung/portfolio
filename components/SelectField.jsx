@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useEffect, useState } from 'react';
 
 export function SelectField( { isSubmitting, name, control, options, errors, labelFocus, placeholder } ) {
   const [isFocused, setIsFocused] = useState( false );
@@ -28,9 +28,9 @@ export function SelectField( { isSubmitting, name, control, options, errors, lab
         <FormItem className="relative w-full">
           <FormLabel
             htmlFor={ name }
-            className={ `absolute left-3 transition-all text-gray-500 ${
+            className={ `absolute left-3 transition-all text-gray-500 dark:text-gray-400 ${
               isFocused
-                ? 'z-10 bg-secondary text-white/60 -top-2 text-xs px-2 before:content-[\'\'] before:absolute before:-z-10 before:left-0 before:right-0 before:top-0 before:bottom-0 before:bg-secondary before:rounded-sm'
+                ? 'z-10 bg-white dark:bg-secondary text-gray-600 dark:text-white/60 -top-2 text-xs px-2 before:content-[\'\'] before:absolute before:-z-10 before:left-0 before:right-0 before:top-0 before:bottom-0 before:bg-white dark:before:bg-secondary before:rounded-sm'
                 : 'top-3 text-sm'
             } ${errors[name] ? 'text-red-500' : ''}` }
           >
@@ -46,7 +46,7 @@ export function SelectField( { isSubmitting, name, control, options, errors, lab
           >
             <FormControl>
               <SelectTrigger
-                className={ `w-full pt-2 pb-2 bg-transparent ${errors[name] || errors[name] && isFocused ? 'border-red-500' : 'focus:border-accent'}` }>
+                className={ `w-full pt-2 pb-2 bg-transparent ${errors[name] || errors[name] && isFocused ? 'border-red-500' : 'focus:border-accent-light dark:focus:border-accent'}` }>
                 <SelectValue/>
               </SelectTrigger>
             </FormControl>

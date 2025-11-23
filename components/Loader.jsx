@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   BarLoader,
   BeatLoader,
@@ -14,8 +13,8 @@ import {
   MoonLoader,
   PacmanLoader,
   PropagateLoader,
-  PulseLoader,
   PuffLoader,
+  PulseLoader,
   RingLoader,
   RiseLoader,
   RotateLoader,

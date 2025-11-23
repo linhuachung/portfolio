@@ -1,53 +1,51 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 import { DialogDocument } from '@/components/DialogDocument';
 import { DialogProject } from '@/components/DialogProject';
+import { motion } from 'framer-motion';
 
-function Content( { color: _color, title, index, description, techStack, type, location, link, ...props } ) {
+function Content( { color: _color, title, index, description, techStack, type, location, link, startDate, endDate, info, ...props } ) {
   return (
     <motion.div
-      className="border border-white/10 rounded-xl px-8 py-4 bg-secondary w-full text-center sm:w-96"
+      className="border border-gray-300 dark:border-white/10 rounded-xl px-8 py-4 bg-[#f0f0f0] dark:bg-secondary w-full text-center sm:w-96"
       whileHover={ { scale: 1.07, boxShadow: '0px 0px 15px rgba(255, 255, 255, 0.2)', zIndex: 50 } }
       transition={ { duration: 0.4, ease: 'easeInOut' } }
       { ...props }
     >
       <motion.div
-        className="text-xl text-accent font-medium mb-1"
+        className="text-xl text-accent-light dark:text-accent font-medium mb-1"
         initial={ { opacity: 0 } }
         whileInView={ { opacity: 1 } }
         transition={ { duration: 1, delay: index * 0.2 } }
         viewport={ { once: false } }
-        { ...props }
       >
         { link ? (
           <a
             href={ link }
             target="_blank"
-            className="hover:text-accent/60 transition-all duration-300"
+            className="hover:text-accent-light/60 dark:hover:text-accent/60 transition-all duration-300"
           >
             { title }
           </a>
         ) : title }
       </motion.div>
-      <div className="text-white/60 mb-4 sm:mb-5 sm:text-xs">
+      <div className="text-gray-600 dark:text-white/60 mb-4 sm:mb-5 sm:text-xs">
         { location }
       </div>
       <div className="mb-4">
         { type === 'work' ? (
           <DialogProject
-            content={ props.info }
+            content={ info }
             title={ description }
-            styledTitle="md:max-w-[448px] text-white text-lg"
+            styledTitle="md:max-w-[448px] text-gray-900 dark:text-white text-lg"
             contentStyled="sm:max-w-[760px]"
           />
         ) : (
-          props.info.map( ( item ) => {
+          info && info.map( ( item ) => {
             return (
               <DialogDocument
                 key={ item.name }
-                content={ { startDate: props.startDate, endDate: props.endDate, ...item } }
+                content={ { startDate, endDate, ...item } }
                 title={ item.name }
-                styledTitle="text-white text-lg width-fit text-left w-72"
+                styledTitle="text-gray-900 dark:text-white text-lg width-fit text-left w-72"
                 contentStyled="sm:max-w-[760px]"
               />
             );
@@ -59,7 +57,7 @@ function Content( { color: _color, title, index, description, techStack, type, l
           { techStack.map( ( tech ) => (
             <span
               key={ tech }
-              className="bg-primary rounded-xl my-1 px-3.5 py-1 text-sm m-1 hover:bg-primary/60 hover:text-accent cursor-pointer transition-all duration-300 shadow-lg drop-shadow-lg hover:shadow-xl hover:drop-shadow-2xl"
+              className="bg-gray-200 dark:bg-primary rounded-xl my-1 px-3.5 py-1 text-sm m-1 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-primary/60 hover:text-accent-light dark:hover:text-accent cursor-pointer transition-all duration-300 shadow-lg drop-shadow-lg hover:shadow-xl hover:drop-shadow-2xl"
             >
               { tech }
             </span>

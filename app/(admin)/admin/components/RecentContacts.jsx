@@ -18,19 +18,19 @@ export default function RecentContacts( { contacts, delay = 0.8 } ) {
       initial={ { opacity: 0, y: 20 } }
       animate={ { opacity: 1, y: 0 } }
       transition={ { delay } }
-      className="bg-secondary rounded-xl p-6 border border-white/20"
+      className="bg-[#f5f5f5] dark:bg-secondary rounded-xl p-6 border border-gray-300 dark:border-white/20"
     >
-      <h3 className="text-xl font-semibold text-white mb-4">Recent Contacts</h3>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Contacts</h3>
       <div className="space-y-3">
         { contacts && contacts.length > 0 ? (
           contacts.map( ( contact ) => (
             <div
               key={ contact.id }
-              className="flex items-center justify-between p-3 bg-primary rounded-lg border border-white/10"
+              className="flex items-center justify-between p-3 bg-gray-50 dark:bg-primary rounded-lg border border-gray-200 dark:border-white/10"
             >
               <div>
-                <p className="text-white font-medium">{ contact.name }</p>
-                <p className="text-white/60 text-sm">{ contact.email }</p>
+                <p className="text-gray-900 dark:text-white font-medium">{ contact.name }</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm">{ contact.email }</p>
               </div>
               <div className="text-right">
                 <span
@@ -38,7 +38,7 @@ export default function RecentContacts( { contacts, delay = 0.8 } ) {
                 >
                   { contact.status }
                 </span>
-                <p className="text-white/40 text-xs mt-1">
+                <p className="text-gray-500 dark:text-white/40 text-xs mt-1">
                   { new Date( contact.createdAt ).toLocaleDateString() }
                 </p>
               </div>

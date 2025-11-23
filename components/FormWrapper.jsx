@@ -6,7 +6,7 @@ const FormWrapper = ( { children, form, isLoading, onSubmit, className = '', loa
     <Form { ...form }>
       <form
         onSubmit={ form.handleSubmit( onSubmit ) }
-        className={ `relative flex flex-col gap-6 p-10 bg-secondary rounded-xl ${className}` }
+        className={ `relative flex flex-col gap-6 p-10 bg-[#f5f5f5] dark:bg-secondary rounded-xl ${className}` }
       >
         { isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl z-10">

@@ -1,18 +1,18 @@
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-semibold ring-offset-white transition-colors',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-semibold ring-offset-white dark:ring-offset-gray-900 transition-colors',
   {
     variants: {
       variant: {
-        default: 'bg-accent text-primary hover:bg-accent-hover',
-        primary: 'bg-primary text-white',
-        outline: 'border border-accent bg-transparent text-accent hover:bg-accent' +
-                    ' hover:text-primary'
+        default: 'bg-accent-light dark:bg-accent text-white dark:text-primary hover:bg-accent-lightHover dark:hover:bg-accent-hover',
+        primary: 'bg-gray-900 dark:bg-primary text-white',
+        outline: 'border border-accent-light dark:border-accent bg-transparent text-accent-light dark:text-accent hover:bg-accent-light dark:hover:bg-accent' +
+                    ' hover:text-white dark:hover:text-primary'
       },
       size: {
         default: 'h-[44px] px-6',
@@ -41,3 +41,4 @@ Button.displayName = 'Button';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants };
+
