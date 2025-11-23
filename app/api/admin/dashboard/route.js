@@ -1,29 +1,29 @@
-import STATUS_CODES from "@/constants/status";
-import { DataResponse } from "@/lib/data-response";
-import prismadb from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import STATUS_CODES from '@/constants/status';
+import { DataResponse } from '@/lib/data-response';
+import prismadb from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function GET( req ) {
   try {
     const { searchParams } = new URL( req.url );
-    const period = searchParams.get( "period" ) || "month";
+    const period = searchParams.get( 'period' ) || 'month';
 
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch ( period ) {
-    case "day":
-      startDate.setDate( now.getDate() - 7 );
-      break;
-    case "week":
-      startDate.setDate( now.getDate() - 30 );
-      break;
-    case "month":
-      startDate.setMonth( now.getMonth() - 12 );
-      break;
-    case "year":
-      startDate.setFullYear( now.getFullYear() - 5 );
-      break;
+      case 'day':
+        startDate.setDate( now.getDate() - 7 );
+        break;
+      case 'week':
+        startDate.setDate( now.getDate() - 30 );
+        break;
+      case 'month':
+        startDate.setMonth( now.getMonth() - 12 );
+        break;
+      case 'year':
+        startDate.setFullYear( now.getFullYear() - 5 );
+        break;
     }
     let totalProjects = 0;
     let totalSkills = 0;
@@ -55,6 +55,7 @@ export async function GET( req ) {
         prismadb.project?.count( { where: { isPublished: true } } ) || Promise.resolve( 0 )
       ] );
     } catch ( countError ) {
+      console.error( 'Failed to fetch counts:', countError );
     }
 
     let allVisits = [];
@@ -70,6 +71,7 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch visits:', error );
     }
 
     let allCvDownloads = [];
@@ -85,6 +87,7 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch CV downloads:', error );
     }
 
     let visitsWithPath = [];
@@ -103,11 +106,12 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch visits with path:', error );
     }
 
     const pathCounts = {};
     visitsWithPath.forEach( ( visit ) => {
-      const path = visit.path || "Unknown";
+      const path = visit.path || 'Unknown';
       pathCounts[path] = ( pathCounts[path] || 0 ) + 1;
     } );
 
@@ -127,6 +131,7 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch contacts:', error );
     }
 
     const statusCounts = {};
@@ -147,6 +152,7 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch projects:', error );
     }
 
     const categoryCounts = {};
@@ -164,7 +170,7 @@ export async function GET( req ) {
       recentContacts = await prismadb.contact.findMany( {
         take: 5,
         orderBy: {
-          createdAt: "desc"
+          createdAt: 'desc'
         },
         select: {
           id: true,
@@ -175,6 +181,7 @@ export async function GET( req ) {
         }
       } );
     } catch ( error ) {
+      console.error( 'Failed to fetch recent contacts:', error );
     }
 
     const formatChartData = ( data, period ) => {
@@ -184,19 +191,20 @@ export async function GET( req ) {
         let key;
 
         switch ( period ) {
-        case "day":
-          key = date.toISOString().split( "T" )[0];
-          break;
-        case "week":
-          const week = Math.floor( ( now - date ) / ( 7 * 24 * 60 * 60 * 1000 ) );
-          key = `Week ${week}`;
-          break;
-        case "month":
-          key = `${date.getFullYear()}-${String( date.getMonth() + 1 ).padStart( 2, "0" )}`;
-          break;
-        case "year":
-          key = String( date.getFullYear() );
-          break;
+          case 'day':
+            key = date.toISOString().split( 'T' )[0];
+            break;
+          case 'week': {
+            const week = Math.floor( ( now - date ) / ( 7 * 24 * 60 * 60 * 1000 ) );
+            key = `Week ${week}`;
+            break;
+          }
+          case 'month':
+            key = `${date.getFullYear()}-${String( date.getMonth() + 1 ).padStart( 2, '0' )}`;
+            break;
+          case 'year':
+            key = String( date.getFullYear() );
+            break;
         }
 
         if ( !grouped[key] ) {
@@ -231,7 +239,7 @@ export async function GET( req ) {
         visits: visitsChartData,
         cvDownloads: cvDownloadsChartData,
         visitsByPath: visitsByPath.map( ( item ) => ( {
-          path: item.path || "Unknown",
+          path: item.path || 'Unknown',
           count: item._count.id
         } ) ),
         contactsByStatus: contactsByStatus.map( ( item ) => ( {
@@ -247,13 +255,13 @@ export async function GET( req ) {
     };
 
     return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, "Dashboard data retrieved", dashboardData ),
+      DataResponse( STATUS_CODES.SUCCESS, 'Dashboard data retrieved', dashboardData ),
       { status: STATUS_CODES.SUCCESS }
     );
 
   } catch ( error ) {
     return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || "Server error", null ),
+      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Server error', null ),
       { status: STATUS_CODES.SERVER_ERROR }
     );
   }

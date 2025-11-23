@@ -1,15 +1,12 @@
-import { Input } from "@/components/ui/input";
-import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useInputFocus } from "@/lib/hooks";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect } from "react";
+import { Input } from '@/components/ui/input';
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function SelectionInputField( {
   name,
   control,
   errors,
   type,
-  isSubmitting,
   className,
   onBlur,
   options,
@@ -26,7 +23,7 @@ export function SelectionInputField( {
         <FormItem className={ `${className} space-y-0 flex items-center justify-center` }>
           <FormItem className="space-y-0 w-1/3">
             <Select
-              value={ field.value?.type || "" }
+              value={ field.value?.type || '' }
               onValueChange={ ( value ) => {
                 field.onChange( { ...field.value, type: value } );
               } }
@@ -34,7 +31,7 @@ export function SelectionInputField( {
               <FormControl>
                 <SelectTrigger
                   className={ `w-full pt-2 pb-2 bg-transparent rounded-l-xl rounded-r-none ${
-                    errors[name] ? "border-red-500" : "focus:border-accent"
+                    errors[name] ? 'border-red-500' : 'focus:border-accent'
                   }` }
                 >
                   <SelectValue placeholder={ placeholderSelect }/>
@@ -55,10 +52,10 @@ export function SelectionInputField( {
             <FormControl>
               <Input
                 id={ name }
-                type={ type || "text" }
+                type={ type || 'text' }
                 placeholder={ placeholderInput }
                 className={ `rounded-l-none input-autofill w-full pt-2 pb-2 bg-transparent border ${
-                  errors[name] ? "border-red-500" : "focus:border-accent"
+                  errors[name] ? 'border-red-500' : 'focus:border-accent'
                 }` }
                 onBlur={ ( event ) => {
                   onBlur && onBlur( event );
@@ -66,7 +63,7 @@ export function SelectionInputField( {
                 onChange={ ( event ) => {
                   field.onChange( { ...field.value, value: event.target.value } );
                 } }
-                value={ field.value?.value || "" }
+                value={ field.value?.value || '' }
                 { ...props }
               />
             </FormControl>

@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 function Title( { children } ) {
   return <div className="text-white font-bold">{ children }</div>;
@@ -13,7 +13,7 @@ function Row( { children, className } ) {
   return (
     <div
       className={ cn(
-        "grid grid-cols-1 sm:grid-cols-3 border-b border-white/20 px-6 py-3 items-baseline",
+        'grid grid-cols-1 sm:grid-cols-3 border-b border-white/20 px-6 py-3 items-baseline',
         className
       ) }
     >
@@ -77,7 +77,7 @@ function ProjectInfo( { info } ) {
         { teamSize && (
           <Row>
             <Title>Technologies:</Title>
-            <Info>{ technologies.join( ", " ) }</Info>
+            <Info>{ technologies.join( ', ' ) }</Info>
           </Row>
         ) }
         { rolesAndResponsibilities && (

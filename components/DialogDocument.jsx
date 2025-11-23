@@ -5,12 +5,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-export function DialogDocument( { styledTitle, contentStyled, file, title, content } ) {
+export function DialogDocument( { styledTitle, contentStyled, file: _file, title, content } ) {
   const [open, setOpen] = useState( false );
   const handleOpenChange = ( isOpen ) => {
     setOpen( isOpen );
@@ -23,7 +23,7 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
           <p
             className={
               cn(
-                "hover:cursor-pointer text-white/60 hover:text-accent transition-all duration-300",
+                'hover:cursor-pointer text-white/60 hover:text-accent transition-all duration-300',
                 styledTitle
               ) }
           >
@@ -35,7 +35,7 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
       </DialogTrigger>
       <DialogContent className={
         cn(
-          "max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl",
+          'max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl',
           contentStyled
         )
       } aria-describedby={ undefined }>
@@ -43,7 +43,7 @@ export function DialogDocument( { styledTitle, contentStyled, file, title, conte
           <DialogTitle className="px-3 sm:px-0">{ title }</DialogTitle>
           { content && (
             <p
-              className="text-white/60 text-base">{ content.startDate } - { content.isCurrent ? "Present" : content.endDate }</p>
+              className="text-white/60 text-base">{ content.startDate } - { content.isCurrent ? 'Present' : content.endDate }</p>
           ) }
         </DialogHeader>
         <div className="mt-5">

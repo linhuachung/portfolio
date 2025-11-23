@@ -1,7 +1,7 @@
-import React from "react";
-import { education } from "@/app/(user)/resume/data";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Timeline from "@/components/TimeLine/TimeLine";
+import React from 'react';
+import { education } from '@/app/(user)/resume/data';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Timeline from '@/components/TimeLine/TimeLine';
 
 function Education() {
 
@@ -16,7 +16,7 @@ function Education() {
               key={ item.id || item.school }
               title={ item.school }
               index={ index }
-              type={ "school" }
+              type={ 'school' }
               startDate={ item.startDate }
               endDate={ item.endDate }
               isCurrent={ item.isCurrent }

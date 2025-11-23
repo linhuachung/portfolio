@@ -1,18 +1,16 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import React, { useState } from 'react';
 
-import "swiper/css";
-import MotionWrapper from "@/components/MotionWrapper";
-import Link from "next/link";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { BsArrowUpRight, BsGithub } from "react-icons/bs";
-import { Swiper, SwiperSlide } from "swiper/react";
-import Image from "next/image";
-import WorkSliderBtns from "@/components/WorkSliderBtns";
-import { projects } from "./data";
-import { DialogDocument } from "@/components/DialogDocument";
-import ProjectInfo from "@/app/(user)/work/components/ProjectInfo";
-import { DialogProject } from "@/components/DialogProject";
+import 'swiper/css';
+import MotionWrapper from '@/components/MotionWrapper';
+import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { BsArrowUpRight, BsGithub } from 'react-icons/bs';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import Image from 'next/image';
+import WorkSliderBtns from '@/components/WorkSliderBtns';
+import { projects } from './data';
+import { DialogProject } from '@/components/DialogProject';
 
 
 function Page() {
@@ -49,7 +47,7 @@ function Page() {
                   return (
                     <li className="text-xl text-accent" key={ index }>
                       { item.name }
-                      { index !== project.stack.length - 1 && "," }
+                      { index !== project.stack.length - 1 && ',' }
                     </li>
                   );
                 } ) }

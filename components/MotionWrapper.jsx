@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
 
 function MotionWrapper( { children, className, ...props } ) {
   return (
@@ -10,7 +10,7 @@ function MotionWrapper( { children, className, ...props } ) {
         transition: {
           delay: 2.4,
           duration: 0.4,
-          ease: "easeIn"
+          ease: 'easeIn'
         }
       } }
       className={ className }

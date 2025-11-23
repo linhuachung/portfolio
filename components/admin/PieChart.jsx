@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   PieChart as RechartsPieChart,
@@ -7,11 +7,11 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend
-} from "recharts";
+} from 'recharts';
 
-const COLORS = ["#00ff99", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444", "#10b981"];
+const COLORS = ['#00ff99', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#10b981'];
 
-export default function PieChart( { data, dataKey = "count", nameKey = "status" } ) {
+export default function PieChart( { data, dataKey = 'count', nameKey = 'status' } ) {
   return (
     <ResponsiveContainer width="100%" height={ 300 }>
       <RechartsPieChart>
@@ -32,14 +32,14 @@ export default function PieChart( { data, dataKey = "count", nameKey = "status" 
         </Pie>
         <Tooltip
           contentStyle={ {
-            backgroundColor: "#27272c",
-            border: "1px solid #ffffff20",
-            borderRadius: "8px",
-            color: "#fff"
+            backgroundColor: '#27272c',
+            border: '1px solid #ffffff20',
+            borderRadius: '8px',
+            color: '#fff'
           } }
         />
         <Legend
-          wrapperStyle={ { color: "#ffffff80" } }
+          wrapperStyle={ { color: '#ffffff80' } }
         />
       </RechartsPieChart>
     </ResponsiveContainer>

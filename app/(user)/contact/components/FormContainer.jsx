@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@/components/ui/button";
-import { InputField } from "@/components/InputField";
-import { SelectField } from "@/components/SelectField";
-import { TextareaField } from "@/components/TextareaField";
-import { EmailSubmit } from "@/lib/email";
-import FormWrapper from "@/components/FormWrapper";
-import { validationContactSchema } from "@/services/schema";
-import Toast from "@/components/Toast";
-import { TOAST_STATUS } from "@/constants/toast";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '@/components/ui/button';
+import { InputField } from '@/components/InputField';
+import { SelectField } from '@/components/SelectField';
+import { TextareaField } from '@/components/TextareaField';
+import { EmailSubmit } from '@/lib/email';
+import FormWrapper from '@/components/FormWrapper';
+import { validationContactSchema } from '@/services/schema';
+import Toast from '@/components/Toast';
+import { TOAST_STATUS } from '@/constants/toast';
 
 function FormContainer() {
   const form = useForm( {
     resolver: yupResolver( validationContactSchema ),
-    mode: "onChange"
+    mode: 'onChange'
   } );
 
   const {
@@ -26,25 +26,25 @@ function FormContainer() {
   } = form;
 
   const services = [
-    { value: "fe", label: "Frontend Development" },
-    { value: "be", label: "Backend Development" },
-    { value: "fs", label: "Fullstack Development" }
+    { value: 'fe', label: 'Frontend Development' },
+    { value: 'be', label: 'Backend Development' },
+    { value: 'fs', label: 'Fullstack Development' }
   ];
 
   const onSubmit = async ( data ) => {
     try {
       await EmailSubmit( data );
       reset( {
-        firstname: "",
-        lastname: "",
-        email: "",
-        phone: "",
-        service: "",
-        message: ""
+        firstname: '',
+        lastname: '',
+        email: '',
+        phone: '',
+        service: '',
+        message: ''
       } );
     } catch ( error ) {
       Toast( {
-        title: "Failed to send the message. Please try again.",
+        title: 'Failed to send the message. Please try again.',
         type: TOAST_STATUS.error
       } );
     }
@@ -121,7 +121,7 @@ function FormContainer() {
           />
         </div>
         <Button size="md" type="submit" className="max-w-40" disabled={ isSubmitting }>
-          { isSubmitting ? "Sending..." : "Send message" }
+          { isSubmitting ? 'Sending...' : 'Send message' }
         </Button>
       </FormWrapper>
     </>

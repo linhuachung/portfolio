@@ -1,9 +1,9 @@
-"use client";
-import React from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { CiMenuFries } from "react-icons/ci";
+'use client';
+import React from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { CiMenuFries } from 'react-icons/ci';
 
 function MobileNav( { links, isAdmin, title } ) {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ function MobileNav( { links, isAdmin, title } ) {
         <div className="mt-32 mb-40 text-center text-2xl">
           <Link href="/"
             className="text-4xl font-semibold hover:text-accent transition-all group">
-            { !isAdmin ? "Chung" : title }
+            { !isAdmin ? 'Chung' : title }
             <span className="text-accent group-hover:text-white">.</span>
           </Link>
         </div>
@@ -25,7 +25,7 @@ function MobileNav( { links, isAdmin, title } ) {
             return <Link
               href={ path }
               key={ path }
-              className={ `${path === pathname && "text-accent border-b-2 border-accent"} text-xl capitalize hover:text-accent transition-all` }
+              className={ `${path === pathname && 'text-accent border-b-2 border-accent'} text-xl capitalize hover:text-accent transition-all` }
             >
               { name }
             </Link>;

@@ -1,32 +1,32 @@
-"use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { BsArrowDownRight } from "react-icons/bs";
+'use client';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { BsArrowDownRight } from 'react-icons/bs';
 
 const services = [
   {
-    num: "01",
-    title: "Frontend Development",
-    description: "Building responsive, high-performance web applications using ReactJS, NextJS, and modern JavaScript. Specializing in component-based architecture, state management with Redux, and seamless API integration for optimal user experiences.",
-    href: "/work"
+    num: '01',
+    title: 'Frontend Development',
+    description: 'Building responsive, high-performance web applications using ReactJS, NextJS, and modern JavaScript. Specializing in component-based architecture, state management with Redux, and seamless API integration for optimal user experiences.',
+    href: '/work'
   },
   {
-    num: "02",
-    title: "UI/UX Implementation",
-    description: "Translating design mockups into pixel-perfect, accessible interfaces using HTML5, CSS3, and Tailwind CSS. Focus on responsive design, cross-browser compatibility, and modern CSS techniques for engaging user interfaces.",
-    href: "/work"
+    num: '02',
+    title: 'UI/UX Implementation',
+    description: 'Translating design mockups into pixel-perfect, accessible interfaces using HTML5, CSS3, and Tailwind CSS. Focus on responsive design, cross-browser compatibility, and modern CSS techniques for engaging user interfaces.',
+    href: '/work'
   },
   {
-    num: "03",
-    title: "Performance Optimization",
-    description: "Optimizing web applications for speed and efficiency through code splitting, lazy loading, and modern bundling techniques. Implementing best practices for Core Web Vitals and ensuring smooth user interactions.",
-    href: "/work"
+    num: '03',
+    title: 'Performance Optimization',
+    description: 'Optimizing web applications for speed and efficiency through code splitting, lazy loading, and modern bundling techniques. Implementing best practices for Core Web Vitals and ensuring smooth user interactions.',
+    href: '/work'
   },
   {
-    num: "04",
-    title: "Full-Stack Integration",
-    description: "Developing complete web solutions with NodeJS backend integration, RESTful API development, and database management. Ensuring seamless communication between frontend and backend systems.",
-    href: "/work"
+    num: '04',
+    title: 'Full-Stack Integration',
+    description: 'Developing complete web solutions with NodeJS backend integration, RESTful API development, and database management. Ensuring seamless communication between frontend and backend systems.',
+    href: '/work'
   }
 ];
 
@@ -41,7 +41,7 @@ function Services() {
             transition: {
               delay: 2.4,
               duration: 0.4,
-              ease: "easeIn"
+              ease: 'easeIn'
             }
           } }
           className="grid grid-cols-1 md:grid-cols-2 gap-[60px]"

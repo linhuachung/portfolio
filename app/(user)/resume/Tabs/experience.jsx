@@ -1,7 +1,7 @@
-import React from "react";
-import { experience } from "@/app/(user)/resume/data";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Timeline from "@/components/TimeLine/TimeLine";
+import React from 'react';
+import { experience } from '@/app/(user)/resume/data';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Timeline from '@/components/TimeLine/TimeLine';
 
 function Experience() {
   return (
@@ -14,7 +14,7 @@ function Experience() {
             key={ item.id || item.company }
             title={ item.company }
             index={ index }
-            type={ "work" }
+            type={ 'work' }
             startDate={ item.startDate }
             endDate={ item.endDate }
             isCurrent={ item.isCurrent }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   LineChart as RechartsLineChart,
@@ -9,9 +9,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend
-} from "recharts";
+} from 'recharts';
 
-export default function LineChart( { data, dataKey = "count", name, color = "#00ff99" } ) {
+export default function LineChart( { data, dataKey = 'count', name, color = '#00ff99' } ) {
   return (
     <ResponsiveContainer width="100%" height={ 300 }>
       <RechartsLineChart data={ data } margin={ { top: 5, right: 30, left: 20, bottom: 5 } }>
@@ -19,22 +19,22 @@ export default function LineChart( { data, dataKey = "count", name, color = "#00
         <XAxis
           dataKey="date"
           stroke="#ffffff60"
-          style={ { fontSize: "12px" } }
+          style={ { fontSize: '12px' } }
         />
         <YAxis
           stroke="#ffffff60"
-          style={ { fontSize: "12px" } }
+          style={ { fontSize: '12px' } }
         />
         <Tooltip
           contentStyle={ {
-            backgroundColor: "#27272c",
-            border: "1px solid #ffffff20",
-            borderRadius: "8px",
-            color: "#fff"
+            backgroundColor: '#27272c',
+            border: '1px solid #ffffff20',
+            borderRadius: '8px',
+            color: '#fff'
           } }
         />
         <Legend
-          wrapperStyle={ { color: "#ffffff80" } }
+          wrapperStyle={ { color: '#ffffff80' } }
         />
         <Line
           type="monotone"

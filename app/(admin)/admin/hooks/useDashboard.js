@@ -1,69 +1,69 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { getDashboardData } from "@/services/dashboard";
-import Toast from "@/components/Toast";
-import { TOAST_STATUS } from "@/constants/toast";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getDashboardData } from '@/services/dashboard';
+import Toast from '@/components/Toast';
+import { TOAST_STATUS } from '@/constants/toast';
 
 const AUTO_REFRESH_INTERVAL = 30000;
 
-export function useDashboard(initialPeriod = "month") {
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [period, setPeriod] = useState(initialPeriod);
-  const [dashboardData, setDashboardData] = useState(null);
-  const intervalRef = useRef(null);
+export function useDashboard( initialPeriod = 'month' ) {
+  const [loading, setLoading] = useState( true );
+  const [refreshing, setRefreshing] = useState( false );
+  const [period, setPeriod] = useState( initialPeriod );
+  const [dashboardData, setDashboardData] = useState( null );
+  const intervalRef = useRef( null );
 
-  const fetchDashboardData = async (showLoading = true) => {
+  const fetchDashboardData = useCallback( async ( showLoading = true ) => {
     try {
-      if (showLoading) {
-        setLoading(true);
+      if ( showLoading ) {
+        setLoading( true );
       } else {
-        setRefreshing(true);
+        setRefreshing( true );
       }
 
-      const result = await getDashboardData(period);
+      const result = await getDashboardData( period );
 
-      if (result.success && result.data) {
-        setDashboardData(result.data);
+      if ( result.success && result.data ) {
+        setDashboardData( result.data );
       } else {
-        Toast({
-          title: result.message || "Failed to load dashboard data",
+        Toast( {
+          title: result.message || 'Failed to load dashboard data',
           type: TOAST_STATUS.error
-        });
+        } );
       }
-    } catch (error) {
-      Toast({
-        title: "An error occurred while loading dashboard data",
+    } catch ( error ) {
+      Toast( {
+        title: 'An error occurred while loading dashboard data',
         type: TOAST_STATUS.error
-      });
+      } );
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      setLoading( false );
+      setRefreshing( false );
     }
-  };
+  }, [period] );
 
   const handleRefresh = () => {
-    fetchDashboardData(false);
+    fetchDashboardData( false );
   };
 
-  const handlePeriodChange = (newPeriod) => {
-    setPeriod(newPeriod);
+  const handlePeriodChange = ( newPeriod ) => {
+    setPeriod( newPeriod );
   };
 
-  useEffect(() => {
-    fetchDashboardData(true);
+  useEffect( () => {
+    fetchDashboardData( true );
 
-    intervalRef.current = setInterval(() => {
-      fetchDashboardData(false);
-    }, AUTO_REFRESH_INTERVAL);
+    intervalRef.current = setInterval( () => {
+      fetchDashboardData( false );
+    }, AUTO_REFRESH_INTERVAL );
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if ( intervalRef.current ) {
+        clearInterval( intervalRef.current );
       }
     };
-  }, [period]);
+  }, [period, fetchDashboardData] );
 
   return {
     loading,

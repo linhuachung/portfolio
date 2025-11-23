@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import BarChart from "@/components/admin/BarChart";
-import LineChart from "@/components/admin/LineChart";
-import PieChart from "@/components/admin/PieChart";
-import ChartContainer from "@/components/ChartContainer";
-import Loader from "@/components/Loader";
-import DashboardHeader from "./components/DashboardHeader";
-import RecentContacts from "./components/RecentContacts";
-import StatsGrid from "./components/StatsGrid";
-import { STATS_CONFIG } from "./constants/dashboardConfig";
-import { useDashboard } from "./hooks/useDashboard";
+import BarChart from '@/components/admin/BarChart';
+import LineChart from '@/components/admin/LineChart';
+import PieChart from '@/components/admin/PieChart';
+import ChartContainer from '@/components/ChartContainer';
+import Loader from '@/components/Loader';
+import DashboardHeader from './components/DashboardHeader';
+import RecentContacts from './components/RecentContacts';
+import StatsGrid from './components/StatsGrid';
+import { STATS_CONFIG } from './constants/dashboardConfig';
+import { useDashboard } from './hooks/useDashboard';
 
 export default function Dashboard() {
   const {

@@ -1,7 +1,7 @@
-"use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
-import Stairs from "@/components/Stairs";
+'use client';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import Stairs from '@/components/Stairs';
 
 function StairTransition() {
   const pathname = usePathname();
@@ -20,7 +20,7 @@ function StairTransition() {
               transition: {
                 delay: 1,
                 duration: 0.4,
-                ease: "easeInOut"
+                ease: 'easeInOut'
               }
             } }
           />

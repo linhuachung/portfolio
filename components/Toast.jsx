@@ -1,5 +1,5 @@
-import { toast } from "react-toastify";
-import { TOAST_POSITION } from "@/constants/toast";
+import { toast } from 'react-toastify';
+import { TOAST_POSITION } from '@/constants/toast';
 
 function Toast( { title, type, position = TOAST_POSITION.topCenter, autoClose = 2500, className, ...props } ) {
   toast(
@@ -10,7 +10,7 @@ function Toast( { title, type, position = TOAST_POSITION.topCenter, autoClose = 
       draggable: true,
       pauseOnHover: false,
       autoClose,
-      theme: "dark",
+      theme: 'dark',
       className: `${className} bg-secondary border border-white/20 w-full`,
       ...props
     }
