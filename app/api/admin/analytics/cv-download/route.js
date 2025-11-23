@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import prismadb from "@/lib/prisma";
-import { DataResponse } from "@/lib/data-response";
-import STATUS_CODES from "@/constants/status";
+import { NextResponse } from 'next/server';
+import prismadb from '@/lib/prisma';
+import { DataResponse } from '@/lib/data-response';
+import STATUS_CODES from '@/constants/status';
 
 export async function POST( req ) {
   try {
     // Handle both JSON and Blob (from sendBeacon)
     let body;
-    const contentType = req.headers.get( "content-type" );
-    
-    if ( contentType?.includes( "application/json" ) ) {
+    const contentType = req.headers.get( 'content-type' );
+
+    if ( contentType?.includes( 'application/json' ) ) {
       body = await req.json();
     } else {
       // Handle Blob from sendBeacon
@@ -18,12 +18,12 @@ export async function POST( req ) {
       body = JSON.parse( text );
     }
 
-    const { userAgent, sessionId } = body;
+    const { userAgent } = body;
 
     // Get IP address from request headers
-    const forwarded = req.headers.get( "x-forwarded-for" );
-    const realIp = req.headers.get( "x-real-ip" );
-    const ip = forwarded ? forwarded.split( "," )[0].trim() : realIp || null;
+    const forwarded = req.headers.get( 'x-forwarded-for' );
+    const realIp = req.headers.get( 'x-real-ip' );
+    const ip = forwarded ? forwarded.split( ',' )[0].trim() : realIp || null;
 
     // Get or create user (optional)
     let userId = null;
@@ -44,7 +44,7 @@ export async function POST( req ) {
     } );
 
     return NextResponse.json(
-      DataResponse( STATUS_CODES.CREATED, "CV download recorded", cvDownload ),
+      DataResponse( STATUS_CODES.CREATED, 'CV download recorded', cvDownload ),
       { status: STATUS_CODES.CREATED }
     );
 
@@ -52,7 +52,7 @@ export async function POST( req ) {
     // Silently fail - don't interrupt user experience
     // Return success to prevent blocking download
     return NextResponse.json(
-      DataResponse( STATUS_CODES.CREATED, "CV download recorded", null ),
+      DataResponse( STATUS_CODES.CREATED, 'CV download recorded', null ),
       { status: STATUS_CODES.CREATED }
     );
   }

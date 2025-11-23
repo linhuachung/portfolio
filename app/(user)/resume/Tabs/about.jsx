@@ -1,38 +1,38 @@
-import React from "react";
-import { about } from "@/app/(user)/resume/data";
+import React from 'react';
+import { about } from '@/app/(user)/resume/data';
 
 function About() {
   const renderFieldValueAboutMe = ( item ) => {
     switch ( item.fieldName ) {
-    case "Email":
-      return (
-        <a
-          href={ `mailto: ${item.fieldValue}` }
-          className="text-lg hover:text-accent transition-all duration-300"
-        >
-          { item.fieldValue }
-        </a>
-      );
-    case "Phone":
-      return (
-        <a
-          className="text-lg hover:text-accent transition-all duration-300"
-          href={ `tel:${item.fieldValue}` }
-        >
-          { item.fieldValue }
-        </a>
-      );
-    case "Skype":
-      return (
-        <a
-          className="text-lg hover:text-accent transition-all duration-300"
-          href={ `skype:${item.fieldValue}?call` }
-        >
-          { item.fieldValue }
-        </a>
-      );
-    default:
-      return <span className="text-lg">{ item.fieldValue }</span>;
+      case 'Email':
+        return (
+          <a
+            href={ `mailto: ${item.fieldValue}` }
+            className="text-lg hover:text-accent transition-all duration-300"
+          >
+            { item.fieldValue }
+          </a>
+        );
+      case 'Phone':
+        return (
+          <a
+            className="text-lg hover:text-accent transition-all duration-300"
+            href={ `tel:${item.fieldValue}` }
+          >
+            { item.fieldValue }
+          </a>
+        );
+      case 'Skype':
+        return (
+          <a
+            className="text-lg hover:text-accent transition-all duration-300"
+            href={ `skype:${item.fieldValue}?call` }
+          >
+            { item.fieldValue }
+          </a>
+        );
+      default:
+        return <span className="text-lg">{ item.fieldValue }</span>;
     }
   };
 

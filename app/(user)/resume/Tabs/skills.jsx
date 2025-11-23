@@ -1,6 +1,6 @@
-import React from "react";
-import { skills } from "@/app/(user)/resume/data";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import React from 'react';
+import { skills } from '@/app/(user)/resume/data';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 function Skills() {
   return (

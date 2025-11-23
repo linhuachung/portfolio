@@ -1,22 +1,22 @@
-import React, { useState, useRef } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import React, { useState, useRef } from 'react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
 function ImageUpload( { name, control, className, watch, setValue, width, height, setError } ) {
   const avatarUrl = watch( name );
-  const defaultAvatar = "/assets/avatarDefault.png";
+  const defaultAvatar = '/assets/avatarDefault.png';
   const [preview, setPreview] = useState( avatarUrl || defaultAvatar );
   const fileInputRef = useRef( null );
 
   const handleAvatarChange = ( e ) => {
     const file = e.target.files[0];
     if ( file ) {
-      const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
       if ( !allowedTypes.includes( file.type ) ) {
-        setError( name, { type: "manual", message: "Invalid image type!!" } );
+        setError( name, { type: 'manual', message: 'Invalid image type!!' } );
         return;
       }
 
@@ -32,10 +32,10 @@ function ImageUpload( { name, control, className, watch, setValue, width, height
 
   const handleRemove = () => {
     setPreview( defaultAvatar );
-    setValue( name, "" );
+    setValue( name, '' );
 
     if ( fileInputRef.current ) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
@@ -50,7 +50,7 @@ function ImageUpload( { name, control, className, watch, setValue, width, height
               width={ width || 120 }
               height={ height || 120 }
               className={ `rounded-full object-cover border-2 border-white/20 w-[${width || 120}px] h-[${height || 120}px]` }
-              style={ { objectFit: "cover", aspectRatio: "1/1" } }
+              style={ { objectFit: 'cover', aspectRatio: '1/1' } }
             />
             { preview !== defaultAvatar && (
               <Button

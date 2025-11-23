@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import FormWrapper from "@/components/FormWrapper";
-import ImageUpload from "@/components/ImageUpload";
-import { InputField } from "@/components/InputField";
-import { SelectionInputField } from "@/components/SelectionInputField";
-import { TextareaField } from "@/components/TextareaField";
-import { Button } from "@/components/ui/button";
-import { validationEditProfileSchema } from "@/services/schema";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import FormWrapper from '@/components/FormWrapper';
+import ImageUpload from '@/components/ImageUpload';
+import { InputField } from '@/components/InputField';
+import { SelectionInputField } from '@/components/SelectionInputField';
+import { TextareaField } from '@/components/TextareaField';
+import { Button } from '@/components/ui/button';
+import { validationEditProfileSchema } from '@/services/schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
 export default function EditProfile() {
 
   const form = useForm( {
     resolver: yupResolver( validationEditProfileSchema ),
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       media: {
-        type: "gitHub",
-        value: "https://www.test.com"
+        type: 'gitHub',
+        value: 'https://www.test.com'
       }
     }
   } );
 
   const {
     register,
-    handleSubmit,
+    handleSubmit: _handleSubmit,
     setError,
     setValue,
     control,
     watch,
-    reset,
+    reset: _reset,
     formState: { errors, isSubmitting }
   } = form;
 
-  const onSubmit = async ( data ) => {
+  const onSubmit = async ( _data ) => {
   };
 
   return (
@@ -85,16 +85,16 @@ export default function EditProfile() {
           placeholderSelect="Service"
           errors={ errors }
           options={ [
-            { value: "fb", label: "Facebook" },
-            { value: "gitHub", label: "Git Hub" },
-            { value: "linkedin", label: "Linkedin" }
+            { value: 'fb', label: 'Facebook' },
+            { value: 'gitHub', label: 'Git Hub' },
+            { value: 'linkedin', label: 'Linkedin' }
           ] }
           isSubmitting={ isSubmitting }
         />
         <Button type="submit"
           className="w-full"
           disabled={ isSubmitting }>
-          { isSubmitting ? "Saving..." : "Save Changes" }
+          { isSubmitting ? 'Saving...' : 'Save Changes' }
         </Button>
       </FormWrapper>
     </div>

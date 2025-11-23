@@ -1,14 +1,14 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { DialogDocument } from "@/components/DialogDocument";
-import { DialogProject } from "@/components/DialogProject";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { DialogDocument } from '@/components/DialogDocument';
+import { DialogProject } from '@/components/DialogProject';
 
-function Content( { color, title, index, description, techStack, type, location, link, ...props } ) {
+function Content( { color: _color, title, index, description, techStack, type, location, link, ...props } ) {
   return (
     <motion.div
       className="border border-white/10 rounded-xl px-8 py-4 bg-secondary w-full text-center sm:w-96"
-      whileHover={ { scale: 1.07, boxShadow: "0px 0px 15px rgba(255, 255, 255, 0.2)", zIndex: 50 } }
-      transition={ { duration: 0.4, ease: "easeInOut" } }
+      whileHover={ { scale: 1.07, boxShadow: '0px 0px 15px rgba(255, 255, 255, 0.2)', zIndex: 50 } }
+      transition={ { duration: 0.4, ease: 'easeInOut' } }
       { ...props }
     >
       <motion.div
@@ -33,7 +33,7 @@ function Content( { color, title, index, description, techStack, type, location,
         { location }
       </div>
       <div className="mb-4">
-        { type === "work" ? (
+        { type === 'work' ? (
           <DialogProject
             content={ props.info }
             title={ description }

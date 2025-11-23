@@ -1,6 +1,6 @@
-"use client";
-import { motion } from "framer-motion";
-import Image from "next/image";
+'use client';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 function Photo() {
   return (
@@ -12,7 +12,7 @@ function Photo() {
           transition: {
             delay: 2,
             duration: 0.4,
-            ease: "easeIn"
+            ease: 'easeIn'
           }
         } }
         className="flex items-center justify-center"
@@ -24,7 +24,7 @@ function Photo() {
             transition: {
               delay: 2.4,
               duration: 0.4,
-              ease: "easeInOut"
+              ease: 'easeInOut'
             }
           } }
           className="w-[270px] h-[270px] xl:w-[450px] xl:h-[450px] mix-blend-lighten absolute"
@@ -52,15 +52,15 @@ function Photo() {
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={ { strokeDasharray: "24 10 0 0" } }
+            initial={ { strokeDasharray: '24 10 0 0' } }
             animate={ {
-              strokeDasharray: ["15 120 25 25", "16 25 92 72", "4 250 22 22"],
+              strokeDasharray: ['15 120 25 25', '16 25 92 72', '4 250 22 22'],
               rotate: [120, 360]
             } }
             transition={ {
               duration: 20,
               repeat: Infinity,
-              repeatType: "reverse"
+              repeatType: 'reverse'
             } }
           />
         </motion.svg>

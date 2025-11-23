@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { trackVisit } from "@/lib/analytics";
+import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { trackVisit } from '@/lib/analytics';
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();
@@ -12,7 +12,7 @@ export default function AnalyticsTracker() {
     if (
       pathname &&
       pathname !== previousPathname.current &&
-      !pathname.startsWith( "/admin" )
+      !pathname.startsWith( '/admin' )
     ) {
       const timer = setTimeout( () => {
         trackVisit( pathname );

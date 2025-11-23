@@ -1,7 +1,7 @@
-import { Form } from "@/components/ui/form";
-import Loader from "@/components/Loader";
+import { Form } from '@/components/ui/form';
+import Loader from '@/components/Loader';
 
-const FormWrapper = ( { children, form, isLoading, onSubmit, className = "", loaderType } ) => {
+const FormWrapper = ( { children, form, isLoading, onSubmit, className = '', loaderType } ) => {
   return (
     <Form { ...form }>
       <form
@@ -14,7 +14,7 @@ const FormWrapper = ( { children, form, isLoading, onSubmit, className = "", loa
           </div>
         ) }
 
-        <div className={ isLoading ? "opacity-50 pointer-events-none" : "" }>{ children }</div>
+        <div className={ isLoading ? 'opacity-50 pointer-events-none' : '' }>{ children }</div>
       </form>
     </Form>
   );

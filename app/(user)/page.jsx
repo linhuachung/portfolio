@@ -1,10 +1,10 @@
-"use client";
-import Photo from "@/components/Photo";
-import Social from "@/components/Social";
-import Stats from "@/components/Stats";
-import { Button } from "@/components/ui/button";
-import { trackCvDownload } from "@/lib/analytics";
-import { FiDownload } from "react-icons/fi";
+'use client';
+import Photo from '@/components/Photo';
+import Social from '@/components/Social';
+import Stats from '@/components/Stats';
+import { Button } from '@/components/ui/button';
+import { trackCvDownload } from '@/lib/analytics';
+import { FiDownload } from 'react-icons/fi';
 
 function Home() {
   const handleClick = async () => {
@@ -12,11 +12,12 @@ function Home() {
       await trackCvDownload();
       await new Promise( resolve => setTimeout( resolve, 100 ) );
     } catch ( error ) {
+      console.error( 'Failed to track CV download:', error );
     }
 
-    const link = document.createElement( "a" );
-    link.href = "/assets/resume/CV_Frontend_LinHuaChung.pdf";
-    link.download = "CV_FrontendDeveloper_Lin_Hua_Chung.pdf";
+    const link = document.createElement( 'a' );
+    link.href = '/assets/resume/CV_Frontend_LinHuaChung.pdf';
+    link.download = 'CV_FrontendDeveloper_Lin_Hua_Chung.pdf';
     document.body.appendChild( link );
     link.click();
     document.body.removeChild( link );

@@ -1,11 +1,10 @@
-"use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DialogDocument } from "@/components/DialogDocument";
-import Experience from "@/app/(user)/resume/Tabs/experience";
-import Education from "@/app/(user)/resume/Tabs/education";
-import Skills from "@/app/(user)/resume/Tabs/skills";
-import About from "@/app/(user)/resume/Tabs/about";
-import MotionWrapper from "@/components/MotionWrapper";
+'use client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Experience from '@/app/(user)/resume/Tabs/experience';
+import Education from '@/app/(user)/resume/Tabs/education';
+import Skills from '@/app/(user)/resume/Tabs/skills';
+import About from '@/app/(user)/resume/Tabs/about';
+import MotionWrapper from '@/components/MotionWrapper';
 
 function Resume() {
 
