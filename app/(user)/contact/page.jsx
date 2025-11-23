@@ -1,8 +1,8 @@
 'use client';
 
-import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 import FormContainer from '@/app/(user)/contact/components/FormContainer';
 import MotionWrapper from '@/components/MotionWrapper';
+import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 
 const info = [
   {
@@ -30,12 +30,12 @@ function Contact() {
         return (
           <li className="flex items-center gap-6" key={ item.title }>
             <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
               <div className="text-[28px]">{ item.icon }</div>
             </div>
             <div className="flex-1">
-              <p className="text-white/60">{ item.title }</p>
-              <a className="text-lg hover:text-accent transition-all duration-300"
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <a className="text-lg text-gray-900 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all duration-300"
                 href={ `tel:${item.description}` }>
                 { item.description }
               </a>
@@ -46,13 +46,13 @@ function Contact() {
         return (
           <li className="flex items-center gap-6" key={ item.title }>
             <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
               <div className="text-[28px]">{ item.icon }</div>
             </div>
             <div className="flex-1">
-              <p className="text-white/60">{ item.title }</p>
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
               <a href={ `mailto:${item.description}` }
-                className="text-lg hover:text-accent transition-all duration-300">
+                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
                 { item.description }
               </a>
             </div>
@@ -62,13 +62,13 @@ function Contact() {
         return (
           <li className="flex items-center gap-6" key={ item.title }>
             <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
               <div className="text-[28px]">{ item.icon }</div>
             </div>
             <div className="flex-1">
-              <p className="text-white/60">{ item.title }</p>
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
               <a href={ item.link } target="_blank"
-                className="text-lg hover:text-accent transition-all duration-300">
+                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
                 { item.description }
               </a>
             </div>
@@ -78,12 +78,12 @@ function Contact() {
         return (
           <li className="flex items-center gap-6" key={ item.title }>
             <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
               <div className="text-[28px]">{ item.icon }</div>
             </div>
             <div className="flex-1">
-              <p className="text-white/60">{ item.title }</p>
-              <p className="text-lg">{ item.description }</p>
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <p className="text-lg text-gray-900 dark:text-white">{ item.description }</p>
             </div>
           </li>
         );

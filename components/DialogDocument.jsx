@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,9 +7,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 export function DialogDocument( { styledTitle, contentStyled, file: _file, title, content } ) {
   const [open, setOpen] = useState( false );
@@ -19,11 +19,11 @@ export function DialogDocument( { styledTitle, contentStyled, file: _file, title
     <Dialog open={ open } onOpenChange={ handleOpenChange }>
       <DialogTrigger asChild>
         <div className="flex items-baseline gap-3 justify-center">
-          <span className="w-[6px] h-[6px] rounded-full bg-accent"></span>
+          <span className="w-[6px] h-[6px] rounded-full bg-accent-light dark:bg-accent"></span>
           <p
             className={
               cn(
-                'hover:cursor-pointer text-white/60 hover:text-accent transition-all duration-300',
+                'hover:cursor-pointer text-gray-700 dark:text-white/60 hover:text-accent-light dark:hover:text-accent transition-all duration-300',
                 styledTitle
               ) }
           >
@@ -35,15 +35,15 @@ export function DialogDocument( { styledTitle, contentStyled, file: _file, title
       </DialogTrigger>
       <DialogContent className={
         cn(
-          'max-w-[375px] sm:max-w-[600px] bg-primary rounded-2xl',
+          'max-w-[375px] sm:max-w-[600px] bg-[#f5f5f5] dark:bg-primary rounded-2xl',
           contentStyled
         )
       } aria-describedby={ undefined }>
         <DialogHeader>
-          <DialogTitle className="px-3 sm:px-0">{ title }</DialogTitle>
+          <DialogTitle className="px-3 sm:px-0 text-gray-900 dark:text-white">{ title }</DialogTitle>
           { content && (
             <p
-              className="text-white/60 text-base">{ content.startDate } - { content.isCurrent ? 'Present' : content.endDate }</p>
+              className="text-gray-600 dark:text-white/60 text-base">{ content.startDate } - { content.isCurrent ? 'Present' : content.endDate }</p>
           ) }
         </DialogHeader>
         <div className="mt-5">

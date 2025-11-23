@@ -1,16 +1,16 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from '@/components/ui/button';
+import FormWrapper from '@/components/FormWrapper';
 import { InputField } from '@/components/InputField';
 import { SelectField } from '@/components/SelectField';
 import { TextareaField } from '@/components/TextareaField';
-import { EmailSubmit } from '@/lib/email';
-import FormWrapper from '@/components/FormWrapper';
-import { validationContactSchema } from '@/services/schema';
 import Toast from '@/components/Toast';
+import { Button } from '@/components/ui/button';
 import { TOAST_STATUS } from '@/constants/toast';
+import { EmailSubmit } from '@/lib/email';
+import { validationContactSchema } from '@/services/schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
 function FormContainer() {
   const form = useForm( {
@@ -19,7 +19,6 @@ function FormContainer() {
   } );
 
   const {
-    register,
     formState: { errors, isSubmitting },
     reset,
     control
@@ -54,12 +53,12 @@ function FormContainer() {
     <>
       <FormWrapper
         form={ form }
-        className="flex flex-col gap-6 px-10 py-8 bg-secondary rounded-xl"
+        className="flex flex-col gap-6 px-10 py-8 bg-[#f5f5f5] dark:bg-secondary rounded-xl"
         onSubmit={ onSubmit }
         isLoading={ isSubmitting }
       >
-        <h3 className="text-4xl text-accent">Let&apos;s work together</h3>
-        <p className="text-white/60 mt-5 mb-5">
+        <h3 className="text-4xl text-accent-light dark:text-accent">Let&apos;s work together</h3>
+        <p className="text-gray-700 dark:text-white/60 mt-5 mb-5">
           Excited to collaborate on impactful projects, I bring expertise in
           ReactJS, NextJS, and modern frontend development. Let’s connect to
           create seamless and engaging digital experiences together!
@@ -69,7 +68,6 @@ function FormContainer() {
             name="firstname"
             placeholder="Firstname"
             control={ control }
-            register={ register }
             isSubmitting={ isSubmitting }
             errors={ errors }
           />
@@ -77,7 +75,6 @@ function FormContainer() {
             name="lastname"
             placeholder="Lastname"
             control={ control }
-            register={ register }
             isSubmitting={ isSubmitting }
             errors={ errors }
           />
@@ -85,7 +82,6 @@ function FormContainer() {
             name="email"
             placeholder="Email"
             control={ control }
-            register={ register }
             isSubmitting={ isSubmitting }
             errors={ errors }
           />
@@ -93,7 +89,6 @@ function FormContainer() {
             name="phone"
             placeholder="Phone number"
             control={ control }
-            register={ register }
             isSubmitting={ isSubmitting }
             errors={ errors }
           />
@@ -106,7 +101,6 @@ function FormContainer() {
             placeholder="Select a service"
             labelFocus="Service"
             control={ control }
-            register={ register }
             isSubmitting={ isSubmitting }
           />
         </div>
@@ -114,7 +108,6 @@ function FormContainer() {
           <TextareaField
             name="message"
             placeholder="Type your message here"
-            register={ register }
             control={ control }
             errors={ errors }
             isSubmitting={ isSubmitting }

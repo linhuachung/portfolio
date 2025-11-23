@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import Time from '@/components/TimeLine/Time';
 import Content from '@/components/TimeLine/Content';
+import Time from '@/components/TimeLine/Time';
+import { motion } from 'framer-motion';
 
 function Timeline( {
   index,
@@ -14,9 +14,10 @@ function Timeline( {
   techStack,
   link,
   logo,
+  info,
   ...props
 } ) {
-  const color = 'bg-accent';
+  const color = 'bg-accent-light dark:bg-accent';
   // const color = element.isCurrent ? "bg-accent" : "bg-secondary";
   return (
     <>
@@ -47,6 +48,8 @@ function Timeline( {
           type={ type }
           startDate={ startDate }
           endDate={ endDate }
+          info={ info }
+          index={ index }
           { ...props }
         />
       </motion.div>

@@ -2,6 +2,7 @@ import { JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import StoreProvider from '@/app/StoreProvider';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const jetbrainsMono = JetBrains_Mono( {
   subsets: ['latin'],
@@ -17,14 +18,32 @@ export const metadata = {
 
 export default function RootLayout( { children } ) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={ {
+            __html: `
+              (function() {
+                const theme = localStorage.getItem('theme') || 'dark';
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `
+          } }
+        />
+      </head>
       <body
         className={ jetbrainsMono.variable }
       >
-        <StoreProvider>
-          { children }
-          <ToastContainer/>
-        </StoreProvider>
+        <ThemeProvider>
+          <StoreProvider>
+            { children }
+            <ToastContainer/>
+          </StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

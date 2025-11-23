@@ -41,7 +41,7 @@ function Stats() {
                   suffix={ item.isPlus && '+' }
                 ></CountUp>
                 <p
-                  className={ `${item.text.length < 15 ? 'max-w-[100px]' : 'max-w-[150px]'} leading-snug text-white/80` }>{
+                  className={ `${item.text.length < 15 ? 'max-w-[100px]' : 'max-w-[150px]'} leading-snug text-gray-700 dark:text-white/80` }>{
                     item.text }
                 </p>
               </div>

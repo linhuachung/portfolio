@@ -3,8 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+    :root {
+        --background: #f8f8f8;
+        --foreground: #1c1c22;
+        --accent-light: #008844;
+        --accent-light-hover: #007733;
+        --accent: #00ff99;
+        --accent-hover: #00e187;
+    }
+
+    .dark {
+        --background: #1c1c22;
+        --foreground: #ffffff;
+    }
+
     body {
-        @apply font-primary bg-primary text-white leading-loose;
+        @apply font-primary leading-loose;
+        background-color: var(--background);
+        color: var(--foreground);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dark body {
+        background-color: #1c1c22;
+        color: #ffffff;
     }
 
     .h1 {
@@ -20,11 +42,29 @@
     }
 
     .text-outline {
+        -webkit-text-stroke: 1px #1c1c22;
+    }
+
+    .dark .text-outline {
         -webkit-text-stroke: 1px #fff;
     }
 
     .text-outline-hover {
-        -webkit-text-stroke: 1px #00ff99;
+        -webkit-text-stroke: 1px var(--accent-light);
+    }
+
+    .dark .text-outline-hover {
+        -webkit-text-stroke: 1px var(--accent);
+    }
+
+    .photo-circle {
+        stroke: var(--accent-light);
+        color: var(--accent-light);
+    }
+
+    .dark .photo-circle {
+        stroke: var(--accent);
+        color: var(--accent);
     }
 
     ::-webkit-scrollbar {
@@ -37,25 +77,69 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #00ff99;
+        background: var(--accent-light);
         border-radius: 10px;
     }
 
+    .dark ::-webkit-scrollbar-thumb {
+        background: var(--accent);
+    }
+
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: var(--accent-light-hover);
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-hover);
     }
 }
 
 @layer utilities {
     .input-autofill:-webkit-autofill {
-        @apply bg-[#27272c] text-white border border-[#00ff99];
+        @apply bg-[#f5f5f5] dark:bg-[#27272c] text-gray-900 dark:text-white border;
+        border-color: var(--accent-light);
+        -webkit-box-shadow: 0 0 0 50px #f5f5f5 inset;
+        -webkit-text-fill-color: #1c1c22;
+    }
+
+    .dark .input-autofill:-webkit-autofill {
+        border-color: var(--accent);
         -webkit-box-shadow: 0 0 0 50px #27272c inset;
         -webkit-text-fill-color: white;
     }
 
     .input-autofill:-webkit-autofill:focus {
-        @apply border-accent;
+        -webkit-box-shadow: 0 0 0 50px #f5f5f5 inset;
+        -webkit-text-fill-color: #1c1c22;
+        border-color: var(--accent-light);
+    }
+
+    .dark .input-autofill:-webkit-autofill:focus {
         -webkit-box-shadow: 0 0 0 50px #27272c inset;
         -webkit-text-fill-color: white;
+        border-color: var(--accent);
+    }
+
+    .recharts-active-bar {
+        background-color: transparent !important;
+        fill: inherit !important;
+    }
+
+    .recharts-active-bar rect {
+        fill: inherit !important;
+        background-color: transparent !important;
+    }
+
+    .recharts-bar-rectangle {
+        transition: opacity 0.2s;
+    }
+
+    .recharts-bar-rectangle:hover {
+        opacity: 0.8;
+    }
+
+    .recharts-tooltip-cursor {
+        fill: transparent !important;
+        stroke: none !important;
     }
 }

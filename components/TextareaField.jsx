@@ -1,5 +1,5 @@
-import { Textarea } from '@/components/ui/textarea';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
 import { useInputFocus } from '@/lib/hooks';
 
 export function TextareaField( {
@@ -22,24 +22,25 @@ export function TextareaField( {
         <FormItem className={ `${className} space-y-0 relative w-full` }>
           <FormLabel
             htmlFor={ name }
-            className={ `absolute left-3 transition-all text-gray-500 ${
-              isFocused
-                ? 'z-10 bg-secondary text-white/60 -top-2 text-xs px-2 before:content-[\'\'] before:absolute before:-z-10 before:left-0 before:right-0 before:top-0 before:bottom-0 before:bg-secondary before:rounded-sm'
-                : 'top-3 text-sm'
-            } ${errors[name] ? 'text-red-500' : ''}` }
+            className={ `absolute left-4 transition-all duration-200 pointer-events-none ${
+              isFocused || field.value
+                ? 'z-10 -top-2.5 text-xs px-2 text-gray-600 dark:text-white/80 bg-[#f5f5f5] dark:bg-secondary'
+                : 'top-4 text-sm text-gray-500 dark:text-gray-400'
+            } ${errors[name] ? 'text-red-500 dark:text-red-400' : ''}` }
           >
             { placeholder }
           </FormLabel>
           <FormControl>
             <Textarea
               id={ name }
-              className={ `w-full pt-2 pb-2 bg-transparent h-[200px] ${errors[name] ? 'border-red-500 focus-visible:accent-red-500 focus-visible:ring-0' : 'focus-visible:ring-accent focus-visible:ring-offset-0'}` }
+              className={ `w-full pt-4 pb-3 bg-transparent h-[200px] ${errors[name] ? 'border-red-500 focus-visible:ring-red-500 focus-visible:ring-0' : 'focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-offset-0'}` }
               placeholder=""
               onFocus={ () => setIsFocused( true ) }
               onBlur={ ( e ) => {
                 setIsFocused( e.target.value !== '' );
                 onBlur && onBlur( e );
               } }
+              value={ field.value || '' }
               { ...field }
               { ...props }
             />

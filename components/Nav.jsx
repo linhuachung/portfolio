@@ -39,7 +39,7 @@ function Nav( { links } ) {
     <nav className="flex gap-8">
       { links?.map( ( { name, path } ) => {
         return <Link href={ path } key={ path }
-          className={ `${path === pathName && 'text-accent border-b-2 border-accent'} capitalize font-medium hover:text-accent transition-all` }>
+          className={ `${path === pathName && 'text-accent-light dark:text-accent border-b-2 border-accent-light dark:border-accent'} capitalize font-medium text-gray-700 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all` }>
           { name }
         </Link>;
       } ) }

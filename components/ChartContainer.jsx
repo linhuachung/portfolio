@@ -16,9 +16,9 @@ export default function ChartContainer( {
       initial={ { opacity: 0, y: 20 } }
       animate={ { opacity: 1, y: 0 } }
       transition={ { delay } }
-      className={ `bg-secondary rounded-xl p-6 border border-white/20 ${className}` }
+      className={ `bg-[#f5f5f5] dark:bg-secondary rounded-xl p-6 border border-gray-300 dark:border-white/20 ${className}` }
     >
-      <h3 className="text-xl font-semibold text-white mb-4">{ title }</h3>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{ title }</h3>
       { data && data.length > 0 ? (
         children
       ) : (
