@@ -1,14 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { InputField } from "@/components/InputField";
-import { Button } from "@/components/ui/button";
 import FormWrapper from "@/components/FormWrapper";
 import ImageUpload from "@/components/ImageUpload";
-import { TextareaField } from "@/components/TextareaField";
-import { validationEditProfileSchema } from "@/services/schema";
+import { InputField } from "@/components/InputField";
 import { SelectionInputField } from "@/components/SelectionInputField";
+import { TextareaField } from "@/components/TextareaField";
+import { Button } from "@/components/ui/button";
+import { validationEditProfileSchema } from "@/services/schema";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
 export default function EditProfile() {
 
@@ -34,9 +34,7 @@ export default function EditProfile() {
     formState: { errors, isSubmitting }
   } = form;
 
-
   const onSubmit = async ( data ) => {
-    console.log( "Updated profile:", data );
   };
 
   return (

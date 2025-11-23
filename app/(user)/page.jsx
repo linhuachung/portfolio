@@ -1,16 +1,25 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { FiDownload } from "react-icons/fi";
-import Social from "@/components/Social";
 import Photo from "@/components/Photo";
+import Social from "@/components/Social";
 import Stats from "@/components/Stats";
+import { Button } from "@/components/ui/button";
+import { trackCvDownload } from "@/lib/analytics";
+import { FiDownload } from "react-icons/fi";
 
 function Home() {
-  const handleClick = () => {
+  const handleClick = async () => {
+    try {
+      await trackCvDownload();
+      await new Promise( resolve => setTimeout( resolve, 100 ) );
+    } catch ( error ) {
+    }
+
     const link = document.createElement( "a" );
     link.href = "/assets/resume/CV_Frontend_LinHuaChung.pdf";
     link.download = "CV_FrontendDeveloper_Lin_Hua_Chung.pdf";
+    document.body.appendChild( link );
     link.click();
+    document.body.removeChild( link );
   };
   return (
     <section className="h-full">
@@ -23,12 +32,11 @@ function Home() {
                             Hello I&apos;m <br/> <span className="text-accent">Hua Chung</span>
             </h1>
             <p className="max-w-[500px] mb-9 text-white/80">
-                            Focused on building high-performance web applications with expertise in
-                            ReactJS, seamless API integration, and performance optimization.
-              <br/>
-                            Passionate about exploring emerging technologies like WebAssembly and
-                            modern optimization techniques to deliver innovative and engaging
-                            digital experiences.
+                            A passionate Frontend Developer with 3+ years of experience crafting high-performance web applications for international markets.
+              <br/><br/>
+                            Specialized in ReactJS, NextJS, and modern JavaScript frameworks, I focus on building scalable, responsive applications with seamless API integration and optimal user experiences.
+              <br/><br/>
+                            Currently working at NAB Innovation Centre Vietnam, I bring expertise in component-based architecture, performance optimization, and cross-functional team collaboration to deliver innovative digital solutions.
             </p>
             <div className="flex flex-col xl:flex-row items-center gap-8">
               <Button

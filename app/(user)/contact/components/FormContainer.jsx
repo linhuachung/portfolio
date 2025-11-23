@@ -9,6 +9,8 @@ import { TextareaField } from "@/components/TextareaField";
 import { EmailSubmit } from "@/lib/email";
 import FormWrapper from "@/components/FormWrapper";
 import { validationContactSchema } from "@/services/schema";
+import Toast from "@/components/Toast";
+import { TOAST_STATUS } from "@/constants/toast";
 
 function FormContainer() {
   const form = useForm( {
@@ -41,8 +43,10 @@ function FormContainer() {
         message: ""
       } );
     } catch ( error ) {
-      console.error( "Error sending email:", error );
-      alert( "Failed to send the message. Please try again." );
+      Toast( {
+        title: "Failed to send the message. Please try again.",
+        type: TOAST_STATUS.error
+      } );
     }
   };
 

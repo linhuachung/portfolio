@@ -10,6 +10,8 @@ import { AdminLoginAction } from "@/store/actions/Auth/action";
 import FormWrapper from "@/components/FormWrapper";
 import STATUS_CODES from "@/constants/status";
 import { validationAdminLoginSchema } from "@/services/schema";
+import Toast from "@/components/Toast";
+import { TOAST_STATUS } from "@/constants/toast";
 
 function AdminLogin() {
   const router = useRouter();
@@ -35,7 +37,10 @@ function AdminLogin() {
       } );
       status === STATUS_CODES.SUCCESS && router.push( "/admin" );
     } catch ( error ) {
-      console.error( "Error:", error );
+      Toast( {
+        title: error.message || "Login failed. Please check your credentials.",
+        type: TOAST_STATUS.error
+      } );
     }
   };
   return (

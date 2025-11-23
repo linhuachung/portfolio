@@ -10,13 +10,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  user
+  admin
+}
+
+enum SocialLinkType {
+  github
+  linkedin
+  facebook
+  twitter
+  instagram
+  website
+  other
+}
+
+enum ProjectCategory {
+  frontend
+  backend
+  fullstack
+  mobile
+  desktop
+  other
+}
+
+enum ContactStatus {
+  pending
+  read
+  replied
+  archived
+}
+
+enum SkillCategory {
+  frontend
+  backend
+  database
+  devops
+  design
+  other
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+  expert
+}
+
+// ============================================
+// MODELS
+// ============================================
+
 model User {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  email  String  @unique
-  name   String
-  avatar String?
-  bio    String?
-  role   String  @default("user")
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  name     String
+  avatar   String?
+  bio      String?
+  phone    String?
+  website  String?
+  role     UserRole @default(user)
 
   socialLinks SocialLink[]
   projects    Project[]
@@ -24,48 +81,69 @@ model User {
   skills      UserSkill[]
   education   Education[]
   contacts    Contact[]
+  visits      Visit[]
+  cvDownloads CvDownload[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([role])
+  @@map("users")
 }
 
 model Admin {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  username String @unique
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  username String   @unique
   password String
-  role     String @default("admin")
+  email    String?  @unique
+  role     UserRole @default(admin)
+  isActive Boolean  @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("admins")
 }
 
 model SocialLink {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  type   String
+  id     String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId String         @db.ObjectId
+  type   SocialLinkType
   url    String
+  order  Int            @default(0)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, type])
+  @@map("socialLinks")
 }
 
 model Project {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String         @db.ObjectId
   title       String
   description String
-  category    String
+  category    ProjectCategory
   image       String?
   link        String?
   github      String?
+  isPublished Boolean        @default(true)
+  order       Int            @default(0)
 
   user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   tags ProjectTag[]
+  techStack ProjectTechStack[]
 
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  ProjectTechStack ProjectTechStack[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, category])
+  @@index([isPublished])
+  @@map("projects")
 }
 
 model ProjectTag {
@@ -74,6 +152,10 @@ model ProjectTag {
   name      String
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([projectId, name])
+  @@map("projectTags")
 }
 
 model Experience {
@@ -81,30 +163,39 @@ model Experience {
   userId         String    @db.ObjectId
   company        String
   position       String
-  description    String
+  description    String    @db.String
   startDate      DateTime
   endDate        DateTime?
-  isCurrent      Boolean
+  isCurrent      Boolean   @default(false)
   location       String
   companyLogo    String?
   companyWebsite String?
+  order          Int       @default(0)
 
   user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   techStack ExperienceTechStack[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, isCurrent])
+  @@map("experiences")
 }
 
 model TechStack {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String @unique
+  icon      String?
+  category  String?
 
   experiences ExperienceTechStack[]
   projects    ProjectTechStack[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("techStacks")
 }
 
 model ExperienceTechStack {
@@ -114,6 +205,11 @@ model ExperienceTechStack {
 
   experience Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   techStack  TechStack  @relation(fields: [techStackId], references: [id], onDelete: Cascade)
+
+  @@unique([experienceId, techStackId])
+  @@index([experienceId])
+  @@index([techStackId])
+  @@map("experienceTechStacks")
 }
 
 model ProjectTechStack {
@@ -123,6 +219,11 @@ model ProjectTechStack {
 
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   techStack TechStack @relation(fields: [techStackId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, techStackId])
+  @@index([projectId])
+  @@index([techStackId])
+  @@map("projectTechStacks")
 }
 
 model Education {
@@ -132,75 +233,145 @@ model Education {
   field        String
   startDate    DateTime
   endDate      DateTime?
-  isCurrent    Boolean
+  isCurrent    Boolean   @default(false)
   grade        String?
-  achievements String?
+  achievements String?   @db.String
+  order        Int       @default(0)
 
-  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  educationExperiences EducationExperiences[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificates Certificate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, isCurrent])
+  @@map("educations")
 }
 
-model EducationExperiences {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+model Certificate {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  educationId String   @db.ObjectId
   name        String
   file        String?
-  educationId String  @db.ObjectId
+  description String?
+  order       Int      @default(0)
 
   education Education @relation(fields: [educationId], references: [id], onDelete: Cascade)
   degrees   Degree[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([educationId])
+  @@map("certificates")
 }
 
 model Degree {
-  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String
-  file                  String?
-  educationExperienceId String  @db.ObjectId
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  certificateId String     @db.ObjectId
+  name         String
+  file         String?
+  description  String?
 
-  educationExperience EducationExperiences @relation(fields: [educationExperienceId], references: [id], onDelete: Cascade)
+  certificate Certificate @relation(fields: [certificateId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([certificateId])
+  @@map("degrees")
 }
 
 model Skill {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  category  String
-  icon      String?
-  UserSkill UserSkill[]
+  id       String      @id @default(auto()) @map("_id") @db.ObjectId
+  name     String      @unique
+  category SkillCategory
+  icon     String?
+
+  userSkills UserSkill[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("skills")
 }
 
 model UserSkill {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String @db.ObjectId
-  skillId String @db.ObjectId
-  level   Int?
+  id      String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String      @db.ObjectId
+  skillId String      @db.ObjectId
+  level   SkillLevel? @default(intermediate)
+  years   Int?
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
+  @@map("userSkills")
 }
 
 model Contact {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String  @db.ObjectId
+  id      String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String        @db.ObjectId
   name    String
   email   String
-  message String
-  status  String  @default("pending")
-  reply   String?
+  phone   String?
+  message String        @db.String
+  status  ContactStatus @default(pending)
+  reply   String?       @db.String
+  repliedAt DateTime?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([status])
+  @@index([createdAt])
+  @@map("contacts")
+}
+
+model Visit {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  ip        String?
+  userAgent String?
+  path      String?
+  referer   String?
+  country   String?
+  city      String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([path])
+  @@map("visits")
+}
+
+model CvDownload {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  ip        String?
+  userAgent String?
+  country   String?
+  city      String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("cvDownloads")
 }
