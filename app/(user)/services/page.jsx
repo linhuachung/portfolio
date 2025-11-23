@@ -1,32 +1,32 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { BsArrowDownRight } from "react-icons/bs";
 
 const services = [
   {
     num: "01",
-    title: "Web Development",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa cumque dolores ducimus eum hic, impedit recusandae sed totam ut veniam.",
-    href: ""
+    title: "Frontend Development",
+    description: "Building responsive, high-performance web applications using ReactJS, NextJS, and modern JavaScript. Specializing in component-based architecture, state management with Redux, and seamless API integration for optimal user experiences.",
+    href: "/work"
   },
   {
     num: "02",
-    title: "UI/UX Design",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa cumque dolores ducimus eum hic, impedit recusandae sed totam ut veniam.",
-    href: ""
+    title: "UI/UX Implementation",
+    description: "Translating design mockups into pixel-perfect, accessible interfaces using HTML5, CSS3, and Tailwind CSS. Focus on responsive design, cross-browser compatibility, and modern CSS techniques for engaging user interfaces.",
+    href: "/work"
   },
   {
     num: "03",
-    title: "Logo Design",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa cumque dolores ducimus eum hic, impedit recusandae sed totam ut veniam.",
-    href: ""
+    title: "Performance Optimization",
+    description: "Optimizing web applications for speed and efficiency through code splitting, lazy loading, and modern bundling techniques. Implementing best practices for Core Web Vitals and ensuring smooth user interactions.",
+    href: "/work"
   },
   {
     num: "04",
-    title: "SEO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa cumque dolores ducimus eum hic, impedit recusandae sed totam ut veniam.",
-    href: ""
+    title: "Full-Stack Integration",
+    description: "Developing complete web solutions with NodeJS backend integration, RESTful API development, and database management. Ensuring seamless communication between frontend and backend systems.",
+    href: "/work"
   }
 ];
 
