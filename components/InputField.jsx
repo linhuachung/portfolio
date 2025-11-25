@@ -1,11 +1,10 @@
-import { Input } from "@/components/ui/input";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useInputFocus } from "@/lib/hooks";
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useInputFocus } from '@/lib/hooks';
 
 export function InputField( {
   name,
   control,
-  register,
   errors,
   placeholder,
   onBlur,
@@ -13,6 +12,7 @@ export function InputField( {
   isSubmitting,
   className,
   onChange,
+  register: _register,
   ...props
 } ) {
   const { isFocused, setIsFocused } = useInputFocus( name, isSubmitting );
@@ -24,29 +24,33 @@ export function InputField( {
         <FormItem className={ `${className} space-y-0 relative w-full` }>
           <FormLabel
             htmlFor={ name }
-            className={ `absolute left-3 transition-all text-gray-500 ${
-              isFocused
-                ? "z-10 bg-secondary text-white/60 -top-0.5 text-xs px-2 before:content-[''] before:absolute before:-z-10 before:left-0 before:right-0 before:top-0 before:bottom-0 before:bg-secondary before:rounded-sm"
-                : "top-3 text-sm"
-            } ${errors[name] ? "text-red-500" : ""}` }
+            className={ `absolute left-4 transition-all duration-200 pointer-events-none ${
+              isFocused || field.value
+                ? 'z-10 -top-2.5 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary'
+                : 'top-3.5 text-sm text-gray-500 dark:text-gray-400'
+            } ${errors[name] ? 'text-red-500 dark:text-red-400' : ''}` }
           >
             { placeholder }
           </FormLabel>
           <FormControl>
             <Input
               id={ name }
-              type={ type || "text" }
+              type={ type || 'text' }
               placeholder=""
-              className={ `input-autofill w-full pt-2 pb-2 bg-transparent border ${
-                errors[name] ? "border-red-500" : "focus:border-accent"
+              className={ `input-autofill w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border ${
+                errors[name] ? 'border-red-500' : 'focus:border-accent-light dark:focus:border-accent'
               }` }
+
               onFocus={ () => setIsFocused( true ) }
               onBlur={ ( e ) => {
-                setIsFocused( e.target.value !== "" );
+                setIsFocused( e.target.value !== '' );
                 onBlur && onBlur( e );
               } }
-              onChange={ onChange }
-              { ...field }
+              onChange={ ( e ) => {
+                field.onChange( e );
+                onChange && onChange( e );
+              } }
+              value={ field.value || '' }
               { ...props }
             />
           </FormControl>

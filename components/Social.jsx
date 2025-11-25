@@ -1,11 +1,11 @@
-import React from "react";
-import Link from "next/link";
-import { FaFacebook, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import React from 'react';
+import Link from 'next/link';
+import { FaFacebook, FaGithub, FaLinkedinIn } from 'react-icons/fa';
 
 const socials = [
-  { icon: <FaGithub/>, path: "https://github.com/linhuachung" },
-  { icon: <FaLinkedinIn/>, path: "https://www.linkedin.com/in/lin-hua-chung-200158179/" },
-  { icon: <FaFacebook/>, path: "" }
+  { icon: <FaGithub/>, path: 'https://github.com/linhuachung' },
+  { icon: <FaLinkedinIn/>, path: 'https://www.linkedin.com/in/lin-hua-chung-200158179/' },
+  { icon: <FaFacebook/>, path: '' }
 ];
 
 function Social( { containerStyles, iconStyles } ) {

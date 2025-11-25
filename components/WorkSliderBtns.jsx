@@ -1,6 +1,6 @@
-"user client";
-import { useSwiper } from "swiper/react";
-import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
+'user client';
+import { useSwiper } from 'swiper/react';
+import { PiCaretLeftBold, PiCaretRightBold } from 'react-icons/pi';
 
 
 function WorkSliderBtns( { containerStyles, btnStyles, iconStyles } ) {

@@ -1,5 +1,5 @@
-import * as Toast from "@radix-ui/react-toast";
-import { Button } from "@/components/ui/button";
+import * as Toast from '@radix-ui/react-toast';
+import { Button } from '@/components/ui/button';
 
 export function ToastSuccess( { open, setOpen } ) {
   return (
@@ -23,7 +23,7 @@ export function ToastSuccess( { open, setOpen } ) {
       </Toast.Root>
       <Toast.Viewport
         className={ `fixed inset-0 flex items-center justify-center p-4 ${
-          open && "bg-primary/95"
+          open && 'bg-primary/95'
         }` }
       />
     </>
