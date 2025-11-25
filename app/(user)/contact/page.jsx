@@ -1,92 +1,92 @@
-"use client";
+'use client';
 
-import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from "react-icons/fa";
-import FormContainer from "@/app/(user)/contact/components/FormContainer";
-import MotionWrapper from "@/components/MotionWrapper";
+import FormContainer from '@/app/(user)/contact/components/FormContainer';
+import MotionWrapper from '@/components/MotionWrapper';
+import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 
 const info = [
   {
     icon: <FaPhoneAlt/>,
-    title: "Phone",
-    description: "(+84) 849966 277"
+    title: 'Phone',
+    description: '(+84) 849966 277'
   },
   {
     icon: <FaEnvelope/>,
-    title: "Email",
-    description: "chunglh1304@gmail.com"
+    title: 'Email',
+    description: 'chunglh1304@gmail.com'
   },
   {
     icon: <FaMapMarkedAlt/>,
-    title: "Address",
-    description: "Ho Chi Minh City",
-    link: "https://maps.app.goo.gl/tLqFHdNkU8eeYoXx6"
+    title: 'Address',
+    description: 'Ho Chi Minh City',
+    link: 'https://maps.app.goo.gl/tLqFHdNkU8eeYoXx6'
   }
 ];
 
 function Contact() {
   const renderFieldValueInfo = ( item ) => {
     switch ( item.title ) {
-    case "Phone":
-      return (
-        <li className="flex items-center gap-6" key={ item.title }>
-          <div
-            className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
-            <div className="text-[28px]">{ item.icon }</div>
-          </div>
-          <div className="flex-1">
-            <p className="text-white/60">{ item.title }</p>
-            <a className="text-lg hover:text-accent transition-all duration-300"
-              href={ `tel:${item.description}` }>
-              { item.description }
-            </a>
-          </div>
-        </li>
-      );
-    case "Email":
-      return (
-        <li className="flex items-center gap-6" key={ item.title }>
-          <div
-            className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
-            <div className="text-[28px]">{ item.icon }</div>
-          </div>
-          <div className="flex-1">
-            <p className="text-white/60">{ item.title }</p>
-            <a href={ `mailto:${item.description}` }
-              className="text-lg hover:text-accent transition-all duration-300">
-              { item.description }
-            </a>
-          </div>
-        </li>
-      );
-    case "Address":
-      return (
-        <li className="flex items-center gap-6" key={ item.title }>
-          <div
-            className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
-            <div className="text-[28px]">{ item.icon }</div>
-          </div>
-          <div className="flex-1">
-            <p className="text-white/60">{ item.title }</p>
-            <a href={ item.link } target="_blank"
-              className="text-lg hover:text-accent transition-all duration-300">
-              { item.description }
-            </a>
-          </div>
-        </li>
-      );
-    default:
-      return (
-        <li className="flex items-center gap-6" key={ item.title }>
-          <div
-            className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-secondary text-accent rounded-md flex items-center justify-center">
-            <div className="text-[28px]">{ item.icon }</div>
-          </div>
-          <div className="flex-1">
-            <p className="text-white/60">{ item.title }</p>
-            <p className="text-lg">{ item.description }</p>
-          </div>
-        </li>
-      );
+      case 'Phone':
+        return (
+          <li className="flex items-center gap-6" key={ item.title }>
+            <div
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
+              <div className="text-[28px]">{ item.icon }</div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <a className="text-lg text-gray-900 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all duration-300"
+                href={ `tel:${item.description}` }>
+                { item.description }
+              </a>
+            </div>
+          </li>
+        );
+      case 'Email':
+        return (
+          <li className="flex items-center gap-6" key={ item.title }>
+            <div
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
+              <div className="text-[28px]">{ item.icon }</div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <a href={ `mailto:${item.description}` }
+                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
+                { item.description }
+              </a>
+            </div>
+          </li>
+        );
+      case 'Address':
+        return (
+          <li className="flex items-center gap-6" key={ item.title }>
+            <div
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
+              <div className="text-[28px]">{ item.icon }</div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <a href={ item.link } target="_blank"
+                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
+                { item.description }
+              </a>
+            </div>
+          </li>
+        );
+      default:
+        return (
+          <li className="flex items-center gap-6" key={ item.title }>
+            <div
+              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
+              <div className="text-[28px]">{ item.icon }</div>
+            </div>
+            <div className="flex-1">
+              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
+              <p className="text-lg text-gray-900 dark:text-white">{ item.description }</p>
+            </div>
+          </li>
+        );
     }
   };
   return (

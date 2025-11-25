@@ -1,6 +1,6 @@
-import Toast from "@/components/Toast";
-import { TOAST_STATUS } from "@/constants/toast";
-import axiosInstance from "@/lib/axios";
+import Toast from '@/components/Toast';
+import { TOAST_STATUS } from '@/constants/toast';
+import axiosInstance from '@/lib/axios';
 
 const methods = {
   get: ( url ) => axiosInstance.get( url ),
@@ -9,10 +9,10 @@ const methods = {
   delete: ( url, data ) => axiosInstance.delete( url, { data } ),
   postFile: ( url, file ) => {
     const formData = new FormData();
-    formData.append( "file", file );
+    formData.append( 'file', file );
     return axiosInstance.post( url, formData, {
       headers: {
-        "Content-Type": "multipart/form-data"
+        'Content-Type': 'multipart/form-data'
       }
     } );
   }
@@ -29,14 +29,14 @@ const callApi = async ( {
   },
   onFinally = () => {
   },
-  textSuccess = ""
+  textSuccess = ''
 } ) => {
   onRequest( textSuccess );
 
   try {
     const response = await methods[method](
       url,
-      method === "delete" || method === "postFile" ? data : data
+      method === 'delete' || method === 'postFile' ? data : data
     );
     onSuccess( response );
     response.message && Toast( {
@@ -47,30 +47,30 @@ const callApi = async ( {
     return response;
   } catch ( error ) {
     const dataError = error.message;
-    if ( error.code === "ERR_BAD_REQUEST" ) {
+    if ( error.code === 'ERR_BAD_REQUEST' ) {
       Toast( {
         title: dataError,
         type: TOAST_STATUS.error
       } );
-      throw new Error( "Network error" );
+      throw new Error( 'Network error' );
     }
-    if ( error.code === "ERROR_NETWORK" ) {
+    if ( error.code === 'ERROR_NETWORK' ) {
       Toast( {
-        title: "Network error",
+        title: 'Network error',
         type: TOAST_STATUS.error
       } );
-      throw new Error( "Network error" );
+      throw new Error( 'Network error' );
     }
-    if ( dataError.error[0].code === "401" ) {
+    if ( dataError.error[0].code === '401' ) {
       localStorage.clear();
-      window.location.href = "/login";
+      window.location.href = '/login';
     }
     onFailed( dataError );
     Toast( {
-      title: "ListMessageError[dataError.error[0].code] || dataError.error[0].code",
+      title: 'ListMessageError[dataError.error[0].code] || dataError.error[0].code',
       type: TOAST_STATUS.error
     } );
-    throw new Error( dataError.message || "Unknown error occurred" );
+    throw new Error( dataError.message || 'Unknown error occurred' );
   } finally {
     onFinally();
   }

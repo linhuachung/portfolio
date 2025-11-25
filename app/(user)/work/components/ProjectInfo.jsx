@@ -1,19 +1,18 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 function Title( { children } ) {
-  return <div className="text-white font-bold">{ children }</div>;
+  return <div className="text-gray-900 dark:text-white font-bold">{ children }</div>;
 }
 
 function Info( { children } ) {
-  return <div className="col-span-2 text-white/60 text-base">{ children }</div>;
+  return <div className="col-span-2 text-gray-700 dark:text-white/60 text-base">{ children }</div>;
 }
 
 function Row( { children, className } ) {
   return (
     <div
       className={ cn(
-        "grid grid-cols-1 sm:grid-cols-3 border-b border-white/20 px-6 py-3 items-baseline",
+        'grid grid-cols-1 sm:grid-cols-3 border-b border-gray-300 dark:border-white/20 px-6 py-3 items-baseline',
         className
       ) }
     >
@@ -34,7 +33,7 @@ function ProjectInfo( { info } ) {
     link
   } = info;
   return (
-    <div className="bg-primary border border-white/20 shadow-lg rounded-2xl mb-6">
+    <div className="bg-[#f0f0f0] dark:bg-primary border border-gray-300 dark:border-white/20 shadow-lg rounded-2xl mb-6">
       <div className="grid">
         { projectName && (
           <Row>
@@ -49,7 +48,7 @@ function ProjectInfo( { info } ) {
               <a
                 href={ link }
                 target="_blank"
-                className="hover:text-accent/60 transition-all duration-300"
+                className="hover:text-accent-light/60 dark:hover:text-accent/60 transition-all duration-300"
               >
                 { company }
               </a>
@@ -77,7 +76,7 @@ function ProjectInfo( { info } ) {
         { teamSize && (
           <Row>
             <Title>Technologies:</Title>
-            <Info>{ technologies.join( ", " ) }</Info>
+            <Info>{ technologies.join( ', ' ) }</Info>
           </Row>
         ) }
         { rolesAndResponsibilities && (

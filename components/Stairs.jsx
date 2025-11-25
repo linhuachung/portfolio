@@ -1,14 +1,14 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 const stairAnimation = {
   initial: {
-    top: "0%"
+    top: '0%'
   },
   animate: {
-    top: "100%"
+    top: '100%'
   },
   exit: {
-    top: ["100%", "0%"]
+    top: ['100%', '0%']
   }
 };
 
@@ -29,7 +29,7 @@ function Stairs() {
           exit="exit"
           transition={ {
             duration: 0.4,
-            ease: "easeInOut",
+            ease: 'easeInOut',
             delay: reverseIndex( index ) * 0.1
           } }
           className="w-full h-full bg-white relative"

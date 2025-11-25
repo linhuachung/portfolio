@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import CountUp from "react-countup";
+import CountUp from 'react-countup';
 
 const stats = [
   {
     num: 3,
-    text: "Years of experience",
+    text: 'Years of experience',
     isPlus: true
   },
   {
     num: 8,
-    text: "Projects completed"
+    text: 'Projects completed'
   },
   {
     num: 4,
-    text: "Technologies mastered",
+    text: 'Technologies mastered',
     isPlus: true
   },
   {
     num: 500,
-    text: "Code commits",
+    text: 'Code commits',
     isPlus: true
   }
 ];
@@ -38,10 +38,10 @@ function Stats() {
                   duration={ 3.5 }
                   delay={ 2 }
                   className="text-4xl xl:text-6xl font-extrabold"
-                  suffix={ item.isPlus && "+" }
+                  suffix={ item.isPlus && '+' }
                 ></CountUp>
                 <p
-                  className={ `${item.text.length < 15 ? "max-w-[100px]" : "max-w-[150px]"} leading-snug text-white/80` }>{
+                  className={ `${item.text.length < 15 ? 'max-w-[100px]' : 'max-w-[150px]'} leading-snug text-gray-700 dark:text-white/80` }>{
                     item.text }
                 </p>
               </div>

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import Cookies from "js-cookie";
-import Header from "@/components/Header";
-import { ADMIN_LINKS } from "@/constants/route";
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Cookies from 'js-cookie';
+import Header from '@/components/Header';
+import { ADMIN_LINKS } from '@/constants/route';
 
 function AdminLayout( { children } ) {
   const router = useRouter();
@@ -12,14 +12,14 @@ function AdminLayout( { children } ) {
   const [isLogin, setIsLogin] = useState( null );
 
   useEffect( () => {
-    const token = Cookies.get( "token" );
+    const token = Cookies.get( 'token' );
 
-    if ( !token && pathname.startsWith( "/admin" ) && pathname !== "/admin/login" ) {
-      router.replace( "/admin/login" );
+    if ( !token && pathname.startsWith( '/admin' ) && pathname !== '/admin/login' ) {
+      router.replace( '/admin/login' );
     }
 
-    if ( token && pathname === "/admin/login" ) {
-      router.replace( "/admin" );
+    if ( token && pathname === '/admin/login' ) {
+      router.replace( '/admin' );
     }
     setIsLogin( token );
   }, [pathname, router] );
