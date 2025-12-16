@@ -33,7 +33,7 @@ function Home() {
                             Hello I&apos;m <br/> <span className="text-accent-light dark:text-accent">Hua Chung</span>
             </h1>
             <p className="max-w-[500px] mb-9 text-gray-700 dark:text-white/80">
-                            A passionate Frontend Developer with 3+ years of experience crafting high-performance web applications for international markets.
+                            A passionate Frontend Developer with 4+ years of experience crafting high-performance web applications for international markets.
               <br/><br/>
                             Specialized in ReactJS, NextJS, and modern JavaScript frameworks, I focus on building scalable, responsive applications with seamless API integration and optimal user experiences.
               <br/><br/>
