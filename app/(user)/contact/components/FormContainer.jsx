@@ -2,12 +2,14 @@
 
 import FormWrapper from '@/components/FormWrapper';
 import { InputField } from '@/components/InputField';
+import { PhoneField } from '@/components/PhoneField';
 import { SelectField } from '@/components/SelectField';
 import { TextareaField } from '@/components/TextareaField';
 import Toast from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { TOAST_STATUS } from '@/constants/toast';
 import { EmailSubmit } from '@/lib/email';
+import { formatPhoneForDisplay } from '@/lib/phone-utils';
 import { validationContactSchema } from '@/services/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -19,7 +21,7 @@ function FormContainer() {
   } );
 
   const {
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     reset,
     control
   } = form;
@@ -32,7 +34,12 @@ function FormContainer() {
 
   const onSubmit = async ( data ) => {
     try {
-      await EmailSubmit( data );
+      const formattedData = {
+        ...data,
+        phone: formatPhoneForDisplay( data.phone )
+      };
+
+      await EmailSubmit( formattedData );
       reset( {
         firstname: '',
         lastname: '',
@@ -69,35 +76,31 @@ function FormContainer() {
             placeholder="Firstname"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
           />
           <InputField
             name="lastname"
             placeholder="Lastname"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
           />
           <InputField
             name="email"
             placeholder="Email"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
           />
-          <InputField
+          <PhoneField
             name="phone"
             placeholder="Phone number"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
+            required={ true }
           />
         </div>
         <div className="my-5">
           <SelectField
             name="service"
             options={ services }
-            errors={ errors }
             placeholder="Select a service"
             labelFocus="Service"
             control={ control }
@@ -109,7 +112,6 @@ function FormContainer() {
             name="message"
             placeholder="Type your message here"
             control={ control }
-            errors={ errors }
             isSubmitting={ isSubmitting }
           />
         </div>

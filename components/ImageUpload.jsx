@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-function ImageUpload( { name, control, className, watch, setValue, width, height, setError } ) {
+function ImageUpload( { name, control, className, watch, setValue, width, height, setError, disabled = false } ) {
   const avatarUrl = watch( name );
   const defaultAvatar = '/assets/avatarDefault.png';
   const [preview, setPreview] = useState( avatarUrl || defaultAvatar );
@@ -71,8 +71,14 @@ function ImageUpload( { name, control, className, watch, setValue, width, height
             id={ name }
             onChange={ handleAvatarChange }
             ref={ fileInputRef }
+            disabled={ disabled }
           />
-          <Button type="button" onClick={ () => fileInputRef.current.click() }>
+          <Button
+            type="button"
+            onClick={ () => !disabled && fileInputRef.current?.click() }
+            disabled={ disabled }
+            className={ disabled ? 'opacity-60 cursor-not-allowed' : '' }
+          >
             Upload Image
           </Button>
         </div>

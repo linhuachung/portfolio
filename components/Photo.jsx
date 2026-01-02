@@ -2,7 +2,9 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-function Photo() {
+function Photo( { avatar } ) {
+  const avatarSrc = avatar || '/assets/new-avatar.jpg';
+
   return (
     <div className="w-full h-full relative">
       <motion.div
@@ -30,7 +32,7 @@ function Photo() {
           className="w-[270px] h-[270px] xl:w-[450px] xl:h-[450px] dark:mix-blend-lighten absolute"
         >
           <Image
-            src="/assets/new-avatar.jpg"
+            src={ avatarSrc }
             priority
             quality={ 100 }
             fill

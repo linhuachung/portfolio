@@ -25,14 +25,16 @@ function AdminLayout( { children } ) {
   }, [pathname, router] );
 
   return (
-    <div className="h-screen">
+    <div className="h-screen flex flex-col overflow-hidden">
       { isLogin && <Header
         isAdmin={ true }
         title="Admin"
         links={ ADMIN_LINKS }
       /> }
 
-      { children }
+      <div className="flex-1 overflow-hidden">
+        { children }
+      </div>
     </div>
   );
 
