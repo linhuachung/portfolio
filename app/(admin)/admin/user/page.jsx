@@ -59,7 +59,7 @@ export default function EditProfile() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Edit Homepage Content</h2>
         </div>
         <FormWrapper form={ form } onSubmit={ handleSave } isLoading={ isSubmitting } className="flex-1 min-h-0 overflow-hidden !p-0 !bg-transparent !rounded-none overflow-y-auto">
-          <div className="h-full overflow-y-auto overflow-x-hidden grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[1fr_1.2fr_0.8fr] gap-4 sm:gap-4 md:gap-5 items-start custom-scrollbar pr-2">
+          <div className="h-full overflow-y-auto overflow-x-hidden grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[1fr_1.2fr_0.8fr] gap-4 sm:gap-4 md:gap-5 items-start custom-scrollbar p-2">
             <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
               <BasicInfoSection
                 control={ control }
@@ -68,6 +68,7 @@ export default function EditProfile() {
                 setError={ setError }
                 clearErrors={ clearErrors }
                 disabled={ !isEditMode }
+                isSubmitting={ isSubmitting }
               />
             </div>
 

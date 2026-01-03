@@ -5,7 +5,7 @@ import { validateCityForCountry } from '@/lib/address-utils';
 import { useEffect, useRef } from 'react';
 import { useWatch } from 'react-hook-form';
 
-export function AddressField( { control, setValue, setError, clearErrors, disabled = false, className } ) {
+export function AddressField( { control, setValue, setError, clearErrors, disabled = false, className, isSubmitting = false } ) {
   const country = useWatch( { control, name: 'addressCountry' } );
   const city = useWatch( { control, name: 'addressCity' } );
   const previousCountryRef = useRef( country );
@@ -70,7 +70,7 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           placeholder="Select country"
           labelFocus="Country"
           control={ control }
-          isSubmitting={ false }
+          isSubmitting={ isSubmitting }
           disabled={ disabled }
           onValueChange={ handleCountryChange }
         />
@@ -81,7 +81,7 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           placeholder={ country ? 'Select city' : 'Select country first' }
           labelFocus="City"
           control={ control }
-          isSubmitting={ false }
+          isSubmitting={ isSubmitting }
           disabled={ disabled || !country }
         />
       </div>

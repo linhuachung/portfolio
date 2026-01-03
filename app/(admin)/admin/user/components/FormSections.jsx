@@ -8,7 +8,7 @@ import { SelectionInputField } from '@/components/SelectionInputField';
 import { TextareaField } from '@/components/TextareaField';
 import { BIO_PARAGRAPH_CONFIG, SOCIAL_LINK_OPTIONS } from '../constants';
 
-export function BasicInfoSection( { control, watch, setValue, setError, clearErrors, disabled = false } ) {
+export function BasicInfoSection( { control, watch, setValue, setError, clearErrors, disabled = false, isSubmitting = false } ) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2">Basic Information</h3>
@@ -67,6 +67,7 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
         setError={ setError }
         clearErrors={ clearErrors }
         disabled={ disabled }
+        isSubmitting={ isSubmitting }
       />
     </div>
   );

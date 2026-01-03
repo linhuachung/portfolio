@@ -40,10 +40,10 @@ export function SelectField( {
           <FormItem className="relative w-full">
             <FormLabel
               htmlFor={ name }
-              className={ `absolute left-3 transition-all text-gray-500 dark:text-gray-400 ${
+              className={ `absolute left-4 transition-all duration-200 pointer-events-none text-gray-500 dark:text-gray-400 ${
                 isFocused
-                  ? 'z-10 bg-white dark:bg-secondary text-gray-600 dark:text-white/60 -top-2 text-xs px-2 before:content-[\'\'] before:absolute before:-z-10 before:left-0 before:right-0 before:top-0 before:bottom-0 before:bg-white dark:before:bg-secondary before:rounded-sm'
-                  : 'top-3 text-sm'
+                  ? 'z-10 -top-1 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary'
+                  : 'top-[17.5px] text-sm'
               } ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
             >
               { displayLabel }
@@ -55,7 +55,7 @@ export function SelectField( {
             >
               <FormControl>
                 <SelectTrigger
-                  className={ `w-full pt-2 pb-2 bg-transparent border-2 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
+                  className={ `w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
                 >
                   <SelectValue/>
                 </SelectTrigger>

@@ -3,7 +3,6 @@
 import FormContainer from '@/app/(user)/contact/components/FormContainer';
 import MotionWrapper from '@/components/MotionWrapper';
 import { PhoneDisplay } from '@/components/PhoneDisplay';
-import { DEFAULT_CONTACT_INFO } from '@/constants/contact';
 import { fetchContactInfo, formatContactInfoForDisplay } from '@/lib/contact-utils';
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaMapMarkedAlt } from 'react-icons/fa';
@@ -24,7 +23,7 @@ function Contact() {
     loadContactInfo();
   }, [] );
 
-  const formattedContactInfo = formatContactInfoForDisplay( contactInfo, DEFAULT_CONTACT_INFO );
+  const formattedContactInfo = formatContactInfoForDisplay( contactInfo );
 
   const info = [
     {
@@ -39,7 +38,7 @@ function Contact() {
       description: formattedContactInfo.address,
       link: formattedContactInfo.addressLink
     }
-  ];
+  ].filter( item => item.description ); // Only show items with data
   const renderFieldValueInfo = ( item ) => {
     switch ( item.title ) {
       case 'Email':
