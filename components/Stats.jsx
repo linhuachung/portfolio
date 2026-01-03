@@ -2,7 +2,7 @@
 
 import CountUp from 'react-countup';
 
-const stats = [
+const defaultStats = [
   {
     num: 4,
     text: 'Years of experience',
@@ -24,12 +24,34 @@ const stats = [
   }
 ];
 
-function Stats() {
+function Stats( { stats } ) {
+  const statsData = stats ? [
+    {
+      num: stats.years || 4,
+      text: 'Years of experience',
+      isPlus: true
+    },
+    {
+      num: stats.projects || 8,
+      text: 'Projects completed'
+    },
+    {
+      num: stats.technologies || 4,
+      text: 'Technologies mastered',
+      isPlus: true
+    },
+    {
+      num: stats.commits || 500,
+      text: 'Code commits',
+      isPlus: true
+    }
+  ] : defaultStats;
+
   return (
     <section className="pt-4 pb-12 xl:pt-0 xl:pb-0">
       <div className="container mx-auto">
         <div className="flex flex-wrap gap-6 max-w-[80vw] mx-auto xl:max-w-none">
-          { stats.map( ( item, i ) => {
+          { statsData.map( ( item, i ) => {
             return (
               <div key={ i }
                 className="flex-1 flex gap-4 items-center justify-center xl:justify-start">

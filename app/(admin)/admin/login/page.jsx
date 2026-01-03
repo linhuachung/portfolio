@@ -22,7 +22,7 @@ function AdminLogin() {
   } );
 
   const {
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     control,
     reset
   } = form;
@@ -58,7 +58,6 @@ function AdminLogin() {
             placeholder="Username"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
           />
           <InputField
             name="password"
@@ -66,7 +65,6 @@ function AdminLogin() {
             type="password"
             control={ control }
             isSubmitting={ isSubmitting }
-            errors={ errors }
           />
         </div>
         <div className="flex justify-center">

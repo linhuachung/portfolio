@@ -72,8 +72,15 @@ model User {
   avatar   String?
   bio      String?
   phone    String?
-  website  String?
   role     UserRole @default(user)
+  title    String?
+  greeting String?
+  bioParagraph String? @db.String
+  stats    Json?
+  cvPath   String?
+  addressCountry String?
+  addressCity    String?
+  address        String?
 
   socialLinks SocialLink[]
   projects    Project[]

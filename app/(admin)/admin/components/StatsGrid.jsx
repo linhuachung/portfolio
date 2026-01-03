@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import StatCard from '@/components/admin/StatCard';
+import { motion } from 'framer-motion';
 
 export default function StatsGrid( { stats, statsConfig } ) {
   return (

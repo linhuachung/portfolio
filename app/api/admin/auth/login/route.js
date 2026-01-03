@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prisma';
 import bcrypt from 'bcrypt';
-import { generateToken } from '@/lib/jwt';
+import { generateToken, generateRefreshToken } from '@/lib/jwt';
 import STATUS_CODES from '@/constants/status';
 import { DataResponse } from '@/lib/data-response';
 
@@ -22,15 +22,31 @@ export async function POST( req ) {
       return NextResponse.json( DataResponse( STATUS_CODES.UNAUTHORIZED, 'Invalid password', null ), { status: STATUS_CODES.UNAUTHORIZED } );
     }
 
-    const token = generateToken( {
+    const accessToken = generateToken( {
       id: user.id,
       username: user.username,
       role: user.role
     } );
 
-    return NextResponse.json( DataResponse( STATUS_CODES.SUCCESS, 'Login success', token ), { status: STATUS_CODES.SUCCESS } );
+    const refreshToken = generateRefreshToken( {
+      id: user.id,
+      username: user.username,
+      role: user.role
+    } );
+
+    // Return both tokens
+    return NextResponse.json(
+      DataResponse( STATUS_CODES.SUCCESS, 'Login success', {
+        accessToken,
+        refreshToken
+      } ),
+      { status: STATUS_CODES.SUCCESS }
+    );
 
   } catch ( error ) {
-    return NextResponse.json( DataResponse( STATUS_CODES.UNAUTHORIZED, ' error.message', null ), { status: STATUS_CODES.SERVER_ERROR }, { status: STATUS_CODES.SERVER_ERROR } );
+    return NextResponse.json(
+      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
+      { status: STATUS_CODES.SERVER_ERROR }
+    );
   }
 }

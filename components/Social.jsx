@@ -1,25 +1,45 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaFacebook, FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import { FaFacebook, FaGithub, FaLinkedinIn, FaTwitter, FaInstagram, FaGlobe } from 'react-icons/fa';
 
-const socials = [
-  { icon: <FaGithub/>, path: 'https://github.com/linhuachung' },
-  { icon: <FaLinkedinIn/>, path: 'https://www.linkedin.com/in/lin-hua-chung-200158179/' },
-  { icon: <FaFacebook/>, path: '' }
-];
+const iconMap = {
+  github: FaGithub,
+  linkedin: FaLinkedinIn,
+  facebook: FaFacebook,
+  twitter: FaTwitter,
+  instagram: FaInstagram,
+  website: FaGlobe
+};
 
-function Social( { containerStyles, iconStyles } ) {
+function Social( { socialLinks = [], containerStyles, iconStyles } ) {
+  // If no socialLinks provided, use default
+  const defaultSocials = [
+    { type: 'github', url: 'https://github.com/linhuachung' },
+    { type: 'linkedin', url: 'https://www.linkedin.com/in/lin-hua-chung-200158179/' },
+    { type: 'facebook', url: '' }
+  ];
+
+  const socials = socialLinks.length > 0
+    ? socialLinks.filter( link => link.url && link.url.trim() !== '' )
+    : defaultSocials;
+
   return (
     <div className={ containerStyles }>
       { socials.map( ( social, index ) => {
+        const IconComponent = iconMap[social.type] || FaGlobe;
+        if ( !social.url || social.url.trim() === '' ) {
+          return null;
+        }
+
         return (
           <Link
             key={ index }
-            href={ social.path }
+            href={ social.url }
             className={ iconStyles }
             target="_blank"
+            rel="noopener noreferrer"
           >
-            { social.icon }
+            <IconComponent/>
           </Link>
         );
       } ) }

@@ -1,102 +1,136 @@
 'use client';
 
 import FormWrapper from '@/components/FormWrapper';
-import ImageUpload from '@/components/ImageUpload';
-import { InputField } from '@/components/InputField';
-import { SelectionInputField } from '@/components/SelectionInputField';
-import { TextareaField } from '@/components/TextareaField';
+import Loader from '@/components/Loader';
 import { Button } from '@/components/ui/button';
-import { validationEditProfileSchema } from '@/services/schema';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import {
+  BasicInfoSection,
+  HomepageContentSection,
+  SocialLinksSection,
+  StatisticsSection
+} from './components/FormSections';
+import { useUserForm } from './hooks/useUserForm';
 
 export default function EditProfile() {
-
-  const form = useForm( {
-    resolver: yupResolver( validationEditProfileSchema ),
-    mode: 'onChange',
-    defaultValues: {
-      media: {
-        type: 'gitHub',
-        value: 'https://www.test.com'
-      }
-    }
-  } );
+  const [isEditMode, setIsEditMode] = useState( false );
 
   const {
-    register,
-    handleSubmit: _handleSubmit,
-    setError,
-    setValue,
+    form,
+    loading,
     control,
     watch,
-    reset: _reset,
-    formState: { errors, isSubmitting }
-  } = form;
+    setValue,
+    setError,
+    clearErrors,
+    isSubmitting,
+    onSubmit,
+    handleCancel
+  } = useUserForm();
 
-  const onSubmit = async ( _data ) => {
+  const socialLinks = watch( 'socialLinks' ) || [];
+
+  const handleEdit = () => {
+    setIsEditMode( true );
   };
 
+  const handleCancelClick = () => {
+    handleCancel();
+    setIsEditMode( false );
+  };
+
+  const handleSave = async ( data ) => {
+    await onSubmit( data );
+    setIsEditMode( false );
+  };
+
+  if ( loading ) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader type="ClipLoader" color="#00ff99" size={ 50 } />
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-sm w-full mx-auto p-6 bg-secondary rounded-2xl border border-white/20
-                text-white sm:max-w-3xl">
-      <h2 className="text-3xl font-bold mb-6 text-center">Edit Profile</h2>
-      <FormWrapper form={ form } onSubmit={ onSubmit } isLoading={ isSubmitting }>
-        <ImageUpload
-          watch={ watch }
-          className="mb-4"
-          control={ control }
-          name="avatar"
-          setValue={ setValue }
-          width={ 200 }
-          height={ 200 }
-          setError={ setError }
-        />
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Email"
-          name="email"
-          register={ register }
-          errors={ errors }
-        />
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Name"
-          name="name"
-          register={ register }
-          errors={ errors }
-        />
-        <TextareaField
-          className="mb-4"
-          control={ control }
-          placeholder="Bio"
-          name="bio"
-          register={ register }
-          errors={ errors }
-        />
-        <SelectionInputField
-          className="mb-4"
-          control={ control }
-          placeholderInput="Media"
-          name="media"
-          register={ register }
-          placeholderSelect="Service"
-          errors={ errors }
-          options={ [
-            { value: 'fb', label: 'Facebook' },
-            { value: 'gitHub', label: 'Git Hub' },
-            { value: 'linkedin', label: 'Linkedin' }
-          ] }
-          isSubmitting={ isSubmitting }
-        />
-        <Button type="submit"
-          className="w-full"
-          disabled={ isSubmitting }>
-          { isSubmitting ? 'Saving...' : 'Save Changes' }
-        </Button>
-      </FormWrapper>
+    <div className="h-full w-full p-2 sm:p-4 md:p-6 overflow-hidden">
+      <div className="h-full w-full max-w-[2000px] mx-auto bg-white dark:bg-secondary rounded-xl md:rounded-2xl border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white p-4 sm:p-5 md:p-6 flex flex-col relative overflow-hidden">
+        <div className="flex items-center mb-4 sm:mb-5 md:mb-6 flex-shrink-0">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Edit Homepage Content</h2>
+        </div>
+        <FormWrapper form={ form } onSubmit={ handleSave } isLoading={ isSubmitting } className="flex-1 min-h-0 overflow-hidden !p-0 !bg-transparent !rounded-none overflow-y-auto">
+          <div className="h-full overflow-y-auto overflow-x-hidden grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[1fr_1.2fr_0.8fr] gap-4 sm:gap-4 md:gap-5 items-start custom-scrollbar p-2">
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
+              <BasicInfoSection
+                control={ control }
+                watch={ watch }
+                setValue={ setValue }
+                setError={ setError }
+                clearErrors={ clearErrors }
+                disabled={ !isEditMode }
+                isSubmitting={ isSubmitting }
+              />
+            </div>
+
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
+              <HomepageContentSection
+                control={ control }
+                watch={ watch }
+                setValue={ setValue }
+                setError={ setError }
+                disabled={ !isEditMode }
+              />
+            </div>
+
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
+              <StatisticsSection
+                control={ control }
+                disabled={ !isEditMode }
+              />
+              <SocialLinksSection
+                control={ control }
+                socialLinks={ socialLinks }
+                isSubmitting={ isSubmitting }
+                setValue={ setValue }
+                watch={ watch }
+                clearErrors={ clearErrors }
+                disabled={ !isEditMode }
+              />
+            </div>
+          </div>
+        </FormWrapper>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-2 mt-4 pt-4 border-t border-gray-300 dark:border-white/20 flex-shrink-0">
+          { !isEditMode ? (
+            <Button
+              type="button"
+              onClick={ handleEdit }
+              className="w-full sm:w-auto"
+            >
+              Edit
+            </Button>
+          ) : (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={ handleCancelClick }
+                disabled={ isSubmitting }
+                className="w-full sm:w-auto"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={ form.handleSubmit( handleSave ) }
+                disabled={ isSubmitting }
+                className="w-full sm:w-auto"
+              >
+                { isSubmitting ? 'Saving...' : 'Save' }
+              </Button>
+            </>
+          ) }
+        </div>
+      </div>
     </div>
   );
 }
