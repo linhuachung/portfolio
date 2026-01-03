@@ -6,9 +6,18 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { getInputBorderStyles } from '@/constants/form-styles';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 
-export function SelectField( { isSubmitting, name, control, options, labelFocus, placeholder } ) {
+export function SelectField( {
+  isSubmitting,
+  name,
+  control,
+  options,
+  labelFocus,
+  placeholder,
+  disabled = false,
+  onValueChange
+} ) {
   return (
     <FormField
       control={ control }
@@ -18,6 +27,14 @@ export function SelectField( { isSubmitting, name, control, options, labelFocus,
         const showError = !!error;
         const value = field.value || '';
         const isFocused = !!value && !isSubmitting;
+        const displayLabel = isFocused && labelFocus ? labelFocus : placeholder;
+
+        const handleValueChange = ( newValue ) => {
+          field.onChange( newValue );
+          if ( onValueChange ) {
+            onValueChange( newValue );
+          }
+        };
 
         return (
           <FormItem className="relative w-full">
@@ -29,24 +46,23 @@ export function SelectField( { isSubmitting, name, control, options, labelFocus,
                   : 'top-3 text-sm'
               } ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
             >
-              { !isFocused ? placeholder : labelFocus ? labelFocus : placeholder }
+              { displayLabel }
             </FormLabel>
             <Select
               value={ value }
-              onValueChange={ ( newValue ) => {
-                field.onChange( newValue );
-              } }
+              onValueChange={ handleValueChange }
+              disabled={ disabled }
             >
               <FormControl>
                 <SelectTrigger
-                  className={ `w-full pt-2 pb-2 bg-transparent border-2 ${getInputBorderStyles( showError, true )}` }
+                  className={ `w-full pt-2 pb-2 bg-transparent border-2 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
                 >
                   <SelectValue/>
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                { options.map( ( { value, label } ) => (
-                  <SelectItem key={ value } value={ value }>
+                { options.map( ( { value: optionValue, label } ) => (
+                  <SelectItem key={ optionValue } value={ optionValue }>
                     { label }
                   </SelectItem>
                 ) ) }

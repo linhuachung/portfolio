@@ -1,14 +1,6 @@
 import { InputField } from '@/components/InputField';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { SelectField } from '@/components/SelectField';
 import { COUNTRIES, getCitiesByCountry } from '@/constants/address-data';
-import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { validateCityForCountry } from '@/lib/address-utils';
 import { useEffect, useRef } from 'react';
 import { useWatch } from 'react-hook-form';
@@ -18,24 +10,27 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
   const city = useWatch( { control, name: 'addressCity' } );
   const previousCountryRef = useRef( country );
 
-  // Validate and reset city when country changes
   useEffect( () => {
     const countryChanged = previousCountryRef.current !== country;
     previousCountryRef.current = country;
 
-    // If country is cleared, reset city
+    // Reset city when country is cleared
     if ( !country ) {
       if ( city ) {
         setValue( 'addressCity', '', { shouldValidate: false } );
-        clearErrors( 'addressCity' );
+        if ( clearErrors ) {
+          clearErrors( 'addressCity' );
+        }
       }
       return;
     }
 
-    // If country changed, reset city
+    // Reset city when country changes
     if ( countryChanged && city ) {
       setValue( 'addressCity', '', { shouldValidate: false } );
-      clearErrors( 'addressCity' );
+      if ( clearErrors ) {
+        clearErrors( 'addressCity' );
+      }
       return;
     }
 
@@ -58,116 +53,46 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
 
   const availableCities = country ? getCitiesByCountry( country ) : [];
 
+  const handleCountryChange = () => {
+    // Reset city when country changes (handled by useEffect, but this ensures immediate reset)
+    setValue( 'addressCity', '', { shouldValidate: false } );
+    if ( clearErrors ) {
+      clearErrors( 'addressCity' );
+    }
+  };
+
   return (
     <div className={ `${className} space-y-4` }>
-      <div className="space-y-4">
-        { /* Row 1: Country and City */ }
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-          { /* Country Select */ }
-          <FormField
-            control={ control }
-            name="addressCountry"
-            render={ ( { field, fieldState } ) => {
-              const error = fieldState?.error;
-              const showError = !!error;
-              const value = field.value || '';
-
-              return (
-                <FormItem className="space-y-1.5 w-full">
-                  <FormLabel
-                    htmlFor="addressCountry"
-                    className={ `text-sm text-gray-600 dark:text-gray-400 ${
-                      showError ? 'text-red-500 dark:text-red-400' : ''
-                    }` }
-                  >
-                    Country
-                  </FormLabel>
-                  <Select
-                    value={ value }
-                    onValueChange={ ( newValue ) => {
-                      field.onChange( newValue );
-                      // Reset city when country changes
-                      setValue( 'addressCity', '', { shouldValidate: false } );
-                    } }
-                    disabled={ disabled }
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={ `w-full pt-3 pb-2.5 bg-transparent border-2 text-sm placeholder:text-xs overflow-hidden min-w-0 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
-                      >
-                        <SelectValue placeholder="Select country" className="truncate whitespace-nowrap overflow-hidden min-w-0" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      { COUNTRIES.map( ( { value, label } ) => (
-                        <SelectItem key={ value } value={ value }>
-                          { label }
-                        </SelectItem>
-                      ) ) }
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="ml-1" />
-                </FormItem>
-              );
-            } }
-          />
-
-          { /* City Select */ }
-          <FormField
-            control={ control }
-            name="addressCity"
-            render={ ( { field, fieldState } ) => {
-              const error = fieldState?.error;
-              const showError = !!error;
-              const value = field.value || '';
-              const hasCountry = !!country;
-
-              return (
-                <FormItem className="space-y-1.5 w-full">
-                  <FormLabel
-                    htmlFor="addressCity"
-                    className={ `text-sm text-gray-600 dark:text-gray-400 ${
-                      showError ? 'text-red-500 dark:text-red-400' : ''
-                    }` }
-                  >
-                    City
-                  </FormLabel>
-                  <Select
-                    value={ value }
-                    onValueChange={ field.onChange }
-                    disabled={ disabled || !hasCountry }
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={ `w-full pt-3 pb-2.5 bg-transparent border-2 text-sm placeholder:text-xs overflow-hidden min-w-0 ${getInputBorderStyles( showError, true )} ${disabled || !hasCountry ? FORM_STYLES.disabled : ''}` }
-                      >
-                        <SelectValue placeholder={ hasCountry ? 'Select city' : 'Select country first' } className="truncate whitespace-nowrap overflow-hidden min-w-0" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      { availableCities.map( ( { value, label } ) => (
-                        <SelectItem key={ value } value={ value }>
-                          { label }
-                        </SelectItem>
-                      ) ) }
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="ml-1" />
-                </FormItem>
-              );
-            } }
-          />
-        </div>
-
-        { /* Row 2: Address (Full Width) */ }
-        <InputField
-          className="mb-0"
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <SelectField
+          name="addressCountry"
+          options={ COUNTRIES }
+          placeholder="Select country"
+          labelFocus="Country"
           control={ control }
-          placeholder="Enter address"
-          name="address"
+          isSubmitting={ false }
           disabled={ disabled }
+          onValueChange={ handleCountryChange }
+        />
+
+        <SelectField
+          name="addressCity"
+          options={ availableCities }
+          placeholder={ country ? 'Select city' : 'Select country first' }
+          labelFocus="City"
+          control={ control }
+          isSubmitting={ false }
+          disabled={ disabled || !country }
         />
       </div>
+
+      <InputField
+        className="mb-0"
+        control={ control }
+        placeholder="Enter address"
+        name="address"
+        disabled={ disabled }
+      />
     </div>
   );
 }

@@ -75,18 +75,21 @@ function FormContainer() {
             name="firstname"
             placeholder="Firstname"
             control={ control }
+            required={ true }
             isSubmitting={ isSubmitting }
           />
           <InputField
             name="lastname"
             placeholder="Lastname"
             control={ control }
+            required={ true }
             isSubmitting={ isSubmitting }
           />
           <InputField
             name="email"
             placeholder="Email"
             control={ control }
+            required={ true }
             isSubmitting={ isSubmitting }
           />
           <PhoneField
