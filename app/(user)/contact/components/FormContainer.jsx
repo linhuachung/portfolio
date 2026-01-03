@@ -7,6 +7,7 @@ import { SelectField } from '@/components/SelectField';
 import { TextareaField } from '@/components/TextareaField';
 import Toast from '@/components/Toast';
 import { Button } from '@/components/ui/button';
+import { CONTACT_SERVICES } from '@/constants/contact';
 import { TOAST_STATUS } from '@/constants/toast';
 import { EmailSubmit } from '@/lib/email';
 import { formatPhoneForDisplay } from '@/lib/phone-utils';
@@ -25,12 +26,6 @@ function FormContainer() {
     reset,
     control
   } = form;
-
-  const services = [
-    { value: 'fe', label: 'Frontend Development' },
-    { value: 'be', label: 'Backend Development' },
-    { value: 'fs', label: 'Fullstack Development' }
-  ];
 
   const onSubmit = async ( data ) => {
     try {
@@ -103,7 +98,7 @@ function FormContainer() {
         <div className="my-5">
           <SelectField
             name="service"
-            options={ services }
+            options={ CONTACT_SERVICES }
             placeholder="Select a service"
             labelFocus="Service"
             control={ control }

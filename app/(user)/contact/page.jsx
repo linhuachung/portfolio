@@ -3,9 +3,10 @@
 import FormContainer from '@/app/(user)/contact/components/FormContainer';
 import MotionWrapper from '@/components/MotionWrapper';
 import { PhoneDisplay } from '@/components/PhoneDisplay';
-import { formatAddress } from '@/lib/address-utils';
-import { FaEnvelope, FaMapMarkedAlt } from 'react-icons/fa';
+import { DEFAULT_CONTACT_INFO } from '@/constants/contact';
+import { fetchContactInfo, formatContactInfoForDisplay } from '@/lib/contact-utils';
 import { useEffect, useState } from 'react';
+import { FaEnvelope, FaMapMarkedAlt } from 'react-icons/fa';
 
 function Contact() {
   const [contactInfo, setContactInfo] = useState( {
@@ -15,48 +16,28 @@ function Contact() {
   } );
 
   useEffect( () => {
-    const fetchContactInfo = async () => {
-      try {
-        const response = await fetch( '/api/user/profile?includeContact=true', {
-          cache: 'no-store'
-        } );
-        const result = await response.json();
-
-        if ( result && result.status === 200 && result.data ) {
-          const userData = result.data;
-          const addressData = {
-            address: userData.address,
-            addressCity: userData.addressCity,
-            addressCountry: userData.addressCountry
-          };
-          const formattedAddress = formatAddress( addressData );
-
-          setContactInfo( {
-            phone: userData.phone || '',
-            email: userData.email || '',
-            address: formattedAddress
-          } );
-        }
-      } catch ( error ) {
-        console.error( 'Failed to fetch contact info:', error );
-      }
+    const loadContactInfo = async () => {
+      const info = await fetchContactInfo( true );
+      setContactInfo( info );
     };
 
-    fetchContactInfo();
+    loadContactInfo();
   }, [] );
+
+  const formattedContactInfo = formatContactInfoForDisplay( contactInfo, DEFAULT_CONTACT_INFO );
 
   const info = [
     {
       icon: <FaEnvelope/>,
       title: 'Email',
-      description: contactInfo.email || 'chunglh1304@gmail.com',
-      link: contactInfo.email ? `mailto:${contactInfo.email}` : 'mailto:chunglh1304@gmail.com'
+      description: formattedContactInfo.email,
+      link: formattedContactInfo.emailLink
     },
     {
       icon: <FaMapMarkedAlt/>,
       title: 'Address',
-      description: contactInfo.address || 'Ho Chi Minh City',
-      link: 'https://maps.app.goo.gl/tLqFHdNkU8eeYoXx6'
+      description: formattedContactInfo.address,
+      link: formattedContactInfo.addressLink
     }
   ];
   const renderFieldValueInfo = ( item ) => {
