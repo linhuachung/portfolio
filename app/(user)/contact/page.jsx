@@ -2,46 +2,45 @@
 
 import FormContainer from '@/app/(user)/contact/components/FormContainer';
 import MotionWrapper from '@/components/MotionWrapper';
-import { FaEnvelope, FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
-
-const info = [
-  {
-    icon: <FaPhoneAlt/>,
-    title: 'Phone',
-    description: '(+84) 849966 277'
-  },
-  {
-    icon: <FaEnvelope/>,
-    title: 'Email',
-    description: 'chunglh1304@gmail.com'
-  },
-  {
-    icon: <FaMapMarkedAlt/>,
-    title: 'Address',
-    description: 'Ho Chi Minh City',
-    link: 'https://maps.app.goo.gl/tLqFHdNkU8eeYoXx6'
-  }
-];
+import { PhoneDisplay } from '@/components/PhoneDisplay';
+import { fetchContactInfo, formatContactInfoForDisplay } from '@/lib/contact-utils';
+import { useEffect, useState } from 'react';
+import { FaEnvelope, FaMapMarkedAlt } from 'react-icons/fa';
 
 function Contact() {
+  const [contactInfo, setContactInfo] = useState( {
+    phone: '',
+    email: '',
+    address: ''
+  } );
+
+  useEffect( () => {
+    const loadContactInfo = async () => {
+      const info = await fetchContactInfo( true );
+      setContactInfo( info );
+    };
+
+    loadContactInfo();
+  }, [] );
+
+  const formattedContactInfo = formatContactInfoForDisplay( contactInfo );
+
+  const info = [
+    {
+      icon: <FaEnvelope/>,
+      title: 'Email',
+      description: formattedContactInfo.email,
+      link: formattedContactInfo.emailLink
+    },
+    {
+      icon: <FaMapMarkedAlt/>,
+      title: 'Address',
+      description: formattedContactInfo.address,
+      link: formattedContactInfo.addressLink
+    }
+  ].filter( item => item.description ); // Only show items with data
   const renderFieldValueInfo = ( item ) => {
     switch ( item.title ) {
-      case 'Phone':
-        return (
-          <li className="flex items-center gap-6" key={ item.title }>
-            <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
-              <div className="text-[28px]">{ item.icon }</div>
-            </div>
-            <div className="flex-1">
-              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
-              <a className="text-lg text-gray-900 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all duration-300"
-                href={ `tel:${item.description}` }>
-                { item.description }
-              </a>
-            </div>
-          </li>
-        );
       case 'Email':
         return (
           <li className="flex items-center gap-6" key={ item.title }>
@@ -93,14 +92,19 @@ function Contact() {
     <MotionWrapper
       className="py-6"
     >
-      <div className="container mxauto">
+      <div className="container mx-auto">
         <div className="flex flex-col xl:flex-row gap-[30px]">
-          <div className="xlw-[54%] order-2 xl:order-none">
+          <div className="xl:w-[54%] order-2 xl:order-none">
             <FormContainer/>
           </div>
           <div
             className="flex-1 flex items-center xl:justify-end order-1 xl:order-none mb-8 xl:mb-0">
             <ul className="flex flex-col gap-10">
+              { contactInfo.phone && (
+                <li>
+                  <PhoneDisplay phone={ contactInfo.phone } />
+                </li>
+              ) }
               { info.map( ( item ) => renderFieldValueInfo( item ) ) }
             </ul>
           </div>

@@ -92,6 +92,24 @@
     .dark ::-webkit-scrollbar-thumb:hover {
         background: var(--accent-hover);
     }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
 }
 
 @layer utilities {
@@ -142,4 +160,117 @@
         fill: transparent !important;
         stroke: none !important;
     }
+
+    /* Force error border color override for inputs with error */
+    input[aria-invalid="true"],
+    textarea[aria-invalid="true"],
+    select[aria-invalid="true"],
+    [class*="border-red-600"]:not([class*="border-gray"]):not([class*="border-white"]),
+    [class*="border-red-500"]:not([class*="border-gray"]):not([class*="border-white"]) {
+        border-color: #dc2626 !important;
+    }
+
+    .dark input[aria-invalid="true"],
+    .dark textarea[aria-invalid="true"],
+    .dark select[aria-invalid="true"],
+    .dark [class*="border-red-600"]:not([class*="border-gray"]):not([class*="border-white"]),
+    .dark [class*="border-red-500"]:not([class*="border-gray"]):not([class*="border-white"]) {
+        border-color: #ef4444 !important;
+    }
+}
+
+/* React Quill Styles */
+.rich-text-editor-wrapper {
+    @apply transition-colors;
+}
+
+.rich-text-editor-wrapper .ql-snow {
+    border: none !important;
+}
+
+.rich-text-editor-wrapper .ql-snow.ql-toolbar {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.rich-text-editor-wrapper .ql-snow.ql-container {
+    border: none !important;
+}
+
+.rich-text-editor-wrapper .ql-container {
+    @apply bg-transparent text-gray-900 dark:text-white;
+    min-height: 200px;
+    font-family: var(--font-jetbrainsMono);
+    border: none !important;
+}
+
+.rich-text-editor-wrapper .ql-editor {
+    @apply pt-4 pb-4 px-4;
+    min-height: 200px;
+}
+
+.rich-text-editor-wrapper .ql-editor.ql-blank::before {
+    @apply text-gray-400 dark:text-gray-500;
+    font-style: normal;
+}
+
+.rich-text-editor-wrapper .ql-toolbar {
+    @apply bg-[#f5f5f5] dark:bg-secondary rounded-t-xl;
+    @apply px-4 py-2;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 2px solid rgb(209 213 219) !important;
+}
+
+.dark .rich-text-editor-wrapper .ql-toolbar {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.rich-text-editor-wrapper .ql-toolbar .ql-stroke {
+    @apply stroke-gray-700 dark:stroke-gray-300;
+}
+
+.rich-text-editor-wrapper .ql-toolbar .ql-fill {
+    @apply fill-gray-700 dark:fill-gray-300;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active {
+    @apply text-accent-light dark:text-accent;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover .ql-stroke,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active .ql-stroke {
+    @apply stroke-accent-light dark:stroke-accent;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover .ql-fill,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active .ql-fill {
+    @apply fill-accent-light dark:fill-accent;
+}
+
+.dark .rich-text-editor-wrapper .ql-snow .ql-stroke {
+    @apply stroke-gray-300;
+}
+
+.dark .rich-text-editor-wrapper .ql-snow .ql-fill {
+    @apply fill-gray-300;
+}
+
+.rich-text-editor-wrapper .ql-snow .ql-picker-label {
+    @apply text-gray-700 dark:text-gray-300;
+}
+
+.rich-text-editor-wrapper .ql-snow .ql-picker-options {
+    @apply bg-[#f5f5f5] dark:bg-secondary border border-gray-300 dark:border-white/20;
+}
+
+.rich-text-editor-wrapper .ql-snow .ql-picker-item {
+    @apply text-gray-700 dark:text-gray-300;
+}
+
+.rich-text-editor-wrapper .ql-snow .ql-picker-item:hover {
+    @apply bg-gray-200 dark:bg-gray-700 text-accent-light dark:text-accent;
 }

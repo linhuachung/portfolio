@@ -46,31 +46,46 @@ const callApi = async ( {
 
     return response;
   } catch ( error ) {
-    const dataError = error.message;
-    if ( error.code === 'ERR_BAD_REQUEST' ) {
+    const errorResponse = error.response?.data || {};
+    const errorMessage = errorResponse.message || error.message || 'An error occurred';
+    const errorCode = error.code || errorResponse.status;
+
+    // Handle specific error codes
+    if ( errorCode === 'ERR_BAD_REQUEST' || errorResponse.status === 400 ) {
       Toast( {
-        title: dataError,
+        title: errorMessage,
         type: TOAST_STATUS.error
       } );
-      throw new Error( 'Network error' );
+      onFailed( errorResponse );
+      throw new Error( errorMessage );
     }
-    if ( error.code === 'ERROR_NETWORK' ) {
+
+    if ( errorCode === 'ERR_NETWORK' || errorCode === 'ERROR_NETWORK' ) {
       Toast( {
-        title: 'Network error',
+        title: 'Network error. Please check your connection.',
         type: TOAST_STATUS.error
       } );
+      onFailed( errorResponse );
       throw new Error( 'Network error' );
     }
-    if ( dataError.error[0].code === '401' ) {
-      localStorage.clear();
-      window.location.href = '/login';
+
+    // Handle 401 Unauthorized
+    if ( errorResponse.status === 401 || ( errorResponse.error && Array.isArray( errorResponse.error ) && errorResponse.error[0]?.code === '401' ) ) {
+      if ( typeof window !== 'undefined' ) {
+        localStorage.clear();
+        window.location.href = '/admin/login';
+      }
+      onFailed( errorResponse );
+      throw new Error( 'Unauthorized' );
     }
-    onFailed( dataError );
+
+    // Generic error handling
+    onFailed( errorResponse );
     Toast( {
-      title: 'ListMessageError[dataError.error[0].code] || dataError.error[0].code',
+      title: errorMessage,
       type: TOAST_STATUS.error
     } );
-    throw new Error( dataError.message || 'Unknown error occurred' );
+    throw new Error( errorMessage );
   } finally {
     onFinally();
   }

@@ -1,8 +1,8 @@
-import { JetBrains_Mono } from 'next/font/google';
-import './globals.css';
-import { ToastContainer } from 'react-toastify';
 import StoreProvider from '@/app/StoreProvider';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { JetBrains_Mono } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
+import './globals.css';
 
 const jetbrainsMono = JetBrains_Mono( {
   subsets: ['latin'],
@@ -13,7 +13,10 @@ const jetbrainsMono = JetBrains_Mono( {
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata = {
   title: 'ChungLH Portfolio',
-  description: 'Hi! I\'m Lin Hua Chung, a Frontend Developer specializing in modern web technologies. Check out my projects and skills!'
+  description: 'Hi! I\'m Lin Hua Chung, a Frontend Developer specializing in modern web technologies. Check out my projects and skills!',
+  icons: {
+    icon: '/favicon.ico'
+  }
 };
 
 export default function RootLayout( { children } ) {
