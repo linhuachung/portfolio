@@ -3,6 +3,10 @@ import { extractFileNameFromUrl, validateCvPath } from '@/lib/cv-utils';
 import prismadb from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+// Force dynamic rendering - this route fetches from S3 at runtime
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const PDF_MAGIC_NUMBER = '%PDF';
 const VALID_CONTENT_TYPES = ['application/pdf', 'binary', 'octet-stream'];
 

@@ -5,6 +5,10 @@ import { DataResponse } from '@/lib/data-response';
 import { formatUserData } from '@/lib/user-formatter';
 import { handleApiError, createErrorResponse } from '@/lib/api-error-handler';
 
+// Force dynamic rendering - this route queries database at runtime
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 // GET public user profile (for homepage and contact page)
 export async function GET( req ) {
   try {
