@@ -12,7 +12,7 @@ export async function POST( req ) {
       return authResult.error;
     }
 
-    const result = await handleFileUpload( req, UPLOAD_TYPES.CV );
+    const result = await handleFileUpload( req, UPLOAD_TYPES.IMAGE );
 
     if ( result.error ) {
       return result.error;
@@ -24,7 +24,7 @@ export async function POST( req ) {
     );
 
   } catch ( error ) {
-    return handleApiError( error, 'CV upload' );
+    return handleApiError( error, 'Image upload' );
   }
 }
 

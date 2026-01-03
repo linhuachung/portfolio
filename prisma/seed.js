@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ContactStatus, PrismaClient, ProjectCategory, SkillCategory, SkillLevel, SocialLinkType, UserRole } from '@prisma/client';
+import { ContactStatus, PrismaClient, ProjectCategory, SkillCategory, SkillLevel, UserRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { SEED_CONSTANTS } from './seed-constants.js';
 
@@ -44,100 +44,22 @@ async function main() {
     console.log( 'ℹ️  Admin user already exists.' );
   }
 
-  // Default user data for seeding
-  const mockData = {
-    email: SEED_CONSTANTS.USER.EMAIL,
-    name: SEED_CONSTANTS.USER.NAME,
-    avatar: SEED_CONSTANTS.USER.AVATAR,
-    bio: SEED_CONSTANTS.USER.BIO,
-    phone: SEED_CONSTANTS.USER.PHONE,
-    website: SEED_CONSTANTS.USER.WEBSITE,
-    title: SEED_CONSTANTS.USER.TITLE,
-    greeting: SEED_CONSTANTS.USER.GREETING,
-    bioParagraph: SEED_CONSTANTS.USER.BIO_PARAGRAPH,
-    stats: SEED_CONSTANTS.USER.STATS,
-    cvPath: SEED_CONSTANTS.USER.CV_PATH,
-    socialLinks: SEED_CONSTANTS.USER.SOCIAL_LINKS
-  };
-
-  // Create or get default User (Portfolio Owner)
-  let user = await prisma.user.findFirst( {
-    where: { email: mockData.email }
-  } );
+  // Get or create default User (Portfolio Owner)
+  // User data should be managed through admin panel, not seed script
+  let user = await prisma.user.findFirst();
 
   if ( !user ) {
+    // Only create minimal user if doesn't exist (for development/testing)
     user = await prisma.user.create( {
       data: {
-        email: mockData.email,
-        name: mockData.name,
-        avatar: mockData.avatar || null,
-        bio: mockData.bio || null,
-        phone: mockData.phone || null,
-        website: mockData.website || null,
-        title: mockData.title || null,
-        greeting: mockData.greeting || null,
-        bioParagraph: mockData.bioParagraph || null,
-        stats: mockData.stats || null,
-        cvPath: mockData.cvPath || null,
+        email: 'user@example.com',
+        name: 'Portfolio Owner',
         role: UserRole.user
       }
     } );
-    console.log( '✅ Default user created from mock data!' );
+    console.log( '✅ Default user created. Please update user data through admin panel.' );
   } else {
-    // Update existing user with mock data
-    user = await prisma.user.update( {
-      where: { id: user.id },
-      data: {
-        name: mockData.name,
-        avatar: mockData.avatar !== undefined ? mockData.avatar : user.avatar,
-        bio: mockData.bio !== undefined ? mockData.bio : user.bio,
-        phone: mockData.phone !== undefined ? mockData.phone : user.phone,
-        website: mockData.website !== undefined ? mockData.website : user.website,
-        title: mockData.title !== undefined ? mockData.title : user.title,
-        greeting: mockData.greeting !== undefined ? mockData.greeting : user.greeting,
-        bioParagraph: mockData.bioParagraph !== undefined ? mockData.bioParagraph : user.bioParagraph,
-        stats: mockData.stats !== undefined ? mockData.stats : user.stats,
-        cvPath: mockData.cvPath !== undefined ? mockData.cvPath : user.cvPath
-      }
-    } );
-    console.log( '✅ User updated with mock data!' );
-  }
-
-  // Create or Update Social Links
-  if ( mockData.socialLinks && mockData.socialLinks.length > 0 ) {
-    // Delete existing social links
-    await prisma.socialLink.deleteMany( {
-      where: { userId: user.id }
-    } );
-
-    // Create new social links from mock data
-    const socialLinksToCreate = mockData.socialLinks
-      .filter( link => link.url && link.url.trim() !== '' )
-      .map( ( link, index ) => ( {
-        userId: user.id,
-        type: SocialLinkType[link.type] || SocialLinkType.other,
-        url: link.url.trim(),
-        order: link.order !== undefined ? link.order : index
-      } ) );
-
-    if ( socialLinksToCreate.length > 0 ) {
-      await prisma.socialLink.createMany( {
-        data: socialLinksToCreate
-      } );
-      console.log( `✅ ${socialLinksToCreate.length} social links created/updated from mock data!` );
-    }
-  } else {
-    // Fallback to default social links if not in mock data
-    const socialLinksCount = await prisma.socialLink.count( { where: { userId: user.id } } );
-    if ( socialLinksCount === 0 ) {
-      await prisma.socialLink.createMany( {
-        data: [
-          { userId: user.id, type: SocialLinkType.github, url: 'https://github.com/linhuachung', order: 0 },
-          { userId: user.id, type: SocialLinkType.linkedin, url: 'https://www.linkedin.com/in/lin-hua-chung-200158179/', order: 1 }
-        ]
-      } );
-      console.log( '✅ Default social links created!' );
-    }
+    console.log( 'ℹ️  User already exists. User data is managed through admin panel.' );
   }
 
   // Create Tech Stacks

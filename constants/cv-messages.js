@@ -8,9 +8,23 @@ export const CV_MESSAGES = {
   DOWNLOAD_FAILED: 'Failed to download CV. Please try again later.',
   FETCH_FAILED: 'Failed to fetch CV file.',
   DOWNLOAD_SUCCESS: 'CV downloaded successfully!',
-  UPLOAD_SUCCESS: 'File uploaded successfully!',
-  UPLOAD_FAILED: 'Failed to upload file',
   DOWNLOAD_TIMEOUT: 'Download timeout. Please try again.'
+};
+
+/**
+ * Upload-related messages
+ */
+export const UPLOAD_MESSAGES = {
+  CV_SUCCESS: 'File uploaded successfully',
+  IMAGE_SUCCESS: 'Image uploaded successfully',
+  UPLOAD_FAILED: 'Failed to upload file',
+  NO_FILE: 'No file provided',
+  INVALID_FILENAME: 'Invalid file name',
+  DANGEROUS_CHARS: 'File name contains invalid characters',
+  INVALID_TYPE: 'Invalid file type',
+  FILE_TOO_LARGE: 'File size exceeds maximum allowed size',
+  EMPTY_FILE: 'File is empty or corrupted',
+  S3_NOT_CONFIGURED: 'AWS S3 is not configured. Please set AWS_S3_BUCKET_NAME in environment variables.'
 };
 
 export const CV_ERROR_CODES = {

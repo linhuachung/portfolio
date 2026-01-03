@@ -99,6 +99,24 @@ Sau khi hoàn thành hướng dẫn này, bạn sẽ:
 
 4. Click **"Create bucket"** ở cuối trang
 
+### 3.3. Tạo folder `images/` trong bucket (Nếu dùng chung bucket cho CV và Images)
+
+**Nếu bạn đã có bucket cho CV upload**, chỉ cần tạo thêm folder `images/`:
+
+1. Click vào tên bucket hiện có
+2. Click nút **"Create folder"** (hoặc **"Create"** → **"Folder"**)
+3. Đặt tên folder: `images`
+4. Click **"Create folder"**
+
+**Cấu trúc bucket sau khi tạo**:
+```
+your-bucket-name/
+├── resume/          (CV files)
+│   └── CV_1234567890_filename.pdf
+└── images/         (Image files)
+    └── IMG_1234567890_avatar.jpg
+```
+
 ---
 
 ## 🔐 Bước 4: Cấu hình Bucket Policy (Cho phép download file)
@@ -131,10 +149,51 @@ Copy và dán policy sau vào editor (thay `your-bucket-name` bằng tên bucket
 }
 ```
 
+**Nếu bucket chưa có policy**, copy và dán policy sau (thay `your-bucket-name` bằng tên bucket của bạn):
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": [
+        "arn:aws:s3:::your-bucket-name/resume/*",
+        "arn:aws:s3:::your-bucket-name/images/*"
+      ]
+    }
+  ]
+}
+```
+
+**Nếu bucket đã có policy cho CV**, chỉ cần thêm resource `images/*` vào mảng `Resource`:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": [
+        "arn:aws:s3:::your-bucket-name/resume/*",
+        "arn:aws:s3:::your-bucket-name/images/*"
+      ]
+    }
+  ]
+}
+```
+
 **Giải thích**:
 - `"Principal": "*"`: Cho phép tất cả mọi người
 - `"Action": "s3:GetObject"`: Cho phép đọc (download) file
-- `"Resource": "arn:aws:s3:::your-bucket-name/resume/*"`: Chỉ áp dụng cho folder `resume/` trong bucket
+- `"Resource"`: Cho phép cả folder `resume/` (CV) và `images/` (Images)
+- Nếu chỉ dùng CV, chỉ cần `"arn:aws:s3:::your-bucket-name/resume/*"`
 
 5. Click **"Save changes"**
 
@@ -236,13 +295,23 @@ AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY_HERE
 AWS_S3_BUCKET_NAME=your-bucket-name
 AWS_REGION=ap-southeast-2
 
-# Optional: Custom folder in S3 bucket (default: 'resume')
+# Optional: Custom folder in S3 bucket for CV (default: 'resume')
 AWS_S3_FOLDER=resume
+
+# Optional: Custom folder in S3 bucket for Images (default: 'images')
+# Dùng chung bucket với CV, chỉ cần tạo folder 'images' trong bucket
+AWS_S3_IMAGES_FOLDER=images
 
 # Optional: Custom base URL (e.g., CloudFront distribution URL)
 # If not set, will use default S3 URL: https://{bucket}.s3.{region}.amazonaws.com/{folder}/{file}
 # AWS_S3_BASE_URL=https://your-cloudfront-url.com
 ```
+
+**Lưu ý về dùng chung bucket**:
+- Bạn có thể **dùng chung 1 bucket** cho cả CV và Images
+- CV sẽ lưu trong folder `resume/` (hoặc `AWS_S3_FOLDER`)
+- Images sẽ lưu trong folder `images/` (hoặc `AWS_S3_IMAGES_FOLDER`)
+- Chỉ cần tạo folder `images/` trong bucket hiện có (xem hướng dẫn bên dưới)
 
 **Giải thích từng biến**:
 - `AWS_ACCESS_KEY_ID`: Access Key ID từ IAM User (Bước 2.4)
@@ -273,12 +342,44 @@ AWS_S3_FOLDER=resume
 **Headers**:
 ```
 Content-Type: multipart/form-data
+Authorization: Bearer <token> (Required - Admin authentication)
 ```
 
 **Body (FormData)**:
-- `file`: File PDF cần upload
+- `file`: File PDF cần upload (Required)
 
-### 8.2. Ví dụ code JavaScript/React
+**Lưu ý**: API sử dụng shared upload handler với validation tự động:
+- ✅ Validate file type (chỉ PDF)
+- ✅ Validate file size (max 10MB)
+- ✅ Validate filename (không chứa ký tự nguy hiểm)
+- ✅ Validate buffer (không rỗng, không corrupted)
+- ✅ Auto-generate unique filename với prefix `CV_`
+
+### 8.2. Response Format
+
+**Success Response (200)**:
+```json
+{
+  "status": 200,
+  "message": "File uploaded successfully",
+  "data": {
+    "path": "https://bucket.s3.region.amazonaws.com/resume/CV_1234567890_filename.pdf",
+    "fileName": "CV_1234567890_filename.pdf",
+    "originalFileName": "filename.pdf"
+  }
+}
+```
+
+**Error Response (400/500)**:
+```json
+{
+  "status": 400,
+  "message": "Error message here",
+  "data": null
+}
+```
+
+### 8.3. Ví dụ code JavaScript/React
 
 #### Cách 1: Sử dụng Fetch API
 
@@ -301,6 +402,11 @@ const uploadCV = async (file) => {
     }
 
     const result = await response.json();
+    
+    if (result.status !== 200 || !result.data) {
+      throw new Error(result.message || 'Upload failed');
+    }
+    
     console.log('Upload success:', result);
     // result.data chứa:
     // {
@@ -360,6 +466,10 @@ const uploadCV = async (file) => {
       withCredentials: true, // Nếu cần gửi cookies
     });
 
+    if (response.data.status !== 200 || !response.data.data) {
+      throw new Error(response.data.message || 'Upload failed');
+    }
+    
     console.log('Upload success:', response.data);
     return response.data.data;
   } catch (error) {
@@ -404,9 +514,13 @@ function CVUploadForm() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // Lưu path vào form
-      setValue('cvPath', response.data.data.path);
-      console.log('Uploaded:', response.data.data.path);
+      if (response.data.status === 200 && response.data.data) {
+        // Lưu path vào form
+        setValue('cvPath', response.data.data.path);
+        console.log('Uploaded:', response.data.data.path);
+      } else {
+        throw new Error(response.data.message || 'Upload failed');
+      }
     } catch (error) {
       setError('cv', { 
         message: error.response?.data?.message || 'Upload failed' 

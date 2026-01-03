@@ -9,9 +9,12 @@ export const FILE_UPLOAD = {
     MAX_SIZE_BYTES: 10 * 1024 * 1024,
     ACCEPTED_TYPES: ['application/pdf'],
     ACCEPT_EXTENSION: '.pdf'
-    // Note: UPLOAD_DIR and PUBLIC_PATH removed - using AWS S3 only
-    // UPLOAD_DIR: 'public/assets/resume',
-    // PUBLIC_PATH: '/assets/resume'
+  },
+  IMAGE: {
+    MAX_SIZE_MB: 5,
+    MAX_SIZE_BYTES: 5 * 1024 * 1024,
+    ACCEPTED_TYPES: ['image/png', 'image/jpeg', 'image/jpg'],
+    ACCEPT_EXTENSIONS: ['.png', '.jpeg', '.jpg']
   }
 };
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 function Photo( { avatar } ) {
-  const avatarSrc = avatar || '/assets/new-avatar.jpg';
+  const avatarSrc = avatar || '/assets/avatarDefault.png';
 
   return (
     <div className="w-full h-full relative">
