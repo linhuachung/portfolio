@@ -5,9 +5,12 @@ import { DataResponse } from '@/lib/data-response';
 import { formatUserData } from '@/lib/user-formatter';
 import { handleApiError, createErrorResponse } from '@/lib/api-error-handler';
 
-// GET public user profile (for homepage)
-export async function GET() {
+// GET public user profile (for homepage and contact page)
+export async function GET( req ) {
   try {
+    const { searchParams } = new URL( req.url );
+    const includeContact = searchParams.get( 'includeContact' ) === 'true';
+
     // Get first user (portfolio owner)
     const user = await prismadb.user.findFirst( {
       include: {
@@ -23,6 +26,15 @@ export async function GET() {
 
     // Format response for public access
     const userData = formatUserData( user, false );
+
+    // Include contact fields if requested (for contact page)
+    if ( includeContact && userData ) {
+      userData.email = user.email || null;
+      userData.phone = user.phone || null;
+      userData.addressCountry = user.addressCountry || null;
+      userData.addressCity = user.addressCity || null;
+      userData.address = user.address || null;
+    }
 
     // Filter out empty social links
     if ( userData ) {

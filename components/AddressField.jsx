@@ -54,7 +54,7 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
   const availableCities = country ? getCitiesByCountry( country ) : [];
 
   const handleCountryChange = () => {
-    // Reset city when country changes (handled by useEffect, but this ensures immediate reset)
+    // Immediate reset when country changes (useEffect will also handle this, but this ensures immediate UI update)
     setValue( 'addressCity', '', { shouldValidate: false } );
     if ( clearErrors ) {
       clearErrors( 'addressCity' );
