@@ -1,6 +1,7 @@
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { getErrorMessage } from '@/lib/form-utils';
 
 export function SelectionInputField( {
@@ -37,9 +38,7 @@ export function SelectionInputField( {
                   <FormControl>
                     <SelectTrigger
                       disabled={ disabled }
-                      className={ `w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary rounded-l-xl rounded-r-none border-2 ${
-                        typeError ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1 data-[state=open]:!border-red-500' : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1 data-[state=open]:border-accent-light dark:data-[state=open]:border-accent'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+                      className={ `w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary rounded-l-xl rounded-r-none border-2 ${getInputBorderStyles( !!typeError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
                     >
                       <SelectValue placeholder={ placeholderSelect }/>
                     </SelectTrigger>
@@ -61,9 +60,7 @@ export function SelectionInputField( {
                     type={ type || 'text' }
                     placeholder={ placeholderInput }
                     disabled={ disabled }
-                    className={ `rounded-l-none input-autofill w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary border-2 ${
-                      urlError ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1' : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1'
-                    } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+                    className={ `rounded-l-none input-autofill w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( !!urlError )} ${disabled ? FORM_STYLES.disabled : ''}` }
                     onBlur={ ( event ) => {
                       onBlur && onBlur( event );
                     } }

@@ -1,5 +1,6 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { useInputFocus } from '@/lib/hooks';
 
 export function TextareaField( {
@@ -12,6 +13,7 @@ export function TextareaField( {
   showWordCount = false,
   minLength,
   maxLength,
+  rows,
   disabled = false,
   ...props
 } ) {
@@ -46,11 +48,10 @@ export function TextareaField( {
               <Textarea
                 id={ name }
                 disabled={ disabled }
-                className={ `w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary h-[200px] border-2 ${
-                  showError
-                    ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-0'
-                    : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-offset-0 focus-visible:ring-1'
-                } ${disabled ? 'cursor-not-allowed' : ''}` }
+                rows={ rows || 5 }
+                className={ `w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border-2 ${
+                  rows ? '' : 'h-[200px]'
+                } ${getInputBorderStyles( showError )} ${disabled ? FORM_STYLES.disabled : ''}` }
                 placeholder=""
                 onFocus={ () => !disabled && setIsFocused( true ) }
                 onBlur={ ( e ) => {

@@ -56,13 +56,15 @@ export async function PUT( req ) {
       avatar,
       bio,
       phone,
-      website,
       title,
       greeting,
       bioParagraph,
       stats,
       cvPath,
-      socialLinks
+      socialLinks,
+      addressCountry,
+      addressCity,
+      address
     } = body;
 
     // Get first user (portfolio owner)
@@ -81,12 +83,14 @@ export async function PUT( req ) {
         avatar: normalizeOptionalField( avatar, existingUser.avatar ),
         bio: normalizeOptionalField( bio, existingUser.bio ),
         phone: normalizeOptionalField( phone, existingUser.phone ),
-        website: normalizeOptionalField( website, existingUser.website ),
         title: normalizeOptionalField( title, existingUser.title ),
         greeting: normalizeOptionalField( greeting, existingUser.greeting ),
         bioParagraph: normalizeOptionalField( bioParagraph, existingUser.bioParagraph ),
         stats: stats !== undefined ? normalizeStats( stats, existingUser.stats ) : existingUser.stats,
-        cvPath: normalizeOptionalField( cvPath, existingUser.cvPath )
+        cvPath: normalizeOptionalField( cvPath, existingUser.cvPath ),
+        addressCountry: normalizeOptionalField( addressCountry, existingUser.addressCountry ),
+        addressCity: normalizeOptionalField( addressCity, existingUser.addressCity ),
+        address: normalizeOptionalField( address, existingUser.address )
       }
     } );
 

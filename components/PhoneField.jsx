@@ -2,6 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { COUNTRY_CODES, DEFAULT_COUNTRY_CODE } from '@/constants/country-codes';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { useInputFocus } from '@/lib/hooks';
 import { formatPhoneForStorage, parsePhoneNumber, sanitizePhoneInput } from '@/lib/phone-utils';
 
@@ -60,11 +61,7 @@ export function PhoneField( {
                   <FormControl>
                     <SelectTrigger
                       disabled={ disabled }
-                      className={ `w-[90px] pt-4 pb-3 px-2 pl-6 bg-secondary-light dark:bg-secondary rounded-r-none border-2 border-r-0 ${
-                        showError
-                          ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1 data-[state=open]:!border-red-500'
-                          : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1 data-[state=open]:border-accent-light dark:data-[state=open]:border-accent'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+                      className={ `w-[90px] pt-4 pb-3 px-2 pl-6 bg-secondary-light dark:bg-secondary rounded-r-none border-2 border-r-0 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
                     >
                       <SelectValue className="whitespace-nowrap !block !truncate min-w-0">
                         { countryCode }
@@ -99,11 +96,7 @@ export function PhoneField( {
                     type="tel"
                     placeholder=""
                     disabled={ disabled }
-                    className={ `rounded-l-none input-autofill w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border-2 ${
-                      showError
-                        ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1'
-                        : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1'
-                    } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+                    className={ `rounded-l-none input-autofill w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( showError )} ${disabled ? FORM_STYLES.disabled : ''}` }
                     onFocus={ () => !disabled && setIsFocused( true ) }
                     onBlur={ handleBlur }
                     onChange={ handlePhoneNumberChange }

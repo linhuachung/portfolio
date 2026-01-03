@@ -1,3 +1,4 @@
+import { AddressField } from '@/components/AddressField';
 import FileUpload from '@/components/FileUpload';
 import ImageUpload from '@/components/ImageUpload';
 import { InputField } from '@/components/InputField';
@@ -18,8 +19,8 @@ export function BasicInfoSection( { control, watch, setValue, setError, disabled
         control={ control }
         name="avatar"
         setValue={ setValue }
-        width={ 200 }
-        height={ 200 }
+        width={ 120 }
+        height={ 120 }
         setError={ setError }
         disabled={ disabled }
       />
@@ -50,19 +51,19 @@ export function BasicInfoSection( { control, watch, setValue, setError, disabled
         disabled={ disabled }
       />
 
-      <InputField
-        className="mb-4"
-        control={ control }
-        placeholder="Website"
-        name="website"
-        disabled={ disabled }
-      />
-
       <TextareaField
         className="mb-4"
         control={ control }
         placeholder="Bio (Short description)"
         name="bio"
+        rows={ 3 }
+        disabled={ disabled }
+      />
+
+      <AddressField
+        className="mb-4"
+        control={ control }
+        setValue={ setValue }
         disabled={ disabled }
       />
     </div>

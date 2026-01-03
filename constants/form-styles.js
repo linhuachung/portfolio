@@ -1,5 +1,5 @@
 export const FORM_STYLES = {
-  disabled: 'opacity-60 cursor-not-allowed',
+  disabled: 'opacity-60 cursor-not-allowed text-gray-500 dark:text-gray-400',
   disabledReadonly: 'opacity-90 cursor-not-allowed',
   baseBorder: 'border-gray-300 dark:border-white/20',
   baseBg: 'bg-secondary-light dark:bg-secondary',

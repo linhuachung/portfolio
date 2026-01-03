@@ -45,12 +45,14 @@ export function useUserForm() {
             avatar: userData.avatar || '',
             bio: userData.bio || '',
             phone: userData.phone || '',
-            website: userData.website || '',
             title: userData.title || DEFAULT_FORM_VALUES.title,
             greeting: userData.greeting || DEFAULT_FORM_VALUES.greeting,
             bioParagraph: userData.bioParagraph || '',
             stats: userData.stats || DEFAULT_FORM_VALUES.stats,
             cvPath: userData.cvPath || '',
+            addressCountry: userData.addressCountry || '',
+            addressCity: userData.addressCity || '',
+            address: userData.address || '',
             socialLinks: mergeSocialLinks( userData.socialLinks )
           };
 

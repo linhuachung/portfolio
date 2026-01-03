@@ -1,5 +1,6 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { useInputFocus } from '@/lib/hooks';
 
 export function InputField( {
@@ -45,9 +46,7 @@ export function InputField( {
                 type={ type || 'text' }
                 placeholder=""
                 disabled={ disabled }
-                className={ `input-autofill w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border-2 ${
-                  showError ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1' : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1'
-                } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+                className={ `input-autofill w-full pt-4 pb-3 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( showError )} ${disabled ? FORM_STYLES.disabled : ''}` }
                 onFocus={ () => !disabled && setIsFocused( true ) }
                 onBlur={ ( e ) => {
                   setIsFocused( e.target.value !== '' );

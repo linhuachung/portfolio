@@ -1,4 +1,5 @@
 import { isValidPhoneNumber } from '@/lib/phone-utils';
+import { validateCityForCountry } from '@/lib/address-utils';
 import * as Yup from 'yup';
 
 export const validationContactSchema = Yup.object().shape( {
@@ -32,6 +33,31 @@ export const validationEditProfileSchema = Yup.object().shape( {
   bioParagraph: Yup.string()
     .min( 50, 'Bio paragraph must be at least 50 characters' )
     .max( 1000, 'Bio paragraph must not exceed 1000 characters' ),
+  addressCountry: Yup.string()
+    .nullable()
+    .transform( ( value ) => value || null ),
+  addressCity: Yup.string()
+    .nullable()
+    .when( 'addressCountry', {
+      is: ( country ) => country && country.trim() !== '',
+      then: ( schema ) => schema.test(
+        'city-in-country',
+        'City must belong to the selected country',
+        function( value ) {
+          const { addressCountry } = this.parent;
+          if ( !value || !addressCountry ) {return true;}
+
+          const validation = validateCityForCountry( value, addressCountry );
+          return validation.valid;
+        }
+      ),
+      otherwise: ( schema ) => schema.nullable()
+    } )
+    .transform( ( value ) => value || null ),
+  address: Yup.string()
+    .max( 200, 'Address must not exceed 200 characters' )
+    .nullable()
+    .transform( ( value ) => value || null ),
   stats: Yup.object().shape( {
     years: Yup.number()
       .required( 'Years of experience is required' )

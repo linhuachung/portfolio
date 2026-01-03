@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { getInputBorderStyles } from '@/constants/form-styles';
 
 export function SelectField( { isSubmitting, name, control, options, labelFocus, placeholder } ) {
   return (
@@ -38,11 +39,7 @@ export function SelectField( { isSubmitting, name, control, options, labelFocus,
             >
               <FormControl>
                 <SelectTrigger
-                  className={ `w-full pt-2 pb-2 bg-transparent border-2 ${
-                    showError
-                      ? '!border-red-500 focus-visible:!border-red-500 focus-visible:ring-red-500 focus-visible:ring-1 data-[state=open]:!border-red-500'
-                      : 'border-gray-300 dark:border-white/20 focus-visible:border-accent-light dark:focus-visible:border-accent focus-visible:ring-accent-light dark:focus-visible:ring-accent focus-visible:ring-1 data-[state=open]:border-accent-light dark:data-[state=open]:border-accent'
-                  }` }
+                  className={ `w-full pt-2 pb-2 bg-transparent border-2 ${getInputBorderStyles( showError, true )}` }
                 >
                   <SelectValue/>
                 </SelectTrigger>

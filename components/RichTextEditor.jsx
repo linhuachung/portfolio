@@ -1,6 +1,7 @@
 'use client';
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 
@@ -72,18 +73,12 @@ export function RichTextEditor( {
             <FormControl>
               { disabled ? (
                 <div
-                  className={ `w-full pt-4 pb-4 px-4 bg-secondary-light dark:bg-secondary border-2 rounded-xl min-h-[200px] max-h-[400px] overflow-y-auto text-base text-gray-900 dark:text-white ${
-                    showError
-                      ? '!border-red-500'
-                      : 'border-gray-300 dark:border-white/20'
-                  } ${disabled ? 'opacity-90 cursor-not-allowed' : ''}` }
+                  className={ `w-full pt-4 pb-4 px-4 bg-secondary-light dark:bg-secondary border-2 rounded-xl min-h-[200px] max-h-[400px] overflow-y-auto text-base text-gray-900 dark:text-white ${getInputBorderStyles( showError )} ${disabled ? FORM_STYLES.disabled : ''}` }
                   style={ { fontFamily: 'var(--font-jetbrainsMono)' } }
                   dangerouslySetInnerHTML={ { __html: value || '' } }
                 />
               ) : (
-                <div className={ `rich-text-editor-wrapper border-2 rounded-xl ${
-                  showError ? '!border-red-500 focus-within:!border-red-500' : 'border-gray-300 dark:border-white/20 focus-within:border-accent-light dark:focus-within:border-accent focus-within:ring-accent-light dark:focus-within:ring-accent focus-within:ring-1'
-                }` }>
+                <div className={ `rich-text-editor-wrapper border-2 rounded-xl ${getInputBorderStyles( showError )}` }>
                   <ReactQuill
                     theme="snow"
                     value={ value || '' }
