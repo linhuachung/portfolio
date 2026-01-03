@@ -610,14 +610,21 @@ export const CITIES_BY_COUNTRY = {
  */
 export function getCitiesByCountry( country ) {
   if ( !country || typeof country !== 'string' ) {
-    console.warn( `[AddressField] Invalid country value: ${country}` );
-    return CITIES_BY_COUNTRY.other;
+    // Silent fallback for invalid country - return empty array or other
+    // Only log in development to avoid console noise in production
+    if ( process.env.NODE_ENV === 'development' ) {
+      console.warn( `[AddressField] Invalid country value: ${country}` );
+    }
+    return CITIES_BY_COUNTRY.other || [];
   }
 
   const cities = CITIES_BY_COUNTRY[country];
   if ( !cities ) {
-    console.warn( `[AddressField] No cities found for country: ${country}` );
-    return CITIES_BY_COUNTRY.other;
+    // Silent fallback for unknown country
+    if ( process.env.NODE_ENV === 'development' ) {
+      console.warn( `[AddressField] No cities found for country: ${country}` );
+    }
+    return CITIES_BY_COUNTRY.other || [];
   }
 
   return cities;

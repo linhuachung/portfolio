@@ -53,24 +53,25 @@ export default function EditProfile() {
   }
 
   return (
-    <div className="h-full w-full p-6 overflow-hidden">
-      <div className="h-full w-full max-w-[2000px] mx-auto bg-secondary rounded-2xl border border-white/20 text-white p-6 flex flex-col relative">
-        <div className="flex items-center mb-6 flex-shrink-0">
-          <h2 className="text-3xl font-bold">Edit Homepage Content</h2>
+    <div className="h-full w-full p-2 sm:p-4 md:p-6 overflow-hidden">
+      <div className="h-full w-full max-w-[2000px] mx-auto bg-secondary rounded-xl md:rounded-2xl border border-white/20 text-white p-4 sm:p-5 md:p-6 flex flex-col relative overflow-hidden">
+        <div className="flex items-center mb-4 sm:mb-5 md:mb-6 flex-shrink-0">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Edit Homepage Content</h2>
         </div>
-        <FormWrapper form={ form } onSubmit={ handleSave } isLoading={ isSubmitting }>
-          <div className="flex-1 overflow-hidden grid grid-cols-3 gap-6 min-h-0">
-            <div className="flex flex-col gap-6 overflow-y-auto pr-2 min-h-0">
+        <FormWrapper form={ form } onSubmit={ handleSave } isLoading={ isSubmitting } className="flex-1 min-h-0 overflow-hidden !p-0 !bg-transparent !rounded-none overflow-y-auto">
+          <div className="h-full overflow-y-auto overflow-x-hidden grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[1fr_1.2fr_0.8fr] gap-4 sm:gap-4 md:gap-5 items-start custom-scrollbar pr-2">
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
               <BasicInfoSection
                 control={ control }
                 watch={ watch }
                 setValue={ setValue }
                 setError={ setError }
+                clearErrors={ clearErrors }
                 disabled={ !isEditMode }
               />
             </div>
 
-            <div className="flex flex-col gap-6 overflow-y-auto px-2 min-h-0">
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
               <HomepageContentSection
                 control={ control }
                 watch={ watch }
@@ -80,12 +81,11 @@ export default function EditProfile() {
               />
             </div>
 
-            <div className="flex flex-col gap-6 overflow-y-auto pl-2 min-h-0">
+            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
               <StatisticsSection
                 control={ control }
                 disabled={ !isEditMode }
               />
-
               <SocialLinksSection
                 control={ control }
                 socialLinks={ socialLinks }
@@ -98,11 +98,12 @@ export default function EditProfile() {
             </div>
           </div>
         </FormWrapper>
-        <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-white/20 flex-shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-2 mt-4 pt-4 border-t border-white/20 flex-shrink-0">
           { !isEditMode ? (
             <Button
               type="button"
               onClick={ handleEdit }
+              className="w-full sm:w-auto"
             >
               Edit
             </Button>
@@ -113,6 +114,7 @@ export default function EditProfile() {
                 variant="outline"
                 onClick={ handleCancelClick }
                 disabled={ isSubmitting }
+                className="w-full sm:w-auto"
               >
                 Cancel
               </Button>
@@ -120,6 +122,7 @@ export default function EditProfile() {
                 type="button"
                 onClick={ form.handleSubmit( handleSave ) }
                 disabled={ isSubmitting }
+                className="w-full sm:w-auto"
               >
                 { isSubmitting ? 'Saving...' : 'Save' }
               </Button>

@@ -10,25 +10,51 @@ import {
 import { COUNTRIES, getCitiesByCountry } from '@/constants/address-data';
 import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
 import { validateCityForCountry } from '@/lib/address-utils';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWatch } from 'react-hook-form';
 
-export function AddressField( { control, setValue, disabled = false, className } ) {
+export function AddressField( { control, setValue, setError, clearErrors, disabled = false, className } ) {
   const country = useWatch( { control, name: 'addressCountry' } );
   const city = useWatch( { control, name: 'addressCity' } );
+  const previousCountryRef = useRef( country );
 
-  // Reset and validate city when country changes
+  // Validate and reset city when country changes
   useEffect( () => {
+    const countryChanged = previousCountryRef.current !== country;
+    previousCountryRef.current = country;
+
+    // If country is cleared, reset city
+    if ( !country ) {
+      if ( city ) {
+        setValue( 'addressCity', '', { shouldValidate: false } );
+        clearErrors( 'addressCity' );
+      }
+      return;
+    }
+
+    // If country changed, reset city
+    if ( countryChanged && city ) {
+      setValue( 'addressCity', '', { shouldValidate: false } );
+      clearErrors( 'addressCity' );
+      return;
+    }
+
+    // Validate city belongs to country
     if ( country && city ) {
       const validation = validateCityForCountry( city, country );
       if ( !validation.valid ) {
         setValue( 'addressCity', '', { shouldValidate: false } );
+        if ( setError ) {
+          setError( 'addressCity', {
+            type: 'manual',
+            message: validation.error || 'City must belong to the selected country'
+          } );
+        }
+      } else if ( clearErrors ) {
+        clearErrors( 'addressCity' );
       }
-    } else if ( country && !city ) {
-      // Reset city when country changes
-      setValue( 'addressCity', '', { shouldValidate: false } );
     }
-  }, [country, city, setValue] );
+  }, [country, city, setValue, setError, clearErrors] );
 
   const availableCities = country ? getCitiesByCountry( country ) : [];
 
@@ -36,7 +62,7 @@ export function AddressField( { control, setValue, disabled = false, className }
     <div className={ `${className} space-y-4` }>
       <div className="space-y-4">
         { /* Row 1: Country and City */ }
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           { /* Country Select */ }
           <FormField
             control={ control }

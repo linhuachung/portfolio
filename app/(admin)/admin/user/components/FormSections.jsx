@@ -8,10 +8,10 @@ import { SelectionInputField } from '@/components/SelectionInputField';
 import { TextareaField } from '@/components/TextareaField';
 import { BIO_PARAGRAPH_CONFIG, SOCIAL_LINK_OPTIONS } from '../constants';
 
-export function BasicInfoSection( { control, watch, setValue, setError, disabled = false } ) {
+export function BasicInfoSection( { control, watch, setValue, setError, clearErrors, disabled = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold mb-4 border-b border-white/20 pb-2">Basic Information</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2">Basic Information</h3>
 
       <ImageUpload
         watch={ watch }
@@ -64,6 +64,8 @@ export function BasicInfoSection( { control, watch, setValue, setError, disabled
         className="mb-4"
         control={ control }
         setValue={ setValue }
+        setError={ setError }
+        clearErrors={ clearErrors }
         disabled={ disabled }
       />
     </div>
@@ -73,7 +75,7 @@ export function BasicInfoSection( { control, watch, setValue, setError, disabled
 export function HomepageContentSection( { control, watch, setValue, setError, disabled = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold mb-4 border-b border-white/20 pb-2">Homepage Content</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2">Homepage Content</h3>
 
       <InputField
         className="mb-4"
@@ -120,9 +122,9 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
 export function StatisticsSection( { control, disabled = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold mb-4 border-b border-white/20 pb-2">Statistics</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2 mt-0">Statistics</h3>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <InputField
           className="mb-4"
           control={ control }
@@ -243,8 +245,8 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4 border-b border-white/20 pb-2">
-        <h3 className="text-xl font-semibold">Social Links</h3>
+      <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4 border-b border-white/20 pb-2">
+        <h3 className="text-lg sm:text-xl font-semibold">Social Links</h3>
         <span className="text-red-500 dark:text-red-400 text-sm">*</span>
         <span className="text-xs text-gray-500 dark:text-gray-400">Required fields</span>
       </div>
@@ -257,8 +259,8 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
         const showAddButton = isLastRow && canAddNewLink();
 
         return (
-          <div key={ index } className="flex items-center gap-2 mb-4">
-            <div className="flex-1">
+          <div key={ index } className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
+            <div className="flex-1 min-w-0">
               <SelectionInputField
                 className="mb-0"
                 control={ control }
@@ -269,7 +271,7 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
                 disabled={ disabled }
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               { showAddButton && !disabled && (
                 <button
                   type="button"
