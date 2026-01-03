@@ -32,6 +32,8 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
         name="email"
         required={ true }
         disabled={ disabled }
+        labelInFocusClass="top-[14px]"
+        labelFocusClass="-top-2"
       />
 
       <InputField
@@ -41,6 +43,8 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
         name="name"
         required={ true }
         disabled={ disabled }
+        labelInFocusClass="top-[14px]"
+        labelFocusClass="-top-2"
       />
 
       <PhoneField
@@ -84,6 +88,8 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
         placeholder="Title (e.g., Frontend Developer)"
         name="title"
         disabled={ disabled }
+        labelInFocusClass="top-[14px]"
+        labelFocusClass="-top-2"
       />
 
       <InputField
@@ -92,6 +98,8 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
         placeholder="Greeting (e.g., Hello I'm)"
         name="greeting"
         disabled={ disabled }
+        labelInFocusClass="top-[14px]"
+        labelFocusClass="-top-2"
       />
 
       <RichTextEditor

@@ -73,6 +73,8 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           isSubmitting={ isSubmitting }
           disabled={ disabled }
           onValueChange={ handleCountryChange }
+          labelFocusClass="top-0.5"
+          labelInFocusClass="top-5"
         />
 
         <SelectField
@@ -83,6 +85,8 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           control={ control }
           isSubmitting={ isSubmitting }
           disabled={ disabled || !country }
+          labelFocusClass="top-0.5"
+          labelInFocusClass="top-5"
         />
       </div>
 
@@ -92,6 +96,9 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
         placeholder="Enter address"
         name="address"
         disabled={ disabled }
+        isSubmitting={ isSubmitting }
+        labelFocusClass="-top-2"
+        labelInFocusClass="top-[14px]"
       />
     </div>
   );
