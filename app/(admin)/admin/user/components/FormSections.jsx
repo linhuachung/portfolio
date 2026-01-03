@@ -11,7 +11,7 @@ import { BIO_PARAGRAPH_CONFIG, SOCIAL_LINK_OPTIONS } from '../constants';
 export function BasicInfoSection( { control, watch, setValue, setError, clearErrors, disabled = false, isSubmitting = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2">Basic Information</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">Basic Information</h3>
 
       <ImageUpload
         watch={ watch }
@@ -80,7 +80,7 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
 export function HomepageContentSection( { control, watch, setValue, setError, disabled = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2">Homepage Content</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">Homepage Content</h3>
 
       <InputField
         className="mb-4"
@@ -131,7 +131,7 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
 export function StatisticsSection( { control, disabled = false } ) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-white/20 pb-2 mt-0">Statistics</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2 mt-0">Statistics</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <InputField
@@ -254,10 +254,10 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4 border-b border-white/20 pb-2">
+      <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">
         <h3 className="text-lg sm:text-xl font-semibold">Social Links</h3>
-        <span className="text-red-500 dark:text-red-400 text-sm">*</span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">Required fields</span>
+        <span className="text-red-600 dark:text-red-400 text-sm">*</span>
+        <span className="text-xs text-gray-600 dark:text-gray-400">Required fields</span>
       </div>
 
       { currentLinks.map( ( link, index ) => {
@@ -311,7 +311,7 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
                 <button
                   type="button"
                   onClick={ () => handleRemove( index ) }
-                  className="px-3 py-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                  className="px-3 py-2 text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                   disabled={ isSubmitting }
                   title="Remove"
                 >

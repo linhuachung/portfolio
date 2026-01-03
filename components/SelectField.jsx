@@ -46,7 +46,7 @@ export function SelectField( {
                 isFocused
                   ? `z-10 -top-1 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary ${labelFocusClass}`
                   : `top-[14px] text-sm ${labelInFocusClass}`
-              } ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
+              } ${showError ? 'text-red-600 dark:text-red-400' : ''}` }
             >
               { displayLabel }
             </FormLabel>

@@ -85,10 +85,10 @@ export function PhoneField( {
                     isFocused || displayValue
                       ? 'z-10 -top-2.5 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary'
                       : 'top-3.5 text-sm text-gray-500 dark:text-gray-400'
-                  } ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
+                  } ${showError ? 'text-red-600 dark:text-red-400' : ''}` }
                 >
                   { placeholder }
-                  { isRequired && <span className="text-red-500 dark:text-red-400 ml-1">*</span> }
+                  { isRequired && <span className="text-red-600 dark:text-red-400 ml-1">*</span> }
                 </FormLabel>
                 <FormControl>
                   <Input

@@ -37,10 +37,10 @@ export function InputField( {
                 isFocused || field.value
                   ? `z-10 -top-1 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary ${labelFocusClass}`
                   : `top-[17.5px] text-sm text-gray-500 dark:text-gray-400 ${labelInFocusClass}`
-              } ${showError ? `text-red-500 dark:text-red-400 ${isFocused ? labelFocusClass : labelInFocusClass}` : ''}` }
+              } ${showError ? `text-red-600 dark:text-red-400 ${isFocused ? labelFocusClass : labelInFocusClass}` : ''}` }
             >
               { placeholder }
-              { isRequired && <span className="text-red-500 dark:text-red-400 border-red-500 ml-1">*</span> }
+              { isRequired && <span className="text-red-600 dark:text-red-400 ml-1">*</span> }
             </FormLabel>
             <FormControl>
               <Input

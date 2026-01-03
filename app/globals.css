@@ -160,6 +160,23 @@
         fill: transparent !important;
         stroke: none !important;
     }
+
+    /* Force error border color override for inputs with error */
+    input[aria-invalid="true"],
+    textarea[aria-invalid="true"],
+    select[aria-invalid="true"],
+    [class*="border-red-600"]:not([class*="border-gray"]):not([class*="border-white"]),
+    [class*="border-red-500"]:not([class*="border-gray"]):not([class*="border-white"]) {
+        border-color: #dc2626 !important;
+    }
+
+    .dark input[aria-invalid="true"],
+    .dark textarea[aria-invalid="true"],
+    .dark select[aria-invalid="true"],
+    .dark [class*="border-red-600"]:not([class*="border-gray"]):not([class*="border-white"]),
+    .dark [class*="border-red-500"]:not([class*="border-gray"]):not([class*="border-white"]) {
+        border-color: #ef4444 !important;
+    }
 }
 
 /* React Quill Styles */

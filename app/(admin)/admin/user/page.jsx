@@ -54,7 +54,7 @@ export default function EditProfile() {
 
   return (
     <div className="h-full w-full p-2 sm:p-4 md:p-6 overflow-hidden">
-      <div className="h-full w-full max-w-[2000px] mx-auto bg-secondary rounded-xl md:rounded-2xl border border-white/20 text-white p-4 sm:p-5 md:p-6 flex flex-col relative overflow-hidden">
+      <div className="h-full w-full max-w-[2000px] mx-auto bg-white dark:bg-secondary rounded-xl md:rounded-2xl border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white p-4 sm:p-5 md:p-6 flex flex-col relative overflow-hidden">
         <div className="flex items-center mb-4 sm:mb-5 md:mb-6 flex-shrink-0">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Edit Homepage Content</h2>
         </div>
@@ -99,7 +99,7 @@ export default function EditProfile() {
             </div>
           </div>
         </FormWrapper>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-2 mt-4 pt-4 border-t border-white/20 flex-shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-2 mt-4 pt-4 border-t border-gray-300 dark:border-white/20 flex-shrink-0">
           { !isEditMode ? (
             <Button
               type="button"

@@ -65,10 +65,10 @@ export function RichTextEditor( {
           <FormItem className={ `${className} space-y-2 w-full` }>
             <FormLabel
               htmlFor={ name }
-              className={ `block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200 ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
+              className={ `block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200 ${showError ? 'text-red-600 dark:text-red-400' : ''}` }
             >
               { placeholder }
-              { ( minLength || maxLength ) && <span className="text-red-500 dark:text-red-400 ml-1">*</span> }
+              { ( minLength || maxLength ) && <span className="text-red-600 dark:text-red-400 ml-1">*</span> }
             </FormLabel>
             <FormControl>
               { disabled ? (
@@ -103,7 +103,7 @@ export function RichTextEditor( {
                 <span>
                   { wordCount } { wordCount === 1 ? 'word' : 'words' }
                 </span>
-                <span className={ `${charCount < ( minLength || 0 ) || charCount > ( maxLength || Infinity ) ? 'text-red-500' : ''}` }>
+                <span className={ `${charCount < ( minLength || 0 ) || charCount > ( maxLength || Infinity ) ? 'text-red-600' : ''}` }>
                   { charCount }/{ maxLength ?? '∞' } characters
                   { minLength && ` (min: ${minLength})` }
                 </span>

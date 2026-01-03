@@ -40,7 +40,7 @@ export function TextareaField( {
                 isFocused || value
                   ? 'z-10 -top-2.5 text-xs px-2 text-gray-600 dark:text-white/80 bg-[#f5f5f5] dark:bg-secondary'
                   : 'top-4 text-sm text-gray-500 dark:text-gray-400'
-              } ${showError ? 'text-red-500 dark:text-red-400' : ''}` }
+              } ${showError ? 'text-red-600 dark:text-red-400' : ''}` }
             >
               { placeholder }
             </FormLabel>
@@ -76,7 +76,7 @@ export function TextareaField( {
                 <span>
                   { wordCount } { wordCount === 1 ? 'word' : 'words' }
                 </span>
-                <span className={ `${charCount < ( minLength || 0 ) || charCount > ( maxLength || Infinity ) ? 'text-red-500' : ''}` }>
+                <span className={ `${charCount < ( minLength || 0 ) || charCount > ( maxLength || Infinity ) ? 'text-red-600' : ''}` }>
                   { charCount }/{ maxLength || '∞' } characters
                   { minLength && ` (min: ${minLength})` }
                 </span>

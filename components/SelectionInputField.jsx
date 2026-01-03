@@ -78,12 +78,12 @@ export function SelectionInputField( {
             { ( typeError || urlError ) && (
               <div className="space-y-1">
                 { typeError && (
-                  <p className="text-sm font-medium text-red-500 dark:text-red-400 ml-1">
+                  <p className="text-sm font-medium text-red-600 dark:text-red-400 ml-1">
                     { typeError }
                   </p>
                 ) }
                 { urlError && (
-                  <p className="text-sm font-medium text-red-500 dark:text-red-400 ml-1">
+                  <p className="text-sm font-medium text-red-600 dark:text-red-400 ml-1">
                     { urlError }
                   </p>
                 ) }
