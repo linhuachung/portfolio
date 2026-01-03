@@ -1,12 +1,11 @@
 import { FILE_UPLOAD, generateUniqueFileName } from '@/constants/file-upload';
+import { FILE_REGEX } from '@/constants/regex-patterns';
 import STATUS_CODES from '@/constants/status';
 import { createErrorResponse, handleApiError } from '@/lib/api-error-handler';
 import { verifyAuth } from '@/lib/auth-utils';
 import { DataResponse } from '@/lib/data-response';
-import { existsSync } from 'fs';
-import { mkdir, writeFile } from 'fs/promises';
+import { uploadFileToS3 } from '@/lib/s3-upload';
 import { NextResponse } from 'next/server';
-import { join } from 'path';
 
 export async function POST( req ) {
   try {
@@ -21,6 +20,16 @@ export async function POST( req ) {
 
     if ( !file ) {
       return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'No file provided' );
+    }
+
+    // Validate file name
+    if ( !file.name || file.name.trim() === '' ) {
+      return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'Invalid file name' );
+    }
+
+    // Validate filename doesn't contain dangerous characters
+    if ( FILE_REGEX.DANGEROUS_CHARS.test( file.name ) ) {
+      return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'File name contains invalid characters' );
     }
 
     // Validate file type
@@ -39,24 +48,33 @@ export async function POST( req ) {
 
     // Generate unique filename
     const fileName = generateUniqueFileName( file.name, 'CV' );
-    const filePath = join( process.cwd(), FILE_UPLOAD.CV.UPLOAD_DIR, fileName );
 
-    // Ensure directory exists
-    const dirPath = join( process.cwd(), FILE_UPLOAD.CV.UPLOAD_DIR );
-    if ( !existsSync( dirPath ) ) {
-      await mkdir( dirPath, { recursive: true } );
+    // Upload to S3 (required)
+    if ( !process.env.AWS_S3_BUCKET_NAME ) {
+      return createErrorResponse(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        'AWS S3 is not configured. Please set AWS_S3_BUCKET_NAME in environment variables.'
+      );
     }
 
-    // Write file to disk
-    await writeFile( filePath, buffer );
+    let publicPath;
+    let uploadedFileName = fileName;
 
-    // Return public path
-    const publicPath = `${FILE_UPLOAD.CV.PUBLIC_PATH}/${fileName}`;
+    try {
+      const uploadResult = await uploadFileToS3( buffer, fileName, file.name );
+      publicPath = uploadResult.path;
+      uploadedFileName = uploadResult.fileName;
+    } catch ( uploadError ) {
+      return createErrorResponse(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        uploadError.message || 'Failed to upload file to S3'
+      );
+    }
 
     return NextResponse.json(
       DataResponse( STATUS_CODES.SUCCESS, 'File uploaded successfully', {
         path: publicPath,
-        fileName,
+        fileName: uploadedFileName,
         originalFileName: file.name
       } ),
       { status: STATUS_CODES.SUCCESS }

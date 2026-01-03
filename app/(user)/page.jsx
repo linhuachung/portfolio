@@ -3,9 +3,12 @@ import Loader from '@/components/Loader';
 import Photo from '@/components/Photo';
 import Social from '@/components/Social';
 import Stats from '@/components/Stats';
+import Toast from '@/components/Toast';
 import { Button } from '@/components/ui/button';
-import { removeFileNamePrefix } from '@/constants/file-upload';
+import { CV_CONSTANTS, CV_MESSAGES } from '@/constants/cv-messages';
+import { TOAST_STATUS } from '@/constants/toast';
 import { trackCvDownload } from '@/lib/analytics';
+import { getCleanCvFileName, validateCvPath } from '@/lib/cv-utils';
 import { useEffect, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
 
@@ -48,31 +51,76 @@ function Home() {
     };
   }, [] );
 
+  const downloadCvFile = async ( cvPath ) => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout( () => controller.abort(), CV_CONSTANTS.DOWNLOAD_TIMEOUT_MS );
+
+      const res = await fetch( cvPath, {
+        cache: 'no-store',
+        signal: controller.signal
+      } );
+
+      clearTimeout( timeoutId );
+
+      if ( !res.ok ) {
+        throw new Error( `Failed to fetch CV file: ${res.status} ${res.statusText}` );
+      }
+
+      const blob = await res.blob();
+      const cleanFileName = getCleanCvFileName( cvPath );
+
+      const link = document.createElement( 'a' );
+      link.href = URL.createObjectURL( blob );
+      link.download = cleanFileName;
+      document.body.appendChild( link );
+      link.click();
+
+      // Cleanup after a delay to ensure download starts
+      setTimeout( () => {
+        document.body.removeChild( link );
+        URL.revokeObjectURL( link.href );
+      }, CV_CONSTANTS.DOWNLOAD_DELAY_MS );
+    } catch ( error ) {
+      if ( error.name === 'AbortError' ) {
+        throw new Error( CV_MESSAGES.DOWNLOAD_TIMEOUT );
+      }
+      throw error;
+    }
+  };
+
   const handleClick = async () => {
     try {
       await trackCvDownload();
-      await new Promise( resolve => setTimeout( resolve, 100 ) );
+      await new Promise( resolve => setTimeout( resolve, CV_CONSTANTS.TRACKING_DELAY_MS ) );
     } catch ( error ) {
       console.error( 'Failed to track CV download:', error );
     }
 
-    // Use CV path from database (uploaded CV)
     const cvPath = profileData?.cvPath;
-    if ( !cvPath ) {
-      console.error( 'CV path not available' );
+    const validation = validateCvPath( cvPath );
+
+    if ( !validation.valid ) {
+      Toast( {
+        title: validation.error,
+        type: TOAST_STATUS.error
+      } );
       return;
     }
 
-    // Extract filename and remove CV_timestamp_ prefix if exists
-    const fileName = cvPath.split( '/' ).pop() || 'CV.pdf';
-    const cleanFileName = removeFileNamePrefix( fileName, 'CV' ) || 'CV.pdf';
-
-    const link = document.createElement( 'a' );
-    link.href = cvPath;
-    link.download = cleanFileName;
-    document.body.appendChild( link );
-    link.click();
-    document.body.removeChild( link );
+    try {
+      await downloadCvFile( cvPath );
+      Toast( {
+        title: CV_MESSAGES.DOWNLOAD_SUCCESS,
+        type: TOAST_STATUS.success
+      } );
+    } catch ( error ) {
+      console.error( 'Failed to download CV:', error );
+      Toast( {
+        title: error.message || CV_MESSAGES.DOWNLOAD_FAILED,
+        type: TOAST_STATUS.error
+      } );
+    }
   };
 
   if ( loading ) {

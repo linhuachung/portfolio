@@ -23,7 +23,7 @@ export const SEED_CONSTANTS = {
       technologies: 4,
       commits: 500
     },
-    CV_PATH: '/assets/resume/CV_Frontend_LinHuaChung.pdf',
+    CV_PATH: null,
     SOCIAL_LINKS: [
       { type: 'github', url: 'https://github.com/linhuachung', order: 0 },
       { type: 'linkedin', url: 'https://www.linkedin.com/in/lin-hua-chung-200158179/', order: 1 }

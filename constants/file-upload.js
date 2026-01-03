@@ -1,3 +1,5 @@
+import { FILE_REGEX } from './regex-patterns';
+
 /**
  * File upload constants
  */
@@ -6,9 +8,10 @@ export const FILE_UPLOAD = {
     MAX_SIZE_MB: 10,
     MAX_SIZE_BYTES: 10 * 1024 * 1024,
     ACCEPTED_TYPES: ['application/pdf'],
-    ACCEPT_EXTENSION: '.pdf',
-    UPLOAD_DIR: 'public/assets/resume',
-    PUBLIC_PATH: '/assets/resume'
+    ACCEPT_EXTENSION: '.pdf'
+    // Note: UPLOAD_DIR and PUBLIC_PATH removed - using AWS S3 only
+    // UPLOAD_DIR: 'public/assets/resume',
+    // PUBLIC_PATH: '/assets/resume'
   }
 };
 
@@ -20,7 +23,7 @@ export const FILE_UPLOAD = {
  */
 export function generateUniqueFileName( originalName, prefix = 'CV' ) {
   const timestamp = Date.now();
-  const sanitizedName = originalName.replace( /[^a-zA-Z0-9.-]/g, '_' );
+  const sanitizedName = originalName.replace( FILE_REGEX.SANITIZE_FILENAME, '_' );
   return `${prefix}_${timestamp}_${sanitizedName}`;
 }
 
@@ -31,7 +34,7 @@ export function generateUniqueFileName( originalName, prefix = 'CV' ) {
  * @returns {string} - Clean filename
  */
 export function removeFileNamePrefix( fileName, prefix = 'CV' ) {
-  const prefixPattern = new RegExp( `^${prefix}_\\d+_` );
+  const prefixPattern = FILE_REGEX.FILENAME_PREFIX( prefix );
   return fileName.replace( prefixPattern, '' ) || fileName;
 }
 

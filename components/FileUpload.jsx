@@ -4,7 +4,8 @@ import Toast from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { FILE_UPLOAD, removeFileNamePrefix } from '@/constants/file-upload';
+import { FILE_UPLOAD } from '@/constants/file-upload';
+import { getCleanCvFileName } from '@/lib/cv-utils';
 import { TOAST_STATUS } from '@/constants/toast';
 import axiosInstance from '@/lib/axios';
 import { useEffect, useRef, useState } from 'react';
@@ -29,7 +30,7 @@ function FileUpload( {
   // Extract original filename from filePath when component mounts or filePath changes
   useEffect( () => {
     if ( filePath && !fileName ) {
-      const extractedFileName = removeFileNamePrefix( filePath.split( '/' ).pop(), 'CV' );
+      const extractedFileName = getCleanCvFileName( filePath );
       setFileName( extractedFileName );
     }
   }, [filePath, fileName] );
@@ -119,7 +120,7 @@ function FileUpload( {
               <div className="flex items-center gap-2">
                 <FiFile className="text-gray-600 dark:text-gray-400" size={ 20 } />
                 <span className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[300px]">
-                  { fileName || removeFileNamePrefix( filePath.split( '/' ).pop(), 'CV' ) }
+                  { fileName || getCleanCvFileName( filePath ) }
                 </span>
               </div>
               { !disabled && (
