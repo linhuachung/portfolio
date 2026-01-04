@@ -6,8 +6,6 @@ import { SERVICE_LABELS } from '@/constants/contact';
 
 export { SERVICE_LABELS };
 
-export const DEFAULT_FROM_EMAIL = 'onboarding@resend.dev';
-
 /**
  * Get service label from service code
  * @param {string} serviceCode - Service code (fe, be, fs)

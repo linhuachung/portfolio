@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ContactStatus, PrismaClient, ProjectCategory, SkillCategory, SkillLevel, UserRole } from '@prisma/client';
+import { PrismaClient, ProjectCategory, SkillCategory, SkillLevel, UserRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { SEED_CONSTANTS } from './seed-constants.js';
 
@@ -361,61 +361,8 @@ async function main() {
     console.log( '✅ Education created!' );
   }
 
-  // Create Contacts (Sample)
-  const contactsCount = await prisma.contact.count( { where: { userId: user.id } } );
-  if ( contactsCount === 0 ) {
-    const contactsData = [
-      {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '1234567890',
-        message: 'I\'m interested in your frontend development services. Can we schedule a call?',
-        status: ContactStatus.pending
-      },
-      {
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        message: 'Great portfolio! Would love to discuss a potential project.',
-        status: ContactStatus.read
-      },
-      {
-        name: 'Mike Johnson',
-        email: 'mike.j@example.com',
-        message: 'Your ReactJS skills are impressive. Looking for a developer for our startup.',
-        status: ContactStatus.replied,
-        reply: 'Thank you for your interest! I\'ll get back to you soon.',
-        repliedAt: new Date()
-      },
-      {
-        name: 'Sarah Williams',
-        email: 'sarah.w@example.com',
-        message: 'Interested in hiring you for a NextJS project.',
-        status: ContactStatus.pending
-      },
-      {
-        name: 'David Brown',
-        email: 'david.brown@example.com',
-        message: 'Can you help with a fullstack project?',
-        status: ContactStatus.read
-      }
-    ];
-
-    // Create contacts with different dates
-    const now = new Date();
-    for ( let i = 0; i < contactsData.length; i++ ) {
-      const contactDate = new Date( now );
-      contactDate.setDate( contactDate.getDate() - ( contactsData.length - i ) );
-
-      await prisma.contact.create( {
-        data: {
-          ...contactsData[i],
-          userId: user.id,
-          createdAt: contactDate
-        }
-      } );
-    }
-    console.log( '✅ Contacts created!' );
-  }
+  // Contacts are now created through the contact form API
+  // No need to seed mock contacts
 
   // Create Visits (Analytics Data)
   const visitsCount = await prisma.visit.count();

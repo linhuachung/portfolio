@@ -92,7 +92,6 @@ function FormContainer() {
             placeholder="Phone number"
             control={ control }
             isSubmitting={ isSubmitting }
-            required={ true }
           />
         </div>
         <div className="my-5">
