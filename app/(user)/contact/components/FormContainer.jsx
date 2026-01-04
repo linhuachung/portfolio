@@ -9,7 +9,7 @@ import Toast from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { CONTACT_SERVICES } from '@/constants/contact';
 import { TOAST_STATUS } from '@/constants/toast';
-import { EmailSubmit } from '@/lib/email';
+import { submitContactForm } from '@/lib/api/contact';
 import { formatPhoneForDisplay } from '@/lib/phone-utils';
 import { validationContactSchema } from '@/services/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,7 +34,7 @@ function FormContainer() {
         phone: formatPhoneForDisplay( data.phone )
       };
 
-      await EmailSubmit( formattedData );
+      await submitContactForm( formattedData );
       reset( {
         firstname: '',
         lastname: '',

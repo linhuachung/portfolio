@@ -1,0 +1,15 @@
+New Contact Form Submission
+
+Name: {{FIRSTNAME}} {{LASTNAME}}
+Email: {{EMAIL}}
+{{#PHONE}}
+Phone: {{PHONE}}
+{{/PHONE}}
+Service: {{SERVICE}}
+
+Message:
+{{MESSAGE}}
+
+---
+This email was sent from your portfolio contact form.
+

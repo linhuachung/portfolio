@@ -327,9 +327,12 @@ model UserSkill {
 model Contact {
   id      String        @id @default(auto()) @map("_id") @db.ObjectId
   userId  String        @db.ObjectId
-  name    String
+  firstname String
+  lastname  String
+  name    String        // Full name (firstname + lastname) for backward compatibility
   email   String
   phone   String?
+  service String?       // Service type: 'fe', 'be', 'fs'
   message String        @db.String
   status  ContactStatus @default(pending)
   reply   String?       @db.String
