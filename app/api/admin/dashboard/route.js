@@ -167,21 +167,33 @@ export async function GET( req ) {
 
     let recentContacts = [];
     try {
-      recentContacts = await prismadb.contact.findMany( {
+      const contacts = await prismadb.contact.findMany( {
         take: 5,
         orderBy: {
           createdAt: 'desc'
         },
         select: {
           id: true,
+          firstname: true,
+          lastname: true,
           name: true,
           email: true,
           status: true,
           createdAt: true
         }
       } );
+
+      // Format contacts: use name if available, otherwise combine firstname + lastname
+      recentContacts = contacts.map( contact => ( {
+        id: contact.id,
+        name: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
+        email: contact.email,
+        status: contact.status,
+        createdAt: contact.createdAt
+      } ) );
     } catch ( error ) {
       console.error( 'Failed to fetch recent contacts:', error );
+      recentContacts = [];
     }
 
     const formatChartData = ( data, period ) => {

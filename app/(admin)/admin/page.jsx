@@ -115,7 +115,11 @@ export default function Dashboard() {
           />
         </ChartContainer>
 
-        <RecentContacts contacts={ recentContacts } delay={ 0.8 } />
+        <RecentContacts
+          contacts={ recentContacts }
+          delay={ 0.8 }
+          onRefresh={ handleRefresh }
+        />
       </div>
     </div>
   );
