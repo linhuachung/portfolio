@@ -44,7 +44,12 @@ export async function POST( req ) {
     }
 
     // Get first user (portfolio owner) to link contact
-    const user = await prismadb.user.findFirst();
+    const user = await prismadb.user.findFirst( {
+      select: {
+        id: true,
+        email: true
+      }
+    } );
 
     if ( !user ) {
       return createErrorResponse( STATUS_CODES.NOT_FOUND, 'User not found' );
@@ -66,7 +71,7 @@ export async function POST( req ) {
       const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || user.email;
 
       if ( recipientEmail ) {
-        await sendContactEmail( body, recipientEmail );
+        await sendContactEmail( body, recipientEmail, contact.id );
         emailSent = true;
       }
     } catch ( emailErr ) {

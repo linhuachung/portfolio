@@ -238,6 +238,11 @@
         <!-- Footer -->
         <div class="email-footer">
           <p>This email was sent from your portfolio contact form.</p>
+          {{#REPLY_URL}}
+          <div style="margin-top: 20px;">
+            <a href="{{REPLY_URL}}" style="display: inline-block; padding: 12px 24px; background-color: #667eea; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">Reply to {{FIRSTNAME}}</a>
+          </div>
+          {{/REPLY_URL}}
         </div>
       </div>
     </div>
