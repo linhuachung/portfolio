@@ -66,17 +66,44 @@ export async function POST( req ) {
     // Send email notification (don't fail if email fails)
     let emailSent = false;
     let emailError = null;
+    let emailErrorDetails = null;
 
     try {
       const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || user.email;
 
+      // Log email sending attempt
+      // eslint-disable-next-line no-console
+      console.log( '📧 Attempting to send contact email:', {
+        recipientEmail,
+        hasRecipientEmail: !!recipientEmail,
+        contactId: contact.id,
+        hasResendApiKey: !!process.env.RESEND_API_KEY,
+        hasResendFromEmail: !!process.env.RESEND_FROM_EMAIL,
+        baseUrl: process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL
+      } );
+
       if ( recipientEmail ) {
         await sendContactEmail( body, recipientEmail, contact.id );
         emailSent = true;
+        // eslint-disable-next-line no-console
+        console.log( '✅ Contact email sent successfully to:', recipientEmail );
+      } else {
+        emailError = 'Recipient email is not configured';
+        console.warn( '⚠️ No recipient email configured' );
       }
     } catch ( emailErr ) {
-      console.error( 'Failed to send contact email:', emailErr );
+      // Enhanced error logging
+      const errorDetails = {
+        message: emailErr.message,
+        stack: emailErr.stack,
+        name: emailErr.name,
+        ...( emailErr.response && { response: emailErr.response } ),
+        ...( emailErr.error && { error: emailErr.error } )
+      };
+
+      console.error( '❌ Failed to send contact email:', JSON.stringify( errorDetails, null, 2 ) );
       emailError = emailErr.message;
+      emailErrorDetails = errorDetails;
       // Continue even if email fails - contact is saved in DB
     }
 
@@ -87,7 +114,10 @@ export async function POST( req ) {
         {
           id: contact.id,
           emailSent,
-          ...( emailError && { emailError: 'Email notification failed, but your message was saved' } )
+          ...( emailError && {
+            emailError: 'Email notification failed, but your message was saved',
+            emailErrorDetails: process.env.NODE_ENV === 'development' ? emailErrorDetails : emailError
+          } )
         }
       ),
       { status: STATUS_CODES.SUCCESS }
