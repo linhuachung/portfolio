@@ -8,5 +8,5 @@ export const ADMIN_ENDPOINT = {
 };
 
 export const USER_ENDPOINT = {
-  // Endpoints are defined in respective API routes
+  SEND_MAIL: '/api/user/email'
 };

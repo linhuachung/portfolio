@@ -22,10 +22,8 @@ export default function RecentContacts( { contacts, delay = 0.8, onRefresh } ) {
 
   const handleContactClick = ( contactId ) => {
     if ( !contactId ) {
-      console.error( 'Contact ID is missing' );
       return;
     }
-    console.log( 'Opening contact detail modal for ID:', contactId );
     setSelectedContactId( contactId );
     setIsModalOpen( true );
   };

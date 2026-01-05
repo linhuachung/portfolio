@@ -16,4 +16,3 @@ export const SERVICE_LABELS = CONTACT_SERVICES.reduce( ( acc, service ) => {
   acc[service.value] = service.label;
   return acc;
 }, {} );
-
