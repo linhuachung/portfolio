@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+# scripts (may contain test files with secrets)
+/scripts
+
 # next.js
 /.next/
 /out/
