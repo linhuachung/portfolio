@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyRefreshToken, generateToken } from '@/lib/jwt';
+import { verifyRefreshToken, generateToken, generateRefreshToken } from '@/lib/jwt';
 import STATUS_CODES from '@/constants/status';
 import { DataResponse } from '@/lib/data-response';
 import { cookies } from 'next/headers';
@@ -33,15 +33,24 @@ export async function POST( req ) {
       );
     }
 
-    // Generate new access token
+    // Generate new access token and refresh token (token rotation)
     const newAccessToken = generateToken( {
       id: decoded.id,
       username: decoded.username,
       role: decoded.role || 'admin'
     } );
 
+    const newRefreshToken = generateRefreshToken( {
+      id: decoded.id,
+      username: decoded.username,
+      role: decoded.role || 'admin'
+    } );
+
     return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Token refreshed successfully', newAccessToken ),
+      DataResponse( STATUS_CODES.SUCCESS, 'Token refreshed successfully', {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken
+      } ),
       { status: STATUS_CODES.SUCCESS }
     );
 

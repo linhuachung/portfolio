@@ -327,15 +327,20 @@ model UserSkill {
 model Contact {
   id      String        @id @default(auto()) @map("_id") @db.ObjectId
   userId  String        @db.ObjectId
-  name    String
+  firstname String
+  lastname  String
+  name    String        // Full name (firstname + lastname) for backward compatibility
   email   String
   phone   String?
+  service String?       // Service type: 'fe', 'be', 'fs'
   message String        @db.String
   status  ContactStatus @default(pending)
-  reply   String?       @db.String
-  repliedAt DateTime?
+  reply   String?       @db.String // Deprecated: use replies relation instead
+  repliedAt DateTime?   // Deprecated: use latest reply createdAt instead
+  emailOpenedAt DateTime? // Track when email was opened
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies ContactReply[] // Multiple replies support
 
   createdAt DateTime @default(now())
 
@@ -346,6 +351,23 @@ model Contact {
   @@map("contacts")
 }
 
+model ContactReply {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  contactId String   @db.ObjectId
+  message   String   @db.String
+  emailSent Boolean  @default(false) // Track if email was sent
+  sentAt    DateTime? // When email was sent
+  openedAt  DateTime? // Track when the reply email was opened by the recipient
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([contactId])
+  @@index([contactId, createdAt])
+  @@map("contactReplies")
+}
 model Visit {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String?  @db.ObjectId
