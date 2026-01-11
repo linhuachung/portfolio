@@ -145,3 +145,69 @@ export const validationEditProfileSchema = Yup.object().shape( {
       } )
   } ) )
 } );
+
+export const validationExperienceSchema = Yup.object().shape( {
+  company: Yup.string()
+    .required( 'Company name is required' )
+    .trim()
+    .min( 1, 'Company name is required' )
+    .max( 200, 'Company name must not exceed 200 characters' ),
+  position: Yup.string()
+    .required( 'Position is required' )
+    .trim()
+    .min( 1, 'Position is required' )
+    .max( 200, 'Position must not exceed 200 characters' ),
+  description: Yup.string()
+    .required( 'Description is required' )
+    .trim()
+    .min( 10, 'Description must be at least 10 characters' )
+    .max( 5000, 'Description must not exceed 5000 characters' ),
+  startDate: Yup.string()
+    .required( 'Start date is required' ),
+  endDate: Yup.string()
+    .nullable()
+    .when( 'isCurrent', {
+      is: true,
+      then: ( schema ) => schema.nullable(),
+      otherwise: ( schema ) => schema.required( 'End date is required when not currently working' )
+    } ),
+  isCurrent: Yup.boolean(),
+  location: Yup.string()
+    .max( 200, 'Location must not exceed 200 characters' )
+    .nullable()
+    .transform( ( value ) => value || null ),
+  companyLogo: Yup.string()
+    .max( 500, 'Company logo URL must not exceed 500 characters' )
+    .nullable()
+    .transform( ( value ) => value || null )
+    .test( 'url-format', 'Please enter a valid URL (e.g., https://example.com)', ( value ) => {
+      if ( !value || value.trim() === '' ) {
+        return true;
+      }
+      try {
+        new URL( value.trim() );
+        return true;
+      } catch {
+        return false;
+      }
+    } ),
+  companyWebsite: Yup.string()
+    .max( 500, 'Company website URL must not exceed 500 characters' )
+    .nullable()
+    .transform( ( value ) => value || null )
+    .test( 'url-format', 'Please enter a valid URL (e.g., https://example.com)', ( value ) => {
+      if ( !value || value.trim() === '' ) {
+        return true;
+      }
+      try {
+        new URL( value.trim() );
+        return true;
+      } catch {
+        return false;
+      }
+    } ),
+  techStack: Yup.array()
+    .of( Yup.string() )
+    .nullable()
+    .transform( ( value ) => value || [] )
+} );
