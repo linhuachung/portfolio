@@ -73,7 +73,7 @@ function ProjectInfo( { info } ) {
             <Info>{ position }</Info>
           </Row>
         ) }
-        { teamSize && (
+        { technologies && Array.isArray( technologies ) && technologies.length > 0 && (
           <Row>
             <Title>Technologies:</Title>
             <Info>{ technologies.join( ', ' ) }</Info>

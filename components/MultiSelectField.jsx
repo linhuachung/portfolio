@@ -1,9 +1,9 @@
 'use client';
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import CreatableSelect from 'react-select/creatable';
 import { useInputFocus } from '@/lib/hooks';
 import * as React from 'react';
+import CreatableSelect from 'react-select/creatable';
 
 export function MultiSelectField( {
   name,

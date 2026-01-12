@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { formatDateRangeForTimeline } from '@/lib/experience-utils';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
@@ -16,6 +17,11 @@ export function DialogProject( { styledTitle, contentStyled, title, content } ) 
   const handleOpenChange = ( isOpen ) => {
     setOpen( isOpen );
   };
+
+  const dateRange = content
+    ? formatDateRangeForTimeline( content.startDate, content.endDate, content.isCurrent )
+    : '';
+
   return (
     <Dialog open={ open } onOpenChange={ handleOpenChange }>
       <DialogTrigger asChild>
@@ -26,7 +32,7 @@ export function DialogProject( { styledTitle, contentStyled, title, content } ) 
               styledTitle
             ) }
         >
-          { title }
+          { title || 'Position' }
         </p>
       </DialogTrigger>
       <DialogContent className={
@@ -36,18 +42,16 @@ export function DialogProject( { styledTitle, contentStyled, title, content } ) 
         )
       }>
         <DialogHeader>
-          <DialogTitle className="px-3 sm:px-0 text-gray-900 dark:text-white">{ title }</DialogTitle>
-          { content && (
-            <p
-              className="text-gray-600 dark:text-white/60 text-base">{ content.startDate } - { content.isCurrent ? 'Present' : content.endDate }</p>
+          <DialogTitle className="px-3 sm:px-0 text-gray-900 dark:text-white">{ title || 'Position' }</DialogTitle>
+          { dateRange && (
+            <p className="text-gray-600 dark:text-white/60 text-base">{ dateRange }</p>
           ) }
         </DialogHeader>
         <div className="mt-5">
-          { content && (
+          { content ? (
             <ProjectInfo info={ content }/>
-          ) }
-          { !content && (
-            <div>No content found!!</div>
+          ) : (
+            <div className="text-gray-600 dark:text-white/60">No content available</div>
           ) }
         </div>
         <DialogFooter>
