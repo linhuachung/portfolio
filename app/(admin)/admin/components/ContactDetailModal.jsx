@@ -16,7 +16,7 @@ import { getServiceLabel } from '@/constants/email';
 import { TOAST_STATUS } from '@/constants/toast';
 import { formatPhoneForDisplayWithCountry, generateTelLink } from '@/lib/phone-utils';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const getStatusStyles = ( status ) => {
   const styles = {
@@ -54,17 +54,7 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
   const [showReplyForm, setShowReplyForm] = useState( false );
   const [editingReplyId, setEditingReplyId] = useState( null );
 
-  useEffect( () => {
-    if ( open && contactId ) {
-      fetchContactDetail();
-    } else {
-      setContact( null );
-      setError( null );
-      setHasAutoMarkedAsRead( false );
-    }
-  }, [open, contactId] );
-
-  const fetchContactDetail = async () => {
+  const fetchContactDetail = useCallback( async () => {
     if ( !contactId ) {
       setError( 'Contact ID is required' );
       return;
@@ -74,7 +64,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
     setError( null );
 
     try {
-      console.log( 'Fetching contact detail for ID:', contactId );
       const response = await fetch( `/api/admin/contact/${contactId}` );
 
       if ( !response.ok ) {
@@ -83,28 +72,50 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
       }
 
       const result = await response.json();
-      console.log( 'Contact detail response:', result );
 
       if ( result.status === 200 && result.data ) {
         const contactData = result.data;
         setContact( contactData );
 
-        // Auto-mark as "read" if status is "pending" and not already marked
         if ( contactData.status === 'pending' && !hasAutoMarkedAsRead ) {
           setHasAutoMarkedAsRead( true );
-          // Call update status silently (no toast)
-          updateStatusSilently( 'read' );
+          try {
+            const updateResponse = await fetch( `/api/admin/contact/${contactId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify( { status: 'read' } )
+            } );
+            if ( updateResponse.ok ) {
+              const updateResult = await updateResponse.json();
+              if ( updateResult.status === 200 && updateResult.data ) {
+                setContact( updateResult.data );
+                if ( onStatusUpdate ) {
+                  onStatusUpdate( updateResult.data );
+                }
+              }
+            }
+          } catch {
+          }
         }
       } else {
         throw new Error( result.message || 'Invalid response format' );
       }
     } catch ( err ) {
-      console.error( 'Error fetching contact detail:', err );
       setError( err.message || 'Failed to load contact details' );
     } finally {
       setLoading( false );
     }
-  };
+  }, [contactId, hasAutoMarkedAsRead, onStatusUpdate] );
+
+  useEffect( () => {
+    if ( open && contactId ) {
+      fetchContactDetail();
+    } else {
+      setContact( null );
+      setError( null );
+      setHasAutoMarkedAsRead( false );
+    }
+  }, [open, contactId, fetchContactDetail] );
 
   const handleSendReply = async () => {
     if ( !contactId || !replyMessage.trim() ) {
@@ -161,7 +172,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
         throw new Error( result.message || 'Invalid response format' );
       }
     } catch ( err ) {
-      console.error( 'Error sending reply:', err );
       setError( err.message || 'Failed to send reply' );
       Toast( {
         title: err.message || 'Failed to send reply',
@@ -225,34 +235,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
     setEditingReplyId( null );
   };
 
-  const updateStatusSilently = async ( newStatus ) => {
-    if ( !contactId || !newStatus ) {
-      return;
-    }
-
-    try {
-      const response = await fetch( `/api/admin/contact/${contactId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify( { status: newStatus } )
-      } );
-
-      if ( response.ok ) {
-        const result = await response.json();
-        if ( result.status === 200 && result.data ) {
-          setContact( result.data );
-          if ( onStatusUpdate ) {
-            onStatusUpdate( result.data );
-          }
-        }
-      }
-    } catch ( err ) {
-      console.error( 'Error auto-updating status:', err );
-      // Silent fail - don't show error for auto-update
-    }
-  };
 
   const updateStatus = async ( newStatus ) => {
     if ( !contactId || !newStatus ) {
@@ -299,7 +281,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
         throw new Error( result.message || 'Invalid response format' );
       }
     } catch ( err ) {
-      console.error( 'Error updating status:', err );
       setError( err.message || 'Failed to update status' );
       Toast( {
         title: err.message || 'Failed to update status',
