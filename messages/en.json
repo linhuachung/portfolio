@@ -1,0 +1,126 @@
+{
+  "common": {
+    "brand": "Chung",
+    "hireMe": "Contact",
+    "downloadCv": "Download CV",
+    "toggleTheme": "Toggle theme",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "send": "Send",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "viewDetail": "View Detail",
+    "noData": "No data available",
+    "available": "Available",
+    "notAvailable": "Not available"
+  },
+  "navigation": {
+    "home": "Home",
+    "resume": "Resume",
+    "work": "Work",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "user": "User",
+    "experience": "Experience",
+    "education": "Education",
+    "project": "Project"
+  },
+  "home": {
+    "downloadCv": "Download CV",
+    "noProfileData": "No profile data available"
+  },
+  "resume": {
+    "tabs": {
+      "experience": "Experience",
+      "education": "Education",
+      "skills": "Skills",
+      "about": "About me"
+    },
+    "experience": {
+      "title": "My experience",
+      "description": "Frontend Developer skilled in ReactJS and NextJS, API integration, and performance optimization.",
+      "failedToLoad": "Failed to load experiences",
+      "noExperience": "No work experience available yet."
+    },
+    "education": {
+      "title": "My education",
+      "description": "I studied Computer Science at Ho Chi Minh City Open University, building a strong foundation in programming and software development. In 2020, I completed a Fullstack Developer program at Cybersoft Academy, enhancing my practical web development skills. These experiences prepared me for a career in technology."
+    },
+    "skills": {
+      "title": "My skills",
+      "description": "A Frontend Developer skilled in HTML, CSS, JavaScript, ReactJS, Redux, NextJS, Tailwind CSS, and Node.js, focused on building high-performance, responsive web apps for the Japanese and U.S. markets, ensuring seamless integration and modern UI/UX."
+    },
+    "about": {
+      "title": "About me",
+      "description": "I am a Frontend Developer with over 3 years of experience in ReactJS, specializing in building responsive and high-performance web applications for the Japanese and U.S. markets. With a strong foundation in backend development, I ensure seamless integration and robust functionality. Adaptable and committed to continuous learning, I thrive in long-term, dynamic environments.",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "experience": "Experience",
+        "skype": "Skype",
+        "nationality": "Nationality",
+        "email": "Email",
+        "freelance": "Freelance",
+        "languages": "Languages"
+      },
+      "fieldValues": {
+        "available": "Available",
+        "years": "3+ Years",
+        "nationality": "Vietnamese",
+        "languages": "English, Vietnamese"
+      }
+    }
+  },
+  "work": {
+    "liveProject": "Live project",
+    "githubRepo": "Github repository"
+  },
+  "contact": {
+    "title": "Let's work together",
+    "description": "Excited to collaborate on impactful projects, I bring expertise in ReactJS, NextJS, and modern frontend development. Let's connect to create seamless and engaging digital experiences together!",
+    "form": {
+      "title": "Let's work together",
+      "description": "Excited to collaborate on impactful projects, I bring expertise in ReactJS, NextJS, and modern frontend development. Let's connect to create seamless and engaging digital experiences together!",
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "email": "Email",
+      "phone": "Phone number",
+      "service": "Service",
+      "selectService": "Select a service",
+      "message": "Type your message here",
+      "sendMessage": "Send message",
+      "sending": "Sending...",
+      "failedToSend": "Failed to send the message. Please try again.",
+      "success": "Message sent successfully!"
+    },
+    "services": {
+      "frontend": "Frontend Development",
+      "backend": "Backend Development",
+      "fullstack": "Fullstack Development"
+    },
+    "info": {
+      "email": "Email",
+      "address": "Address"
+    }
+  },
+  "cv": {
+    "notAvailable": "CV not available. Please upload a CV file in the admin panel.",
+    "outdatedPath": "CV file path is outdated. Please upload a new CV file in the admin panel.",
+    "invalidPath": "Invalid CV file path. Please upload a new CV file in the admin panel.",
+    "downloadFailed": "Failed to download CV. Please try again later.",
+    "fetchFailed": "Failed to fetch CV file.",
+    "downloadSuccess": "CV downloaded successfully!",
+    "downloadTimeout": "Download timeout. Please try again."
+  },
+  "stats": {
+    "yearsOfExperience": "Years of experience",
+    "projectsCompleted": "Projects completed",
+    "technologiesMastered": "Technologies mastered",
+    "codeCommits": "Code commits"
+  }
+}
