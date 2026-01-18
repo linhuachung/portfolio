@@ -1,4 +1,4 @@
-import ProjectInfo from '@/app/(user)/work/components/ProjectInfo';
+import ProjectInfo from '@/app/[locale]/(user)/work/components/ProjectInfo';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

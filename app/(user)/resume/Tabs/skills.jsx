@@ -1,12 +1,16 @@
+'use client';
 import { skills } from '@/app/(user)/resume/data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTranslations } from 'next-intl';
 
 function Skills() {
+  const t = useTranslations( 'resume.skills' );
+
   return (
     <div className="flex flex-col gap-[30px]">
       <div className="flex flex-col gap-[30px] text-center xl:text-left ">
-        <h3 className="text-4xl font-bold text-gray-900 dark:text-white">{ skills.title }</h3>
-        <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">{ skills.description }</p>
+        <h3 className="text-4xl font-bold text-gray-900 dark:text-white">{ t( 'title' ) }</h3>
+        <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">{ t( 'description' ) }</p>
       </div>
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 xl:gap-[30px]">
         { skills.skillList.map( ( item, index ) => {

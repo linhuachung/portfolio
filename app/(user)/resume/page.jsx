@@ -5,9 +5,10 @@ import Education from '@/app/(user)/resume/Tabs/education';
 import Skills from '@/app/(user)/resume/Tabs/skills';
 import About from '@/app/(user)/resume/Tabs/about';
 import MotionWrapper from '@/components/MotionWrapper';
+import { useTranslations } from 'next-intl';
 
 function Resume() {
-
+  const t = useTranslations( 'resume.tabs' );
 
   return (
     <MotionWrapper
@@ -16,10 +17,10 @@ function Resume() {
       <div className="container mx-auto">
         <Tabs defaultValue="experience" className="flex flex-col xl:flex-row gap-[60px]">
           <TabsList className="flex flex-col w-full max-w-[380px] mx-auto xl:mx-0 gap-6">
-            <TabsTrigger value="experience">Experience</TabsTrigger>
-            <TabsTrigger value="education">Education</TabsTrigger>
-            <TabsTrigger value="skills">Skills</TabsTrigger>
-            <TabsTrigger value="about">About me</TabsTrigger>
+            <TabsTrigger value="experience">{ t( 'experience' ) }</TabsTrigger>
+            <TabsTrigger value="education">{ t( 'education' ) }</TabsTrigger>
+            <TabsTrigger value="skills">{ t( 'skills' ) }</TabsTrigger>
+            <TabsTrigger value="about">{ t( 'about' ) }</TabsTrigger>
           </TabsList>
           <div className="min-h-[700px] w-full">
             <TabsContent value="experience" className="w-full">

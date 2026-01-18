@@ -6,7 +6,7 @@ import Stats from '@/components/Stats';
 import Toast from '@/components/Toast';
 import TypingText from '@/components/TypingText';
 import { Button } from '@/components/ui/button';
-import { CV_CONSTANTS, CV_MESSAGES } from '@/constants/cv-messages';
+import { CV_CONSTANTS } from '@/constants/cv-messages';
 import { TOAST_STATUS } from '@/constants/toast';
 import { trackCvDownload } from '@/lib/analytics';
 import { getCleanCvFileName, validateCvPath } from '@/lib/cv-utils';
@@ -14,15 +14,20 @@ import { extractPlainTextFromHTML } from '@/lib/html-utils';
 import { TYPING_ANIMATION } from '@/constants/animations';
 import { useEffect, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
+import { useTranslations } from 'next-intl';
+import { mapCvValidationCodeToTranslationKey } from '@/lib/i18n-utils';
 
 function Home() {
+  const t = useTranslations( 'home' );
+  const tCv = useTranslations( 'cv' );
+  const tCommon = useTranslations( 'common' );
   const [profileData, setProfileData] = useState( null );
   const [loading, setLoading] = useState( true );
 
   const fetchProfile = async () => {
     try {
       const response = await fetch( '/api/user/profile', {
-        cache: 'no-store' // Ensure fresh data
+        cache: 'no-store'
       } );
       const result = await response.json();
 
@@ -32,7 +37,6 @@ function Home() {
         setProfileData( null );
       }
     } catch ( error ) {
-      console.error( 'Failed to fetch profile:', error );
       setProfileData( null );
     } finally {
       setLoading( false );
@@ -86,7 +90,7 @@ function Home() {
       }, CV_CONSTANTS.DOWNLOAD_DELAY_MS );
     } catch ( error ) {
       if ( error.name === 'AbortError' ) {
-        throw new Error( CV_MESSAGES.DOWNLOAD_TIMEOUT );
+        throw new Error( tCv( 'downloadTimeout' ) );
       }
       throw error;
     }
@@ -97,15 +101,15 @@ function Home() {
       await trackCvDownload();
       await new Promise( resolve => setTimeout( resolve, CV_CONSTANTS.TRACKING_DELAY_MS ) );
     } catch ( error ) {
-      console.error( 'Failed to track CV download:', error );
     }
 
     const cvPath = profileData?.cvPath;
     const validation = validateCvPath( cvPath );
 
     if ( !validation.valid ) {
+      const errorKey = mapCvValidationCodeToTranslationKey( validation.code );
       Toast( {
-        title: validation.error,
+        title: tCv( errorKey ),
         type: TOAST_STATUS.error
       } );
       return;
@@ -114,13 +118,12 @@ function Home() {
     try {
       await downloadCvFile( cvPath );
       Toast( {
-        title: CV_MESSAGES.DOWNLOAD_SUCCESS,
+        title: tCv( 'downloadSuccess' ),
         type: TOAST_STATUS.success
       } );
     } catch ( error ) {
-      console.error( 'Failed to download CV:', error );
       Toast( {
-        title: error.message || CV_MESSAGES.DOWNLOAD_FAILED,
+        title: error.message || tCv( 'downloadFailed' ),
         type: TOAST_STATUS.error
       } );
     }
@@ -138,7 +141,7 @@ function Home() {
     return (
       <div className="flex items-center justify-center h-full min-h-[60vh]">
         <div className="text-center">
-          <p className="text-gray-500 dark:text-gray-400">No profile data available</p>
+          <p className="text-gray-500 dark:text-gray-400">{ t( 'noProfileData' ) }</p>
         </div>
       </div>
     );
@@ -182,7 +185,7 @@ function Home() {
                 className="uppercase flex items-center gap-2"
                 onClick={ handleClick }
               >
-                <span>Download CV</span>
+                <span>{ tCommon( 'downloadCv' ) }</span>
                 <FiDownload className="text-xl"/>
               </Button>
               <div className="mb-8 xl:mb-0 ">

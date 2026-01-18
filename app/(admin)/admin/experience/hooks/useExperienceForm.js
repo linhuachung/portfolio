@@ -85,7 +85,7 @@ export function useExperienceForm( experienceId = null ) {
     };
 
     fetchExperience();
-  }, [experienceId] );
+  }, [experienceId, reset] );
 
   const onSubmit = async ( data ) => {
     try {

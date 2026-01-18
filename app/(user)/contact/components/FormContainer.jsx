@@ -14,8 +14,12 @@ import { formatPhoneForDisplay } from '@/lib/phone-utils';
 import { validationContactSchema } from '@/services/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+import { mapServiceValueToTranslationKey } from '@/lib/i18n-utils';
 
 function FormContainer() {
+  const t = useTranslations( 'contact.form' );
+  const tServices = useTranslations( 'contact.services' );
   const form = useForm( {
     resolver: yupResolver( validationContactSchema ),
     mode: 'onChange'
@@ -45,7 +49,7 @@ function FormContainer() {
       } );
     } catch ( error ) {
       Toast( {
-        title: 'Failed to send the message. Please try again.',
+        title: t( 'failedToSend' ),
         type: TOAST_STATUS.error
       } );
     }
@@ -59,37 +63,35 @@ function FormContainer() {
         onSubmit={ onSubmit }
         isLoading={ isSubmitting }
       >
-        <h3 className="text-4xl text-accent-light dark:text-accent">Let&apos;s work together</h3>
+        <h3 className="text-4xl text-accent-light dark:text-accent">{ t( 'title' ) }</h3>
         <p className="text-gray-700 dark:text-white/60 mt-5 mb-5">
-          Excited to collaborate on impactful projects, I bring expertise in
-          ReactJS, NextJS, and modern frontend development. Let’s connect to
-          create seamless and engaging digital experiences together!
+          { t( 'description' ) }
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <InputField
             name="firstname"
-            placeholder="Firstname"
+            placeholder={ t( 'firstname' ) }
             control={ control }
             required={ true }
             isSubmitting={ isSubmitting }
           />
           <InputField
             name="lastname"
-            placeholder="Lastname"
+            placeholder={ t( 'lastname' ) }
             control={ control }
             required={ true }
             isSubmitting={ isSubmitting }
           />
           <InputField
             name="email"
-            placeholder="Email"
+            placeholder={ t( 'email' ) }
             control={ control }
             required={ true }
             isSubmitting={ isSubmitting }
           />
           <PhoneField
             name="phone"
-            placeholder="Phone number"
+            placeholder={ t( 'phone' ) }
             control={ control }
             isSubmitting={ isSubmitting }
           />
@@ -97,9 +99,12 @@ function FormContainer() {
         <div className="my-5">
           <SelectField
             name="service"
-            options={ CONTACT_SERVICES }
-            placeholder="Select a service"
-            labelFocus="Service"
+            options={ CONTACT_SERVICES.map( service => ( {
+              ...service,
+              label: tServices( mapServiceValueToTranslationKey( service.value ) )
+            } ) ) }
+            placeholder={ t( 'selectService' ) }
+            labelFocus={ t( 'service' ) }
             control={ control }
             isSubmitting={ isSubmitting }
           />
@@ -107,13 +112,13 @@ function FormContainer() {
         <div className="mb-6">
           <TextareaField
             name="message"
-            placeholder="Type your message here"
+            placeholder={ t( 'message' ) }
             control={ control }
             isSubmitting={ isSubmitting }
           />
         </div>
         <Button size="md" type="submit" className="max-w-40" disabled={ isSubmitting }>
-          { isSubmitting ? 'Sending...' : 'Send message' }
+          { isSubmitting ? t( 'sending' ) : t( 'sendMessage' ) }
         </Button>
       </FormWrapper>
     </>

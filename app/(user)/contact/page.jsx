@@ -3,11 +3,14 @@
 import FormContainer from '@/app/(user)/contact/components/FormContainer';
 import MotionWrapper from '@/components/MotionWrapper';
 import { PhoneDisplay } from '@/components/PhoneDisplay';
+import ContactInfoItem from '@/components/ContactInfoItem';
 import { fetchContactInfo, formatContactInfoForDisplay } from '@/lib/contact-utils';
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaMapMarkedAlt } from 'react-icons/fa';
+import { useTranslations } from 'next-intl';
 
 function Contact() {
+  const t = useTranslations( 'contact.info' );
   const [contactInfo, setContactInfo] = useState( {
     phone: '',
     email: '',
@@ -28,66 +31,17 @@ function Contact() {
   const info = [
     {
       icon: <FaEnvelope/>,
-      title: 'Email',
+      title: t( 'email' ),
       description: formattedContactInfo.email,
       link: formattedContactInfo.emailLink
     },
     {
       icon: <FaMapMarkedAlt/>,
-      title: 'Address',
+      title: t( 'address' ),
       description: formattedContactInfo.address,
       link: formattedContactInfo.addressLink
     }
-  ].filter( item => item.description ); // Only show items with data
-  const renderFieldValueInfo = ( item ) => {
-    switch ( item.title ) {
-      case 'Email':
-        return (
-          <li className="flex items-center gap-6" key={ item.title }>
-            <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
-              <div className="text-[28px]">{ item.icon }</div>
-            </div>
-            <div className="flex-1">
-              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
-              <a href={ `mailto:${item.description}` }
-                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
-                { item.description }
-              </a>
-            </div>
-          </li>
-        );
-      case 'Address':
-        return (
-          <li className="flex items-center gap-6" key={ item.title }>
-            <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
-              <div className="text-[28px]">{ item.icon }</div>
-            </div>
-            <div className="flex-1">
-              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
-              <a href={ item.link } target="_blank"
-                className="text-lg text-gray-900 dark:text-white hover:text-accent transition-all duration-300">
-                { item.description }
-              </a>
-            </div>
-          </li>
-        );
-      default:
-        return (
-          <li className="flex items-center gap-6" key={ item.title }>
-            <div
-              className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#f0f0f0] dark:bg-secondary text-accent-light dark:text-accent rounded-md flex items-center justify-center">
-              <div className="text-[28px]">{ item.icon }</div>
-            </div>
-            <div className="flex-1">
-              <p className="text-gray-600 dark:text-white/60">{ item.title }</p>
-              <p className="text-lg text-gray-900 dark:text-white">{ item.description }</p>
-            </div>
-          </li>
-        );
-    }
-  };
+  ].filter( item => item.description );
   return (
     <MotionWrapper
       className="py-6"
@@ -105,7 +59,15 @@ function Contact() {
                   <PhoneDisplay phone={ contactInfo.phone } />
                 </li>
               ) }
-              { info.map( ( item ) => renderFieldValueInfo( item ) ) }
+              { info.map( ( item ) => (
+                <ContactInfoItem
+                  key={ item.title }
+                  icon={ item.icon }
+                  title={ item.title }
+                  description={ item.description }
+                  link={ item.link }
+                />
+              ) ) }
             </ul>
           </div>
         </div>

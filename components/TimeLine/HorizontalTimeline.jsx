@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import ProjectInfo from '@/app/(user)/work/components/ProjectInfo';
+import ProjectInfo from '@/app/[locale]/(user)/work/components/ProjectInfo';
 
 function HorizontalTimeline( { experiences = [] } ) {
   const [hoveredIndex, setHoveredIndex] = useState( null );

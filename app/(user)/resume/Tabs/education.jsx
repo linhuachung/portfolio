@@ -1,14 +1,18 @@
+'use client';
+'use client';
 import React from 'react';
 import { education } from '@/app/(user)/resume/data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Timeline from '@/components/TimeLine/TimeLine';
+import ResumeSectionHeader from '@/components/ResumeSectionHeader';
+import { useTranslations } from 'next-intl';
 
 function Education() {
+  const t = useTranslations( 'resume.education' );
 
   return (
-    <div className="flex flex-col gap-[30px] text-center xl:text-left">
-      <h3 className="text-4xl font-bold text-gray-900 dark:text-white">{ education.title }</h3>
-      <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">{ education.description }</p>
+    <>
+      <ResumeSectionHeader title={ t( 'title' ) } description={ t( 'description' ) } />
       <ScrollArea className="h-[400px]">
         { education.educationExperiences.map( ( item, index ) => {
           return (
@@ -28,7 +32,7 @@ function Education() {
           );
         } ) }
       </ScrollArea>
-    </div>
+    </>
   );
 }
 

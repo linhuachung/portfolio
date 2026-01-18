@@ -4,8 +4,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import Timeline from '@/components/TimeLine/TimeLine';
 import Loader from '@/components/Loader';
 import EmptyState from '@/components/EmptyState';
+import ResumeSectionHeader from '@/components/ResumeSectionHeader';
+import { useTranslations } from 'next-intl';
 
 function Experience() {
+  const t = useTranslations( 'resume.experience' );
   const [experiences, setExperiences] = useState( [] );
   const [loading, setLoading] = useState( true );
   const [error, setError] = useState( null );
@@ -54,8 +57,7 @@ function Experience() {
           setExperiences( [] );
         }
       } catch ( err ) {
-        console.error( 'Failed to fetch experiences:', err );
-        setError( 'Failed to load experiences' );
+        setError( t( 'failedToLoad' ) );
         setExperiences( [] );
       } finally {
         setLoading( false );
@@ -73,49 +75,40 @@ function Experience() {
     return () => {
       window.removeEventListener( 'focus', handleFocus );
     };
-  }, [] );
+  }, [t] );
 
   if ( loading ) {
     return (
-      <div className="flex flex-col gap-[30px] text-center xl:text-left">
-        <h3 className="text-4xl font-bold text-gray-900 dark:text-white">My experience</h3>
-        <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">
-          Frontend Developer skilled in ReactJS and NextJS, API integration, and performance optimization.
-        </p>
+      <>
+        <ResumeSectionHeader title={ t( 'title' ) } description={ t( 'description' ) } />
         <div className="flex items-center justify-center py-12">
           <Loader type="ClipLoader" color="#00ff99" size={ 40 } />
         </div>
-      </div>
+      </>
     );
   }
 
   if ( error ) {
     return (
-      <div className="flex flex-col gap-[30px] text-center xl:text-left">
-        <h3 className="text-4xl font-bold text-gray-900 dark:text-white">My experience</h3>
+      <>
+        <ResumeSectionHeader title={ t( 'title' ) } />
         <EmptyState message={ error } />
-      </div>
+      </>
     );
   }
 
   if ( !experiences || experiences.length === 0 ) {
     return (
-      <div className="flex flex-col gap-[30px] text-center xl:text-left">
-        <h3 className="text-4xl font-bold text-gray-900 dark:text-white">My experience</h3>
-        <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">
-          Frontend Developer skilled in ReactJS and NextJS, API integration, and performance optimization.
-        </p>
-        <EmptyState message="No work experience available yet." />
-      </div>
+      <>
+        <ResumeSectionHeader title={ t( 'title' ) } description={ t( 'description' ) } />
+        <EmptyState message={ t( 'noExperience' ) } />
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col gap-[30px] text-center xl:text-left">
-      <h3 className="text-4xl font-bold text-gray-900 dark:text-white">My experience</h3>
-      <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">
-        Frontend Developer skilled in ReactJS and NextJS, API integration, and performance optimization.
-      </p>
+    <>
+      <ResumeSectionHeader title={ t( 'title' ) } description={ t( 'description' ) } />
       <ScrollArea className="h-[400px]">
         { experiences.map( ( item, index ) => (
           <Timeline
@@ -135,7 +128,7 @@ function Experience() {
           />
         ) ) }
       </ScrollArea>
-    </div>
+    </>
   );
 }
 

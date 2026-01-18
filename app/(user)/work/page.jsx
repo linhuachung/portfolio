@@ -11,9 +11,11 @@ import { BsArrowUpRight, BsGithub } from 'react-icons/bs';
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { projects } from './data';
+import { useTranslations } from 'next-intl';
 
 
 function Page() {
+  const t = useTranslations( 'work' );
   const [project, setProject] = useState( projects[0] );
 
   const handleSlideChange = ( swiper ) => {
@@ -63,7 +65,7 @@ function Page() {
                           className="text-gray-900 dark:text-white text-3xl group-hover:text-accent-light dark:group-hover:text-accent"/>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Live project</p>
+                        <p>{ t( 'liveProject' ) }</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -77,7 +79,7 @@ function Page() {
                           className="text-gray-900 dark:text-white text-3xl group-hover:text-accent-light dark:group-hover:text-accent"/>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Github repository</p>
+                        <p>{ t( 'githubRepo' ) }</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

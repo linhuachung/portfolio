@@ -59,12 +59,6 @@ export async function POST( req, { params } ) {
       return createErrorResponse( STATUS_CODES.BAD_REQUEST, `Invalid contact email format: ${contact.email}` );
     }
 
-    console.log( '📋 Contact found:', {
-      id: contact.id,
-      name: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
-      email: contact.email,
-      emailValid: emailRegex.test( contact.email )
-    } );
 
     // Get user (portfolio owner) info for reply email
     const user = await prismadb.user.findFirst( {
@@ -82,14 +76,6 @@ export async function POST( req, { params } ) {
     let emailSent = false;
     let emailError = null;
 
-    console.log( '📨 Preparing to send reply email:', {
-      contactId: contact.id,
-      recipientEmail: contact.email,
-      recipientName: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
-      adminName: user.name || adminName || 'Portfolio Admin',
-      adminEmail: user.email
-    } );
-
     try {
       await sendReplyEmail( {
         contactId: contact.id,
@@ -102,13 +88,6 @@ export async function POST( req, { params } ) {
       } );
 
       emailSent = true;
-      console.log( '✅ Reply email sent successfully to:', contact.email );
-      console.log( '📋 Contact details:', {
-        id: contact.id,
-        name: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
-        email: contact.email,
-        messageLength: contact.message?.length || 0
-      } );
     } catch ( emailErr ) {
       console.error( '❌ Failed to send reply email:', {
         error: emailErr.message,
