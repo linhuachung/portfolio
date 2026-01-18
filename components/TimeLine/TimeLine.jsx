@@ -2,6 +2,18 @@ import Content from '@/components/TimeLine/Content';
 import Time from '@/components/TimeLine/Time';
 import { motion } from 'framer-motion';
 
+// Constants
+const ACCENT_COLOR = 'bg-accent-light dark:bg-accent';
+const ANIMATION_DELAY_MULTIPLIER = 0.2;
+
+// Animation configuration
+const ANIMATION_CONFIG = {
+  initial: { opacity: 0, y: 50, scale: 0.9 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  transition: { duration: 0.6, ease: 'easeOut' },
+  viewport: { once: false, amount: 0.2 }
+};
+
 function Timeline( {
   index = 0,
   type = 'work',
@@ -17,34 +29,38 @@ function Timeline( {
   info,
   ...props
 } ) {
+  // Validation
   if ( !title && !description ) {
-    console.warn( 'Timeline component: Missing required props (title or description)' );
+    if ( process.env.NODE_ENV === 'development' ) {
+      console.warn( '[Timeline] Missing required props: title or description' );
+    }
     return null;
   }
 
-  const color = 'bg-accent-light dark:bg-accent';
+  // Calculate animation delay
+  const animationDelay = index * ANIMATION_DELAY_MULTIPLIER;
 
   return (
     <motion.div
       className="flex flex-col sm:flex-row m-4 mb-8 relative px-5 sm:justify-center xl:justify-start"
-      initial={ { opacity: 0, y: 50, scale: 0.9 } }
-      whileInView={ { opacity: 1, y: 0, scale: 1 } }
-      transition={ { duration: 0.6, delay: index * 0.2, ease: 'easeOut' } }
-      viewport={ { once: false, amount: 0.2 } }
+      initial={ ANIMATION_CONFIG.initial }
+      whileInView={ ANIMATION_CONFIG.animate }
+      transition={ { ...ANIMATION_CONFIG.transition, delay: animationDelay } }
+      viewport={ ANIMATION_CONFIG.viewport }
     >
       <Time
         startDate={ startDate }
         endDate={ endDate }
         isCurrent={ isCurrent }
         type={ type }
-        color={ color }
+        color={ ACCENT_COLOR }
         logo={ logo }
         link={ link }
         { ...props }
       />
       <Content
         title={ title }
-        color={ color }
+        color={ ACCENT_COLOR }
         location={ location }
         description={ description }
         techStack={ techStack }
