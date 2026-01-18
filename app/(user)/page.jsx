@@ -4,11 +4,14 @@ import Photo from '@/components/Photo';
 import Social from '@/components/Social';
 import Stats from '@/components/Stats';
 import Toast from '@/components/Toast';
+import TypingText from '@/components/TypingText';
 import { Button } from '@/components/ui/button';
 import { CV_CONSTANTS, CV_MESSAGES } from '@/constants/cv-messages';
 import { TOAST_STATUS } from '@/constants/toast';
 import { trackCvDownload } from '@/lib/analytics';
 import { getCleanCvFileName, validateCvPath } from '@/lib/cv-utils';
+import { extractPlainTextFromHTML } from '@/lib/html-utils';
+import { TYPING_ANIMATION } from '@/constants/animations';
 import { useEffect, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
 
@@ -146,6 +149,7 @@ function Home() {
   const greeting = profileData.greeting;
   const bioParagraph = profileData.bioParagraph || '';
   const socialLinks = profileData.socialLinks || [];
+  const bioText = extractPlainTextFromHTML( bioParagraph );
 
   return (
     <section className="h-full">
@@ -159,8 +163,18 @@ function Home() {
             </h1>
             <div
               className="mb-9 text-gray-700 dark:text-white/80 prose prose-sm dark:prose-invert max-w-[500px]"
-              dangerouslySetInnerHTML={ { __html: bioParagraph } }
-            />
+            >
+              { bioText ? (
+                <TypingText
+                  text={ bioText }
+                  speed={ TYPING_ANIMATION.DEFAULT_SPEED }
+                  showCursor={ true }
+                  className="block"
+                />
+              ) : (
+                <div dangerouslySetInnerHTML={ { __html: bioParagraph } } />
+              ) }
+            </div>
             <div className="flex flex-col xl:flex-row items-center gap-8">
               <Button
                 variant="outline"
