@@ -2,6 +2,12 @@
   "buildCommand": "npx prisma generate && npm run build",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["sin1"]
+  "regions": ["sin1"],
+  "redirects": [
+    {
+      "source": "/cv",
+      "destination": "https://drive.google.com/file/d/1Jv0OA6El-0zT6gMgHQMgPZYKOlsx7RqZ/view",
+      "permanent": true
+    }
+  ]
 }
-
