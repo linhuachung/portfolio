@@ -1,51 +1,52 @@
 'use client';
 
 import CountUp from 'react-countup';
-
-const defaultStats = [
-  {
-    num: 4,
-    text: 'Years of experience',
-    isPlus: true
-  },
-  {
-    num: 8,
-    text: 'Projects completed'
-  },
-  {
-    num: 4,
-    text: 'Technologies mastered',
-    isPlus: true
-  },
-  {
-    num: 500,
-    text: 'Code commits',
-    isPlus: true
-  }
-];
+import { useTranslations } from 'next-intl';
 
 function Stats( { stats } ) {
+  const t = useTranslations( 'stats' );
+
   const statsData = stats ? [
     {
       num: stats.years || 4,
-      text: 'Years of experience',
+      text: t( 'yearsOfExperience' ),
       isPlus: true
     },
     {
       num: stats.projects || 8,
-      text: 'Projects completed'
+      text: t( 'projectsCompleted' )
     },
     {
       num: stats.technologies || 4,
-      text: 'Technologies mastered',
+      text: t( 'technologiesMastered' ),
       isPlus: true
     },
     {
       num: stats.commits || 500,
-      text: 'Code commits',
+      text: t( 'codeCommits' ),
       isPlus: true
     }
-  ] : defaultStats;
+  ] : [
+    {
+      num: 4,
+      text: t( 'yearsOfExperience' ),
+      isPlus: true
+    },
+    {
+      num: 8,
+      text: t( 'projectsCompleted' )
+    },
+    {
+      num: 4,
+      text: t( 'technologiesMastered' ),
+      isPlus: true
+    },
+    {
+      num: 500,
+      text: t( 'codeCommits' ),
+      isPlus: true
+    }
+  ];
 
   return (
     <section className="pt-4 pb-12 xl:pt-0 xl:pb-0">
