@@ -40,8 +40,6 @@ export async function GET( req, { params } ) {
           }
         } );
       } catch ( updateErr ) {
-        // Silently fail - field might not be in schema yet
-        console.log( 'Email tracking: Field emailOpenedAt may not exist yet' );
       }
     }
 

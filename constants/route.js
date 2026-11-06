@@ -1,41 +1,37 @@
 export const LINKS = [
   {
-    name: "Home",
-    path: "/"
+    name: 'home',
+    path: '/'
   },
   {
-    name: "Resume",
-    path: "/resume"
+    name: 'resume',
+    path: '/resume'
   },
   {
-    name: "Work",
-    path: "/work"
-  },
-  {
-    name: "Contact",
-    path: "/contact"
+    name: 'work',
+    path: '/work'
   }
 ];
 
 export const ADMIN_LINKS = [
   {
-    name: "Dashboard",
-    path: "/admin"
+    name: 'Dashboard',
+    path: '/admin'
   },
   {
-    name: "User",
-    path: "/admin/user"
+    name: 'User',
+    path: '/admin/user'
   },
   {
-    name: "Experience",
-    path: "/admin/experience"
+    name: 'Experience',
+    path: '/admin/experience'
   },
   {
-    name: "Education",
-    path: "/admin/education"
+    name: 'Education',
+    path: '/admin/education'
   },
   {
-    name: "Project",
-    path: "/admin/project"
+    name: 'Project',
+    path: '/admin/project'
   }
 ];
