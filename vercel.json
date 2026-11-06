@@ -6,8 +6,8 @@
   "redirects": [
     {
       "source": "/cv",
-      "destination": "https://drive.google.com/file/d/1Jv0OA6El-0zT6gMgHQMgPZYKOlsx7RqZ/view",
-      "permanent": true
+      "destination": "/Resume_LinHuaChung_SoftwareEngineer.pdf",
+      "permanent": false
     }
   ]
 }
