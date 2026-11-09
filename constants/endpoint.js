@@ -8,5 +8,4 @@ export const ADMIN_ENDPOINT = {
 };
 
 export const USER_ENDPOINT = {
-  SEND_MAIL: '/api/user/email'
 };

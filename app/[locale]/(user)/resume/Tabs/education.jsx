@@ -1,0 +1,38 @@
+'use client';
+import React from 'react';
+import { education } from '@/app/[locale]/(user)/resume/data';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Timeline from '@/components/TimeLine/TimeLine';
+import { useTranslations } from 'next-intl';
+
+function Education() {
+  const t = useTranslations( 'resume.education' );
+
+  return (
+    <div className="flex flex-col gap-[30px] text-center xl:text-left">
+      <h3 className="text-4xl font-bold text-gray-900 dark:text-white">{ t( 'title' ) }</h3>
+      <p className="max-w-[600px] text-gray-700 dark:text-white/60 mx-auto xl:mx-0">{ t( 'description' ) }</p>
+      <ScrollArea className="h-[400px]">
+        { education.educationExperiences.map( ( item, index ) => {
+          return (
+            <Timeline
+              key={ item.id || item.school }
+              title={ item.school }
+              index={ index }
+              type={ 'school' }
+              startDate={ item.startDate }
+              endDate={ item.endDate }
+              isCurrent={ item.isCurrent }
+              location={ item.location }
+              info={ item.degree }
+              logo={ item?.logo }
+              link={ item?.link }
+            />
+          );
+        } ) }
+      </ScrollArea>
+    </div>
+  );
+}
+
+export default Education;

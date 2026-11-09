@@ -1,0 +1,126 @@
+{
+  "common": {
+    "brand": "Chung",
+    "hireMe": "Liên hệ",
+    "downloadCv": "Tải CV",
+    "toggleTheme": "Chuyển đổi giao diện",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "send": "Gửi",
+    "sending": "Đang gửi...",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "close": "Đóng",
+    "viewDetail": "Xem chi tiết",
+    "noData": "Không có dữ liệu",
+    "available": "Có sẵn",
+    "notAvailable": "Không có sẵn"
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "resume": "Sơ yếu lý lịch",
+    "work": "Dự án",
+    "contact": "Liên hệ",
+    "dashboard": "Bảng điều khiển",
+    "user": "Người dùng",
+    "experience": "Kinh nghiệm",
+    "education": "Học vấn",
+    "project": "Dự án"
+  },
+  "home": {
+    "downloadCv": "Tải CV",
+    "noProfileData": "Không có dữ liệu hồ sơ"
+  },
+  "resume": {
+    "tabs": {
+      "experience": "Kinh nghiệm",
+      "education": "Học vấn",
+      "skills": "Kỹ năng",
+      "about": "Về tôi"
+    },
+    "experience": {
+      "title": "Kinh nghiệm làm việc",
+      "description": "Frontend Developer thành thạo ReactJS và NextJS, tích hợp API và tối ưu hiệu suất.",
+      "failedToLoad": "Không thể tải kinh nghiệm",
+      "noExperience": "Chưa có kinh nghiệm làm việc."
+    },
+    "education": {
+      "title": "Học vấn",
+      "description": "Tôi đã học Khoa học Máy tính tại Đại học Mở Thành phố Hồ Chí Minh, xây dựng nền tảng vững chắc về lập trình và phát triển phần mềm. Năm 2020, tôi hoàn thành chương trình Fullstack Developer tại Cybersoft Academy, nâng cao kỹ năng phát triển web thực tế. Những trải nghiệm này đã chuẩn bị cho tôi sự nghiệp trong công nghệ."
+    },
+    "skills": {
+      "title": "Kỹ năng",
+      "description": "Frontend Developer thành thạo HTML, CSS, JavaScript, ReactJS, Redux, NextJS, Tailwind CSS và Node.js, tập trung vào việc xây dựng các ứng dụng web hiệu suất cao, responsive cho thị trường Nhật Bản và Mỹ, đảm bảo tích hợp liền mạch và UI/UX hiện đại."
+    },
+    "about": {
+      "title": "Về tôi",
+      "description": "Tôi là Frontend Developer với hơn 3 năm kinh nghiệm trong ReactJS, chuyên xây dựng các ứng dụng web responsive và hiệu suất cao cho thị trường Nhật Bản và Mỹ. Với nền tảng vững chắc về backend development, tôi đảm bảo tích hợp liền mạch và chức năng mạnh mẽ. Linh hoạt và cam kết học hỏi liên tục, tôi phát triển mạnh trong môi trường dài hạn, năng động.",
+      "fields": {
+        "name": "Tên",
+        "phone": "Điện thoại",
+        "experience": "Kinh nghiệm",
+        "skype": "Skype",
+        "nationality": "Quốc tịch",
+        "email": "Email",
+        "freelance": "Freelance",
+        "languages": "Ngôn ngữ"
+      },
+      "fieldValues": {
+        "available": "Có sẵn",
+        "years": "3+ Năm",
+        "nationality": "Việt Nam",
+        "languages": "Tiếng Anh, Tiếng Việt"
+      }
+    }
+  },
+  "work": {
+    "liveProject": "Dự án trực tuyến",
+    "githubRepo": "Kho lưu trữ Github"
+  },
+  "contact": {
+    "title": "Hãy làm việc cùng nhau",
+    "description": "Hứng thú hợp tác trong các dự án có tác động, tôi mang đến chuyên môn về ReactJS, NextJS và phát triển frontend hiện đại. Hãy kết nối để tạo ra những trải nghiệm kỹ thuật số liền mạch và hấp dẫn cùng nhau!",
+    "form": {
+      "title": "Hãy làm việc cùng nhau",
+      "description": "Hứng thú hợp tác trong các dự án có tác động, tôi mang đến chuyên môn về ReactJS, NextJS và phát triển frontend hiện đại. Hãy kết nối để tạo ra những trải nghiệm kỹ thuật số liền mạch và hấp dẫn cùng nhau!",
+      "firstname": "Tên",
+      "lastname": "Họ",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "service": "Dịch vụ",
+      "selectService": "Chọn dịch vụ",
+      "message": "Nhập tin nhắn của bạn tại đây",
+      "sendMessage": "Gửi tin nhắn",
+      "sending": "Đang gửi...",
+      "failedToSend": "Không thể gửi tin nhắn. Vui lòng thử lại.",
+      "success": "Gửi tin nhắn thành công!"
+    },
+    "services": {
+      "frontend": "Phát triển Frontend",
+      "backend": "Phát triển Backend",
+      "fullstack": "Phát triển Fullstack"
+    },
+    "info": {
+      "email": "Email",
+      "address": "Địa chỉ"
+    }
+  },
+  "cv": {
+    "notAvailable": "CV không có sẵn. Vui lòng tải lên file CV trong bảng quản trị.",
+    "outdatedPath": "Đường dẫn file CV đã lỗi thời. Vui lòng tải lên file CV mới trong bảng quản trị.",
+    "invalidPath": "Đường dẫn file CV không hợp lệ. Vui lòng tải lên file CV mới trong bảng quản trị.",
+    "downloadFailed": "Không thể tải CV. Vui lòng thử lại sau.",
+    "fetchFailed": "Không thể tải file CV.",
+    "downloadSuccess": "Tải CV thành công!",
+    "downloadTimeout": "Hết thời gian tải. Vui lòng thử lại."
+  },
+  "stats": {
+    "yearsOfExperience": "Năm kinh nghiệm",
+    "projectsCompleted": "Dự án đã hoàn thành",
+    "technologiesMastered": "Công nghệ đã thành thạo",
+    "codeCommits": "Lần commit code"
+  }
+}
