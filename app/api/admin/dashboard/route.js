@@ -1,281 +1,139 @@
 import STATUS_CODES from '@/constants/status';
+import { parseDashboardPeriod } from '@/lib/admin-dashboard-query';
+import { verifyAuth } from '@/lib/auth-utils';
 import { DataResponse } from '@/lib/data-response';
 import prismadb from '@/lib/prisma';
+import { withTimeout } from '@/lib/promise-timeout';
 import { NextResponse } from 'next/server';
+import { contentVersion, education, experiences, projects, skills } from '@/content/public-content';
+import { buildOverviewContent, formatChartData, toRecentContact } from '@/lib/admin-overview';
 
-export async function GET( req ) {
-  try {
-    const { searchParams } = new URL( req.url );
-    const period = searchParams.get( 'period' ) || 'month';
-
-    const now = new Date();
-    const startDate = new Date();
-
-    switch ( period ) {
-      case 'day':
-        startDate.setDate( now.getDate() - 7 );
-        break;
-      case 'week':
-        startDate.setDate( now.getDate() - 30 );
-        break;
-      case 'month':
-        startDate.setMonth( now.getMonth() - 12 );
-        break;
-      case 'year':
-        startDate.setFullYear( now.getFullYear() - 5 );
-        break;
-    }
-    let totalProjects = 0;
-    let totalSkills = 0;
-    let totalExperiences = 0;
-    let totalEducation = 0;
-    let totalContacts = 0;
-    let totalVisits = 0;
-    let totalCvDownloads = 0;
-    let publishedProjects = 0;
-
-    try {
-      [
-        totalProjects,
-        totalSkills,
-        totalExperiences,
-        totalEducation,
-        totalContacts,
-        totalVisits,
-        totalCvDownloads,
-        publishedProjects
-      ] = await Promise.all( [
-        prismadb.project?.count() || Promise.resolve( 0 ),
-        prismadb.skill?.count() || Promise.resolve( 0 ),
-        prismadb.experience?.count() || Promise.resolve( 0 ),
-        prismadb.education?.count() || Promise.resolve( 0 ),
-        prismadb.contact?.count() || Promise.resolve( 0 ),
-        prismadb.visit?.count() || Promise.resolve( 0 ),
-        prismadb.cvDownload?.count() || Promise.resolve( 0 ),
-        prismadb.project?.count( { where: { isPublished: true } } ) || Promise.resolve( 0 )
-      ] );
-    } catch ( countError ) {
-      console.error( 'Failed to fetch counts:', countError );
-    }
-
-    let allVisits = [];
-    try {
-      allVisits = await prismadb.visit.findMany( {
-        where: {
-          createdAt: {
-            gte: startDate
-          }
-        },
-        select: {
-          createdAt: true
-        }
-      } );
-    } catch ( error ) {
-      console.error( 'Failed to fetch visits:', error );
-    }
-
-    let allCvDownloads = [];
-    try {
-      allCvDownloads = await prismadb.cvDownload.findMany( {
-        where: {
-          createdAt: {
-            gte: startDate
-          }
-        },
-        select: {
-          createdAt: true
-        }
-      } );
-    } catch ( error ) {
-      console.error( 'Failed to fetch CV downloads:', error );
-    }
-
-    let visitsWithPath = [];
-    try {
-      visitsWithPath = await prismadb.visit.findMany( {
-        where: {
-          createdAt: {
-            gte: startDate
-          },
-          path: {
-            not: null
-          }
-        },
-        select: {
-          path: true
-        }
-      } );
-    } catch ( error ) {
-      console.error( 'Failed to fetch visits with path:', error );
-    }
-
-    const pathCounts = {};
-    visitsWithPath.forEach( ( visit ) => {
-      const path = visit.path || 'Unknown';
-      pathCounts[path] = ( pathCounts[path] || 0 ) + 1;
-    } );
-
-    const visitsByPath = Object.entries( pathCounts )
-      .map( ( [path, count] ) => ( {
-        path,
-        _count: { id: count }
-      } ) )
-      .sort( ( a, b ) => b._count.id - a._count.id )
-      .slice( 0, 10 );
-
-    let allContacts = [];
-    try {
-      allContacts = await prismadb.contact.findMany( {
-        select: {
-          status: true
-        }
-      } );
-    } catch ( error ) {
-      console.error( 'Failed to fetch contacts:', error );
-    }
-
-    const statusCounts = {};
-    allContacts.forEach( ( contact ) => {
-      statusCounts[contact.status] = ( statusCounts[contact.status] || 0 ) + 1;
-    } );
-
-    const contactsByStatus = Object.entries( statusCounts ).map( ( [status, count] ) => ( {
-      status,
-      _count: { id: count }
-    } ) );
-
-    let allProjects = [];
-    try {
-      allProjects = await prismadb.project.findMany( {
-        select: {
-          category: true
-        }
-      } );
-    } catch ( error ) {
-      console.error( 'Failed to fetch projects:', error );
-    }
-
-    const categoryCounts = {};
-    allProjects.forEach( ( project ) => {
-      categoryCounts[project.category] = ( categoryCounts[project.category] || 0 ) + 1;
-    } );
-
-    const projectsByCategory = Object.entries( categoryCounts ).map( ( [category, count] ) => ( {
-      category,
-      _count: { id: count }
-    } ) );
-
-    let recentContacts = [];
-    try {
-      const contacts = await prismadb.contact.findMany( {
-        take: 5,
-        orderBy: {
-          createdAt: 'desc'
-        },
-        select: {
-          id: true,
-          firstname: true,
-          lastname: true,
-          name: true,
-          email: true,
-          status: true,
-          createdAt: true
-        }
-      } );
-
-      // Format contacts: use name if available, otherwise combine firstname + lastname
-      recentContacts = contacts.map( contact => ( {
-        id: contact.id,
-        name: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
-        email: contact.email,
-        status: contact.status,
-        createdAt: contact.createdAt
-      } ) );
-    } catch ( error ) {
-      console.error( 'Failed to fetch recent contacts:', error );
-      recentContacts = [];
-    }
-
-    const formatChartData = ( data, period ) => {
-      const grouped = {};
-      data.forEach( ( item ) => {
-        const date = new Date( item.createdAt );
-        let key;
-
-        switch ( period ) {
-          case 'day':
-            key = date.toISOString().split( 'T' )[0];
-            break;
-          case 'week': {
-            const week = Math.floor( ( now - date ) / ( 7 * 24 * 60 * 60 * 1000 ) );
-            key = `Week ${week}`;
-            break;
-          }
-          case 'month':
-            key = `${date.getFullYear()}-${String( date.getMonth() + 1 ).padStart( 2, '0' )}`;
-            break;
-          case 'year':
-            key = String( date.getFullYear() );
-            break;
-        }
-
-        if ( !grouped[key] ) {
-          grouped[key] = 0;
-        }
-        grouped[key] += 1;
-      } );
-
-      return Object.entries( grouped )
-        .map( ( [date, count] ) => ( {
-          date,
-          count
-        } ) )
-        .sort( ( a, b ) => a.date.localeCompare( b.date ) );
-    };
-
-    const visitsChartData = formatChartData( allVisits, period );
-    const cvDownloadsChartData = formatChartData( allCvDownloads, period );
-
-    const dashboardData = {
-      stats: {
-        totalProjects,
-        publishedProjects,
-        totalSkills,
-        totalExperiences,
-        totalEducation,
-        totalContacts,
-        totalVisits,
-        totalCvDownloads
-      },
-      charts: {
-        visits: visitsChartData,
-        cvDownloads: cvDownloadsChartData,
-        visitsByPath: visitsByPath.map( ( item ) => ( {
-          path: item.path || 'Unknown',
-          count: item._count.id
-        } ) ),
-        contactsByStatus: contactsByStatus.map( ( item ) => ( {
-          status: item.status,
-          count: item._count.id
-        } ) ),
-        projectsByCategory: projectsByCategory.map( ( item ) => ( {
-          category: item.category,
-          count: item._count.id
-        } ) )
-      },
-      recentContacts
-    };
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Dashboard data retrieved', dashboardData ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
-  } catch ( error ) {
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
-  }
+function getStartDate( period, now ) {
+  const startDate = new Date( now );
+  if ( period === 'day' ) {startDate.setDate( now.getDate() - 7 );}
+  if ( period === 'week' ) {startDate.setDate( now.getDate() - 30 );}
+  if ( period === 'month' ) {startDate.setMonth( now.getMonth() - 12 );}
+  if ( period === 'year' ) {startDate.setFullYear( now.getFullYear() - 5 );}
+  return startDate;
 }
 
+function countBy( items, key ) {
+  const counts = {};
+  items.forEach( item => {
+    const value = item[key] || 'Unknown';
+    counts[value] = ( counts[value] || 0 ) + 1;
+  } );
+  return counts;
+}
+
+const emptyData = {
+  totalContacts: 0,
+  pendingContacts: 0,
+  totalVisits: 0,
+  totalCvDownloads: 0,
+  visits: [],
+  cvDownloads: [],
+  visitsWithPath: [],
+  contacts: [],
+  recentContacts: []
+};
+
+async function loadDashboardData( startDate ) {
+  const [
+    totalContacts,
+    pendingContacts,
+    totalVisits,
+    totalCvDownloads,
+    visits,
+    cvDownloads,
+    visitsWithPath,
+    contacts,
+    recentContacts
+  ] = await Promise.all( [
+    prismadb.contact.count(),
+    prismadb.contact.count( { where: { status: 'pending' } } ),
+    prismadb.visit.count(),
+    prismadb.cvDownload.count(),
+    prismadb.visit.findMany( { where: { createdAt: { gte: startDate } }, select: { createdAt: true } } ),
+    prismadb.cvDownload.findMany( { where: { createdAt: { gte: startDate } }, select: { createdAt: true } } ),
+    prismadb.visit.findMany( { where: { createdAt: { gte: startDate }, path: { not: null } }, select: { path: true } } ),
+    prismadb.contact.findMany( { select: { status: true } } ),
+    prismadb.contact.findMany( {
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        name: true,
+        service: true,
+        message: true,
+        status: true,
+        createdAt: true
+      }
+    } )
+  ] );
+
+  return {
+    totalContacts,
+    pendingContacts,
+    totalVisits,
+    totalCvDownloads,
+    visits,
+    cvDownloads,
+    visitsWithPath,
+    contacts,
+    recentContacts
+  };
+}
+
+export async function GET( req ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
+
+  const { searchParams } = new URL( req.url );
+  const period = parseDashboardPeriod( searchParams );
+  const now = new Date();
+  let databaseAvailable = true;
+  let records;
+
+  try {
+    records = await withTimeout( loadDashboardData( getStartDate( period, now ) ), 3500 );
+  } catch {
+    databaseAvailable = false;
+    records = emptyData;
+    console.warn( 'Dashboard database unavailable; serving empty operational data.' );
+  }
+
+  const pathCounts = countBy( records.visitsWithPath, 'path' );
+  const statusCounts = countBy( records.contacts, 'status' );
+  const canonicalOverview = buildOverviewContent( { experiences, education, projects, skills, pendingContacts: records.pendingContacts } );
+  const dashboardData = {
+    meta: { databaseAvailable, contentVersion, generatedAt: now.toISOString() },
+    stats: {
+      ...canonicalOverview.stats,
+      publishedProjects: projects.length,
+      totalSkills: skills.reduce( ( total, group ) => total + group.items.length, 0 ),
+      totalExperiences: experiences.length,
+      totalEducation: education.length,
+      totalContacts: records.totalContacts,
+      pendingContacts: records.pendingContacts,
+      totalVisits: records.totalVisits,
+      totalCvDownloads: records.totalCvDownloads
+    },
+    charts: {
+      visits: formatChartData( records.visits, period ),
+      cvDownloads: formatChartData( records.cvDownloads, period ),
+      visitsByPath: Object.entries( pathCounts ).map( ( [path, count] ) => ( { path, count } ) ).sort( ( a, b ) => b.count - a.count ).slice( 0, 10 ),
+      contactsByStatus: Object.entries( statusCounts ).map( ( [status, count] ) => ( { status, count } ) )
+    },
+    actionQueue: canonicalOverview.actionQueue,
+    contentSummary: canonicalOverview.contentSummary,
+    recentContacts: records.recentContacts.map( toRecentContact )
+  };
+
+  return NextResponse.json(
+    DataResponse( STATUS_CODES.SUCCESS, databaseAvailable ? 'Dashboard data retrieved' : 'Dashboard is using offline data', dashboardData ),
+    { status: STATUS_CODES.SUCCESS }
+  );
+}

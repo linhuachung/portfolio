@@ -3,11 +3,15 @@ import prismadb from '@/lib/prisma';
 import STATUS_CODES from '@/constants/status';
 import { DataResponse } from '@/lib/data-response';
 import { sendReplyEmail } from '@/lib/resend-reply';
+import { verifyAuth } from '@/lib/auth-utils';
+import { handleApiError } from '@/lib/api-error-handler';
 
 /**
  * PUT - Update a reply
  */
 export async function PUT( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     const resolvedParams = await params;
     const { id, replyId } = resolvedParams;
@@ -145,7 +149,7 @@ export async function PUT( req, { params } ) {
             emailSent = true;
           } catch ( emailErr ) {
             console.error( 'Failed to send reply email:', emailErr );
-            emailError = emailErr.message;
+            emailError = 'Email delivery failed';
           }
         }
       }
@@ -174,11 +178,7 @@ export async function PUT( req, { params } ) {
     );
 
   } catch ( error ) {
-    console.error( 'Error updating reply:', error );
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
+    return handleApiError( error, 'Update contact reply' );
   }
 }
 
@@ -186,6 +186,8 @@ export async function PUT( req, { params } ) {
  * DELETE - Delete a reply
  */
 export async function DELETE( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     const resolvedParams = await params;
     const { id, replyId } = resolvedParams;
@@ -224,11 +226,7 @@ export async function DELETE( req, { params } ) {
     );
 
   } catch ( error ) {
-    console.error( 'Error deleting reply:', error );
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
+    return handleApiError( error, 'Delete contact reply' );
   }
 }
 

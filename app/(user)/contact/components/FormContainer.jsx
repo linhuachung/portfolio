@@ -1,123 +1,266 @@
 'use client';
 
-import FormWrapper from '@/components/FormWrapper';
-import { InputField } from '@/components/InputField';
-import { PhoneField } from '@/components/PhoneField';
-import { SelectField } from '@/components/SelectField';
-import { TextareaField } from '@/components/TextareaField';
-import Toast from '@/components/Toast';
-import { Button } from '@/components/ui/button';
-import { CONTACT_SERVICES } from '@/constants/contact';
-import { TOAST_STATUS } from '@/constants/toast';
-import { submitContactForm } from '@/lib/api/contact';
-import { formatPhoneForDisplay } from '@/lib/phone-utils';
-import { validationContactSchema } from '@/services/schema';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { validateContactPayload } from '@/lib/contact-validation';
+import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
+import CheckCircleOutlineRounded from '@mui/icons-material/CheckCircleOutlineRounded';
+import ReplayRounded from '@mui/icons-material/ReplayRounded';
+import SendRounded from '@mui/icons-material/SendRounded';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import TextField from '@mui/material/TextField';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useEffect, useRef, useState } from 'react';
+import { BodyCopy, Kicker } from '@/app/(user)/components/PublicLayout.styles';
+import {
+  Confirmation,
+  ContactForm,
+  FieldGrid,
+  FormActions,
+  FormHeader,
+  FormStep,
+  FormStepper,
+  FormTitle,
+  MessageField,
+  PrivacyNote,
+  ReviewChips,
+  ServiceControl,
+  StepCount,
+  SubmitAlert,
+  VisuallyHiddenLegend
+} from '@/app/(user)/contact/Contact.styles';
 
-function FormContainer() {
-  const form = useForm( {
-    resolver: yupResolver( validationContactSchema ),
-    mode: 'onChange'
-  } );
+const initialData = { name: '', email: '', service: '', message: '' };
+const serviceOptions = [
+  ['frontend', 'Product interface or workflow'],
+  ['ui', 'Design system or UI implementation'],
+  ['performance', 'Performance or accessibility review'],
+  ['fullstack', 'Engineering role or collaboration']
+];
+const stepLabels = ['Contact details', 'Message'];
 
-  const {
-    formState: { isSubmitting },
-    reset,
-    control
-  } = form;
+export default function FormContainer() {
+  const [step, setStep] = useState( 1 );
+  const [data, setData] = useState( initialData );
+  const [errors, setErrors] = useState( {} );
+  const [status, setStatus] = useState( 'idle' );
+  const [submitError, setSubmitError] = useState( '' );
+  const [pendingFocus, setPendingFocus] = useState( null );
+  const fields = useRef( {} );
+  const reduceMotion = useMediaQuery( '(prefers-reduced-motion: reduce)', { noSsr: true } );
 
-  const onSubmit = async ( data ) => {
+  useEffect( () => {
+    if ( !pendingFocus ) {return undefined;}
+    const frame = requestAnimationFrame( () => {
+      fields.current[pendingFocus]?.focus();
+      setPendingFocus( null );
+    } );
+    return () => cancelAnimationFrame( frame );
+  }, [pendingFocus, step] );
+
+  const updateField = event => {
+    const { name, value } = event.target;
+    setData( current => ( { ...current, [name]: value } ) );
+    setErrors( current => ( { ...current, [name]: undefined } ) );
+    setSubmitError( '' );
+    if ( status === 'error' ) {setStatus( 'idle' );}
+  };
+
+  const focusFirstError = nextErrors => {
+    const first = ['name', 'email', 'service', 'message'].find( field => nextErrors[field] );
+    if ( first ) {setPendingFocus( first );}
+  };
+
+  const continueToMessage = () => {
+    const result = validateContactPayload( data );
+    const firstStepErrors = Object.fromEntries( Object.entries( result.errors ).filter( ( [key] ) => key !== 'message' ) );
+    if ( Object.keys( firstStepErrors ).length ) {
+      setErrors( firstStepErrors );
+      focusFirstError( firstStepErrors );
+      return;
+    }
+    setSubmitError( '' );
+    setStep( 2 );
+    setPendingFocus( 'message' );
+  };
+
+  const goBack = () => {
+    setStep( 1 );
+    setSubmitError( '' );
+    if ( status === 'error' ) {setStatus( 'idle' );}
+  };
+
+  const resetForm = () => {
+    setData( initialData );
+    setErrors( {} );
+    setSubmitError( '' );
+    setStep( 1 );
+    setStatus( 'idle' );
+  };
+
+  const submit = async event => {
+    event.preventDefault();
+    const result = validateContactPayload( data );
+    if ( !result.valid ) {
+      setErrors( result.errors );
+      if ( result.errors.name || result.errors.email || result.errors.service ) {setStep( 1 );}
+      setSubmitError( '' );
+      focusFirstError( result.errors );
+      return;
+    }
+
+    setStatus( 'submitting' );
+    setSubmitError( '' );
     try {
-      const formattedData = {
-        ...data,
-        phone: formatPhoneForDisplay( data.phone )
-      };
-
-      await submitContactForm( formattedData );
-      reset( {
-        firstname: '',
-        lastname: '',
-        email: '',
-        phone: '',
-        service: '',
-        message: ''
+      const response = await fetch( '/api/user/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( result.data )
       } );
+      const responseData = await response.json().catch( () => ( {} ) );
+      if ( !response.ok ) {
+        if ( Array.isArray( responseData.errors ) ) {
+          const apiErrors = Object.fromEntries( responseData.errors.map( error => [error.field, error.message] ) );
+          setErrors( apiErrors );
+          if ( apiErrors.name || apiErrors.email || apiErrors.service ) {setStep( 1 );}
+          setStatus( 'idle' );
+          setSubmitError( '' );
+          focusFirstError( apiErrors );
+          return;
+        }
+        const message = response.status === 429
+          ? 'Too many messages were sent. Try again later or use the direct email link.'
+          : 'Message could not be sent. Try again or use the direct email link.';
+        throw new Error( message );
+      }
+      setStatus( 'success' );
     } catch ( error ) {
-      Toast( {
-        title: 'Failed to send the message. Please try again.',
-        type: TOAST_STATUS.error
-      } );
+      setStatus( 'error' );
+      setSubmitError( error instanceof Error ? error.message : 'Message could not be sent. Try again or use the direct email link.' );
     }
   };
 
+  if ( status === 'success' ) {
+    return (
+      <Confirmation elevation={ 0 } role="status" $reduceMotion={ reduceMotion } data-testid="contact-form-panel">
+        <CheckCircleOutlineRounded aria-hidden="true" />
+        <Kicker component="p">Message received</Kicker>
+        <FormTitle component="h2">Thank you, { data.name }.</FormTitle>
+        <BodyCopy component="p">Your note is in. I will review the context and reply by email.</BodyCopy>
+        <Button type="button" variant="outlined" startIcon={ <ReplayRounded /> } onClick={ resetForm }>Send another</Button>
+      </Confirmation>
+    );
+  }
+
   return (
-    <>
-      <FormWrapper
-        form={ form }
-        className="flex flex-col gap-6 px-10 py-8 bg-[#f5f5f5] dark:bg-secondary rounded-xl"
-        onSubmit={ onSubmit }
-        isLoading={ isSubmitting }
-      >
-        <h3 className="text-4xl text-accent-light dark:text-accent">Let&apos;s work together</h3>
-        <p className="text-gray-700 dark:text-white/60 mt-5 mb-5">
-          Excited to collaborate on impactful projects, I bring expertise in
-          ReactJS, NextJS, and modern frontend development. Let’s connect to
-          create seamless and engaging digital experiences together!
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <InputField
-            name="firstname"
-            placeholder="Firstname"
-            control={ control }
-            required={ true }
-            isSubmitting={ isSubmitting }
-          />
-          <InputField
-            name="lastname"
-            placeholder="Lastname"
-            control={ control }
-            required={ true }
-            isSubmitting={ isSubmitting }
-          />
-          <InputField
-            name="email"
-            placeholder="Email"
-            control={ control }
-            required={ true }
-            isSubmitting={ isSubmitting }
-          />
-          <PhoneField
-            name="phone"
-            placeholder="Phone number"
-            control={ control }
-            isSubmitting={ isSubmitting }
-          />
-        </div>
-        <div className="my-5">
-          <SelectField
-            name="service"
-            options={ CONTACT_SERVICES }
-            placeholder="Select a service"
-            labelFocus="Service"
-            control={ control }
-            isSubmitting={ isSubmitting }
-          />
-        </div>
-        <div className="mb-6">
-          <TextareaField
+    <ContactForm component="form" elevation={ 0 } onSubmit={ submit } noValidate data-testid="contact-form-panel">
+      <FormHeader>
+        <Box>
+          <Kicker component="p">Start a conversation</Kicker>
+          <FormTitle component="h2">
+            { step === 1 ? 'Start with the essentials.' : 'Add the context that matters.' }
+          </FormTitle>
+        </Box>
+        <StepCount size="small" label={ `Step ${step} of 2` } />
+      </FormHeader>
+
+      <FormStepper activeStep={ step - 1 } aria-label="Contact form progress">
+        { stepLabels.map( label => <Step key={ label }><StepLabel>{ label }</StepLabel></Step> ) }
+      </FormStepper>
+
+      { submitError && <SubmitAlert severity="error" variant="outlined">{ submitError }</SubmitAlert> }
+
+      { step === 1 ? (
+        <FormStep component="fieldset" $reduceMotion={ reduceMotion } data-testid="contact-form-step">
+          <VisuallyHiddenLegend component="legend">Contact details</VisuallyHiddenLegend>
+          <FieldGrid>
+            <ContactField label="Full Name" name="name" value={ data.name } error={ errors.name } onChange={ updateField } fieldRef={ node => { fields.current.name = node; } } autoComplete="name" />
+            <ContactField label="Email" name="email" type="email" value={ data.email } error={ errors.email } onChange={ updateField } fieldRef={ node => { fields.current.email = node; } } autoComplete="email" />
+            <ServiceField value={ data.service } error={ errors.service } onChange={ updateField } fieldRef={ node => { fields.current.service = node; } } />
+          </FieldGrid>
+          <FormActions $single>
+            <PrivacyNote component="p">No phone number required. Your details stay out of the URL.</PrivacyNote>
+            <Button type="button" variant="contained" endIcon={ <ArrowForwardRounded /> } onClick={ continueToMessage }>Continue to Message</Button>
+          </FormActions>
+        </FormStep>
+      ) : (
+        <FormStep component="fieldset" $reduceMotion={ reduceMotion } data-testid="contact-form-step">
+          <VisuallyHiddenLegend component="legend">Message and review</VisuallyHiddenLegend>
+          <MessageField
+            id="message"
+            inputRef={ node => { fields.current.message = node; } }
             name="message"
-            placeholder="Type your message here"
-            control={ control }
-            isSubmitting={ isSubmitting }
+            label="Message"
+            multiline
+            minRows={ 3 }
+            value={ data.message }
+            onChange={ updateField }
+            autoComplete="off"
+            error={ !!errors.message }
+            helperText={ errors.message }
+            fullWidth
+            slotProps={ { htmlInput: { maxLength: 3000, 'aria-describedby': errors.message ? 'message-helper-text' : undefined } } }
           />
-        </div>
-        <Button size="md" type="submit" className="max-w-40" disabled={ isSubmitting }>
-          { isSubmitting ? 'Sending...' : 'Send message' }
-        </Button>
-      </FormWrapper>
-    </>
+          <ReviewChips direction="row" spacing={ 1 } useFlexGap>
+            <Chip size="small" label={ data.name } />
+            <Chip size="small" label={ serviceOptions.find( option => option[0] === data.service )?.[1] } />
+          </ReviewChips>
+          <FormActions>
+            <Button type="button" variant="text" startIcon={ <ArrowBackRounded /> } onClick={ goBack }>Back</Button>
+            <Button type="submit" variant="contained" endIcon={ status === 'submitting' ? <CircularProgress size={ 16 } color="inherit" /> : <SendRounded /> } disabled={ status === 'submitting' }>
+              { status === 'submitting' ? 'Sending...' : 'Send Message' }
+            </Button>
+          </FormActions>
+        </FormStep>
+      ) }
+    </ContactForm>
   );
 }
 
-export default FormContainer;
+function ContactField( { label, name, type = 'text', value, error, onChange, fieldRef, autoComplete } ) {
+  return (
+    <TextField
+      id={ name }
+      inputRef={ fieldRef }
+      type={ type }
+      name={ name }
+      label={ label }
+      value={ value }
+      onChange={ onChange }
+      autoComplete={ autoComplete }
+      error={ !!error }
+      helperText={ error }
+      fullWidth
+      slotProps={ { htmlInput: { spellCheck: type === 'email' ? false : undefined, 'aria-describedby': error ? `${name}-helper-text` : undefined } } }
+    />
+  );
+}
+
+function ServiceField( { value, error, onChange, fieldRef } ) {
+  return (
+    <ServiceControl fullWidth error={ !!error }>
+      <InputLabel id="service-label">Conversation topic</InputLabel>
+      <Select
+        labelId="service-label"
+        id="service"
+        inputRef={ fieldRef }
+        name="service"
+        label="Conversation topic"
+        value={ value }
+        onChange={ onChange }
+        inputProps={ { autoComplete: 'off', 'aria-describedby': error ? 'service-error' : undefined } }
+      >
+        { serviceOptions.map( ( [optionValue, optionLabel] ) => <MenuItem value={ optionValue } key={ optionValue }>{ optionLabel }</MenuItem> ) }
+      </Select>
+      { error && <FormHelperText id="service-error" role="alert">{ error }</FormHelperText> }
+    </ServiceControl>
+  );
+}

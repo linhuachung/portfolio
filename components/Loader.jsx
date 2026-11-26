@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 import {
   BarLoader,
   BeatLoader,
@@ -24,8 +26,9 @@ import {
   SyncLoader
 } from 'react-spinners';
 
-const Loader = ( { type = 'ClipLoader', color = '#00ff99', size = 50, speedMultiplier = 1 } ) => {
-  const loaderProps = { color, size, speedMultiplier };
+const Loader = ( { type = 'ClipLoader', color, size = 50, speedMultiplier = 1 } ) => {
+  const theme = useTheme();
+  const loaderProps = { color: color || theme.palette.primary.main, size, speedMultiplier };
 
   const getLoader = () => {
     switch ( type ) {
@@ -78,7 +81,7 @@ const Loader = ( { type = 'ClipLoader', color = '#00ff99', size = 50, speedMulti
     }
   };
 
-  return <div className="flex justify-center items-center">{ getLoader() }</div>;
+  return <Box sx={ { display: 'flex', alignItems: 'center', justifyContent: 'center' } }>{ getLoader() }</Box>;
 };
 
 export default Loader;

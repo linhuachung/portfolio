@@ -1,180 +1,191 @@
+'use client';
+
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import InputBase from '@mui/material/InputBase';
+import Typography from '@mui/material/Typography';
+import { alpha, styled } from '@mui/material/styles';
 import Toast from '@/components/Toast';
-import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { FormField, FormItem, FormMessage } from '@/components/form/FormPrimitives';
 import { FILE_UPLOAD } from '@/constants/file-upload';
 import { TOAST_STATUS } from '@/constants/toast';
 import axiosInstance from '@/lib/axios';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-function ImageUpload( { name, control, className, watch, setValue, width, height, setError, disabled = false } ) {
+const PhotoEditor = styled( Box )( ( { theme } ) => ( {
+  display: 'grid',
+  gridTemplateColumns: 'auto minmax(0, 1fr)',
+  alignItems: 'center',
+  gap: theme.spacing( 2 ),
+  padding: theme.spacing( 2 ),
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: 10,
+  backgroundColor: alpha( theme.palette.background.default, .62 ),
+  [theme.breakpoints.down( 'sm' )]: { gridTemplateColumns: '1fr', justifyItems: 'start' }
+} ) );
+
+const PhotoPreview = styled( Box )( ( { theme } ) => ( {
+  position: 'relative',
+  padding: theme.spacing( .5 ),
+  border: `1px solid ${alpha( theme.palette.primary.main, .35 )}`,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.background.paper
+} ) );
+
+const AvatarPreview = styled( Avatar, { shouldForwardProp: property => property !== '$size' } )( ( { theme, $size } ) => ( {
+  width: $size,
+  height: $size,
+  color: theme.palette.text.secondary,
+  backgroundColor: alpha( theme.palette.primary.main, .1 ),
+  fontSize: '1.75rem'
+} ) );
+
+const UploadProgress = styled( Box )( ( { theme } ) => ( {
+  position: 'absolute',
+  inset: theme.spacing( .5 ),
+  display: 'grid',
+  placeItems: 'center',
+  borderRadius: '50%',
+  color: theme.palette.primary.main,
+  backgroundColor: alpha( theme.palette.background.paper, .78 )
+} ) );
+
+const PhotoContent = styled( Box )( ( { theme } ) => ( { minWidth: 0, display: 'grid', gap: theme.spacing( 1.25 ) } ) );
+const PhotoActions = styled( Box )( ( { theme } ) => ( { display: 'flex', alignItems: 'center', gap: theme.spacing( 1 ), flexWrap: 'wrap' } ) );
+const HiddenInput = styled( InputBase )( { display: 'none' } );
+
+function ImageUpload( { name, control, watch, setValue, width = 96, setError, clearErrors, disabled = false } ) {
   const avatarUrl = watch( name );
-  const defaultAvatar = '/assets/avatarDefault.png';
-  const [preview, setPreview] = useState( avatarUrl || defaultAvatar );
+  const [preview, setPreview] = useState( avatarUrl || '' );
   const [uploading, setUploading] = useState( false );
+  const [status, setStatus] = useState( '' );
   const fileInputRef = useRef( null );
 
-  // Update preview when avatarUrl changes
-  useEffect( () => {
-    if ( avatarUrl ) {
-      setPreview( avatarUrl );
-    } else {
-      setPreview( defaultAvatar );
-    }
-  }, [avatarUrl, defaultAvatar] );
+  useEffect( () => { setPreview( avatarUrl || '' ); }, [avatarUrl] );
 
-  const handleAvatarChange = async ( e ) => {
-    const file = e.target.files[0];
-    if ( !file ) {
-      return;
-    }
+  const resetInput = () => {
+    if ( fileInputRef.current ) {fileInputRef.current.value = '';}
+  };
 
-    // Validate file type
+  const handleAvatarChange = async event => {
+    const file = event.target.files?.[0];
+    if ( !file ) {return;}
+
+    clearErrors?.( name );
+    setStatus( '' );
+
     if ( !FILE_UPLOAD.IMAGE.ACCEPTED_TYPES.includes( file.type ) ) {
-      setError( name, { type: 'manual', message: 'Only PNG, JPEG, JPG images are allowed' } );
+      setError( name, { type: 'manual', message: 'Choose a PNG or JPG image.' } );
+      resetInput();
       return;
     }
-
-    // Validate file size
     if ( file.size > FILE_UPLOAD.IMAGE.MAX_SIZE_BYTES ) {
-      setError( name, { type: 'manual', message: `File size must be less than ${FILE_UPLOAD.IMAGE.MAX_SIZE_MB}MB` } );
+      setError( name, { type: 'manual', message: `Choose an image smaller than ${FILE_UPLOAD.IMAGE.MAX_SIZE_MB} MB.` } );
+      resetInput();
       return;
     }
 
-    // Show preview immediately
+    const previousPreview = avatarUrl || '';
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview( reader.result );
-    };
+    reader.onloadend = () => setPreview( String( reader.result || previousPreview ) );
     reader.readAsDataURL( file );
 
-    // Upload to S3
     try {
       setUploading( true );
-
+      setStatus( 'Uploading profile photo…' );
       const formData = new FormData();
       formData.append( 'file', file );
       formData.append( 'type', 'avatar' );
 
       const response = await axiosInstance.post( '/api/admin/upload/image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
         timeout: 60000
       } );
-
-      if ( response?.status === 200 && response.data ) {
-        const result = response.data;
-        const imagePath = result.data?.path || result.path;
-
-        if ( !imagePath || typeof imagePath !== 'string' ) {
-          throw new Error( 'Invalid response format from server' );
-        }
-
-        setValue( name, imagePath );
-        setPreview( imagePath );
-        Toast( {
-          title: 'Image uploaded successfully!',
-          type: TOAST_STATUS.success
-        } );
-      } else {
-        throw new Error( 'Invalid response from server' );
+      const imagePath = response?.data?.path;
+      if ( response?.status !== 200 || typeof imagePath !== 'string' || !imagePath ) {
+        throw new Error( 'The upload service returned an invalid image path.' );
       }
+
+      setValue( name, imagePath, { shouldDirty: true, shouldValidate: true } );
+      setPreview( imagePath );
+      clearErrors?.( name );
+      setStatus( 'Profile photo uploaded. Save the profile to apply it.' );
+      Toast( { title: 'Profile photo uploaded', type: TOAST_STATUS.success } );
     } catch ( error ) {
-      let errorMessage = 'Failed to upload image';
-      if ( error.response?.data?.message ) {
-        errorMessage = error.response.data.message;
-      } else if ( error.response?.data?.error ) {
-        errorMessage = error.response.data.error;
-      } else if ( error.request ) {
-        errorMessage = 'Network error. Please check your connection and try again.';
-      } else if ( error.message ) {
-        errorMessage = error.message;
-      }
-
-      setError( name, {
-        type: 'manual',
-        message: errorMessage
-      } );
-      Toast( {
-        title: errorMessage,
-        type: TOAST_STATUS.error
-      } );
-      // Reset preview to previous value or default
-      setPreview( avatarUrl || defaultAvatar );
+      const errorMessage = error.response?.data?.message
+        || ( error.request ? 'The upload service is unavailable. Check the connection and try again.' : error.message )
+        || 'Unable to upload the profile photo.';
+      setPreview( previousPreview );
+      setStatus( 'Profile photo upload failed.' );
+      setError( name, { type: 'manual', message: errorMessage } );
+      Toast( { title: errorMessage, type: TOAST_STATUS.error } );
     } finally {
       setUploading( false );
-      if ( fileInputRef.current ) {
-        fileInputRef.current.value = '';
-      }
+      resetInput();
     }
   };
 
-
   const handleRemove = () => {
-    if ( disabled ) {
-      return;
-    }
-    setPreview( defaultAvatar );
-    setValue( name, '' );
-
-    if ( fileInputRef.current ) {
-      fileInputRef.current.value = '';
-    }
+    if ( disabled || uploading ) {return;}
+    setPreview( '' );
+    setValue( name, '', { shouldDirty: true, shouldValidate: true } );
+    clearErrors?.( name );
+    setStatus( 'Profile photo removed. Save the profile to apply it.' );
+    resetInput();
   };
 
   return (
     <FormField control={ control } name={ name } render={ () => (
-      <FormItem className={ `${className} space-y-0 relative w-full` }>
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative group">
-            <Image
-              src={ preview || defaultAvatar }
-              alt="Avatar preview"
-              width={ width || 120 }
-              height={ height || 120 }
-              className="rounded-full object-cover border-2 border-white/20"
-              style={ { objectFit: 'cover', aspectRatio: '1/1', width: `${width || 120}px`, height: `${height || 120}px` } }
-              unoptimized={ true }
-              onError={ () => {
-                setPreview( defaultAvatar );
-              } }
+      <FormItem>
+        <PhotoEditor>
+          <PhotoPreview>
+            <AvatarPreview src={ preview || undefined } alt={ preview ? 'Current profile photo' : 'No profile photo selected' } $size={ width } />
+            { uploading && <UploadProgress><CircularProgress size={ 28 } aria-label="Uploading profile photo" /></UploadProgress> }
+          </PhotoPreview>
+
+          <PhotoContent>
+            <Box>
+              <Typography component="h3" sx={ { fontSize: '.9rem', fontWeight: 700 } }>Profile Photo</Typography>
+              <Typography component="p" sx={ { mt: .35, color: 'text.secondary', fontSize: '.75rem', lineHeight: 1.45 } }>
+                PNG or JPG, up to { FILE_UPLOAD.IMAGE.MAX_SIZE_MB } MB. Use a square image for the best result.
+              </Typography>
+            </Box>
+            <HiddenInput
+              type="file"
+              accept={ FILE_UPLOAD.IMAGE.ACCEPTED_TYPES.join( ',' ) }
+              id={ name }
+              onChange={ handleAvatarChange }
+              inputRef={ fileInputRef }
+              disabled={ uploading || disabled }
+              inputProps={ { 'aria-label': 'Choose profile photo' } }
             />
-            { preview !== defaultAvatar && !disabled && (
+            <PhotoActions>
               <Button
-                onClick={ handleRemove }
-                className="absolute inset-0 flex items-center justify-center w-full h-full
-           bg-primary bg-opacity-0 text-white text-sm px-3 py-1 rounded-full
-           transition-all duration-300 opacity-0 group-hover:opacity-100
-           group-hover:bg-primary/60 hover:bg-opacity-1"
+                type="button"
+                variant="outlined"
+                startIcon={ uploading ? <CircularProgress size={ 16 } color="inherit" /> : <PhotoCameraOutlinedIcon /> }
+                onClick={ () => fileInputRef.current?.click() }
+                disabled={ uploading || disabled }
               >
-                Remove
+                { uploading ? 'Uploading…' : preview ? 'Replace Photo' : 'Upload Photo' }
               </Button>
-            ) }
-          </div>
-          <Input
-            type="file"
-            accept="image/png,image/jpeg,image/jpg"
-            className="hidden"
-            id={ name }
-            onChange={ handleAvatarChange }
-            ref={ fileInputRef }
-            disabled={ uploading || disabled }
-          />
-          <Button
-            type="button"
-            onClick={ () => !disabled && !uploading && fileInputRef.current?.click() }
-            disabled={ uploading || disabled }
-            className={ ( disabled || uploading ) ? 'opacity-60 cursor-not-allowed' : '' }
-          >
-            { uploading ? 'Uploading...' : 'Upload Image' }
-          </Button>
-        </div>
-        <FormMessage className="text-center pt-5"/>
+              { preview && (
+                <Button type="button" color="error" startIcon={ <DeleteOutlineOutlinedIcon /> } onClick={ handleRemove } disabled={ uploading || disabled }>
+                  Remove Photo
+                </Button>
+              ) }
+            </PhotoActions>
+            <Typography component="p" aria-live="polite" sx={ { minHeight: '1.1em', color: 'text.secondary', fontSize: '.7rem' } }>{ status }</Typography>
+          </PhotoContent>
+        </PhotoEditor>
+        <FormMessage />
       </FormItem>
-    ) }/>
+    ) } />
   );
 }
 

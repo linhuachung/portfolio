@@ -6,7 +6,7 @@ import { trackVisit } from '@/lib/analytics';
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();
-  const previousPathname = useRef( pathname );
+  const previousPathname = useRef( null );
 
   useEffect( () => {
     if (

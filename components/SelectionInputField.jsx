@@ -1,14 +1,14 @@
-import { FormControl, FormField, FormItem } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { FormField, FormItem } from '@/components/form/FormPrimitives';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import { getErrorMessage } from '@/lib/form-utils';
 
 export function SelectionInputField( {
   name,
   control,
   type,
-  className,
   onBlur,
   options,
   placeholderSelect,
@@ -26,70 +26,64 @@ export function SelectionInputField( {
         const urlError = getErrorMessage( fieldError, 'url' );
 
         return (
-          <div className="w-full space-y-1">
-            <FormItem className={ `${className} space-y-0 flex items-center justify-center` }>
-              <FormItem className="space-y-0 w-1/3">
-                <Select
-                  value={ field.value?.type || '' }
-                  onValueChange={ ( value ) => {
-                    field.onChange( { ...field.value, type: value } );
-                  } }
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      disabled={ disabled }
-                      className={ `w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary rounded-l-xl rounded-r-none border-2 ${getInputBorderStyles( !!typeError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
-                    >
-                      <SelectValue placeholder={ placeholderSelect }/>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    { options.map( ( { value, label } ) => (
-                      <SelectItem key={ value } value={ value }>
-                        { label }
-                      </SelectItem>
-                    ) ) }
-                  </SelectContent>
-                </Select>
-              </FormItem>
-
-              <FormItem className="space-y-0 w-full mt-0">
-                <FormControl>
-                  <Input
-                    id={ `${name}-url` }
-                    type={ type || 'text' }
-                    placeholder={ placeholderInput }
-                    disabled={ disabled }
-                    className={ `rounded-l-none input-autofill w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( !!urlError )} ${disabled ? FORM_STYLES.disabled : ''}` }
-                    onBlur={ ( event ) => {
-                      onBlur && onBlur( event );
-                    } }
-                    onChange={ ( event ) => {
-                      if ( !disabled ) {
-                        field.onChange( { ...field.value, url: event.target.value } );
-                      }
-                    } }
-                    value={ field.value?.url || '' }
-                    { ...props }
-                  />
-                </FormControl>
-              </FormItem>
+          <Box sx={ { width: '100%', display: 'grid', gap: 1 } }>
+            <FormItem sx={ { display: 'grid', gridTemplateColumns: 'minmax(120px, 1fr) minmax(0, 2fr)', gap: 0 } }>
+              <TextField
+                select
+                value={ field.value?.type || '' }
+                onChange={ ( event ) => {
+                  field.onChange( { ...field.value, type: event.target.value } );
+                } }
+                disabled={ disabled }
+                displayEmpty
+                inputProps={ { 'aria-label': placeholderSelect } }
+                label={ placeholderSelect }
+                error={ !!typeError }
+                sx={ { '& .MuiOutlinedInput-root': { borderTopRightRadius: 0, borderBottomRightRadius: 0 } } }
+              >
+                <MenuItem value="" disabled>{ placeholderSelect }</MenuItem>
+                { options.map( ( { value, label } ) => (
+                  <MenuItem key={ value } value={ value }>{ label }</MenuItem>
+                ) ) }
+              </TextField>
+              <TextField
+                id={ `${name}-url` }
+                inputRef={ field.ref }
+                name={ `${name}.url` }
+                type={ type || 'text' }
+                placeholder={ placeholderInput }
+                disabled={ disabled }
+                error={ !!urlError }
+                label={ placeholderInput }
+                fullWidth
+                sx={ { '& .MuiOutlinedInput-root': { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } } }
+                onBlur={ ( event ) => {
+                  onBlur && onBlur( event );
+                } }
+                onChange={ ( event ) => {
+                  if ( !disabled ) {
+                    field.onChange( { ...field.value, url: event.target.value } );
+                  }
+                } }
+                value={ field.value?.url || '' }
+                { ...props }
+              />
             </FormItem>
             { ( typeError || urlError ) && (
-              <div className="space-y-1">
+              <Box sx={ { display: 'grid', gap: .5 } }>
                 { typeError && (
-                  <p className="text-sm font-medium text-red-600 dark:text-red-400 ml-1">
+                  <Typography component="p" sx={ { ml: 1, color: 'error.main', fontSize: '.8rem', fontWeight: 500 } }>
                     { typeError }
-                  </p>
+                  </Typography>
                 ) }
                 { urlError && (
-                  <p className="text-sm font-medium text-red-600 dark:text-red-400 ml-1">
+                  <Typography component="p" sx={ { ml: 1, color: 'error.main', fontSize: '.8rem', fontWeight: 500 } }>
                     { urlError }
-                  </p>
+                  </Typography>
                 ) }
-              </div>
+              </Box>
             ) }
-          </div>
+          </Box>
         );
       } }
     />

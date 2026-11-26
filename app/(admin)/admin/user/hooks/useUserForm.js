@@ -5,14 +5,15 @@ import axiosInstance from '@/lib/axios';
 import { mergeSocialLinks } from '@/lib/social-links-utils';
 import { validationEditProfileSchema } from '@/services/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DEFAULT_FORM_VALUES } from '../constants';
+import { cloneProfileData } from '../profile-data';
 
 export function useUserForm() {
   const [loading, setLoading] = useState( true );
   const [originalData, setOriginalData] = useState( null );
+  const [loadError, setLoadError] = useState( '' );
 
   const form = useForm( {
     resolver: yupResolver( validationEditProfileSchema ),
@@ -34,6 +35,7 @@ export function useUserForm() {
     const fetchUserData = async () => {
       try {
         setLoading( true );
+        setLoadError( '' );
         const response = await axiosInstance.get( ADMIN_ENDPOINT.USER );
 
         if ( response && response.status === 200 && response.data ) {
@@ -48,7 +50,6 @@ export function useUserForm() {
             title: userData.title || DEFAULT_FORM_VALUES.title,
             greeting: userData.greeting || DEFAULT_FORM_VALUES.greeting,
             bioParagraph: userData.bioParagraph || '',
-            stats: userData.stats || DEFAULT_FORM_VALUES.stats,
             cvPath: userData.cvPath || '',
             addressCountry: userData.addressCountry || '',
             addressCity: userData.addressCity || '',
@@ -56,14 +57,12 @@ export function useUserForm() {
             socialLinks: mergeSocialLinks( userData.socialLinks )
           };
 
-          setOriginalData( formData );
-          reset( formData );
+          setOriginalData( cloneProfileData( formData ) );
+          reset( cloneProfileData( formData ) );
         }
       } catch ( error ) {
         if ( error.response?.status === 401 || error.response?.data?.status === 401 ) {
           if ( typeof window !== 'undefined' ) {
-            Cookies.remove( 'token' );
-            Cookies.remove( 'refreshToken' );
             window.location.href = '/admin/login';
             return;
           }
@@ -73,6 +72,7 @@ export function useUserForm() {
           title: error.response?.data?.message || 'Failed to load user data',
           type: TOAST_STATUS.error
         } );
+        setLoadError( 'The database profile is temporarily unavailable. Public pages are still using their local content fallback.' );
       } finally {
         setLoading( false );
       }
@@ -92,8 +92,12 @@ export function useUserForm() {
           type: TOAST_STATUS.success
         } );
 
-        setOriginalData( data );
-        window.location.reload();
+        setOriginalData( cloneProfileData( data ) );
+        reset( cloneProfileData( data ) );
+        if ( typeof window !== 'undefined' ) {
+          window.dispatchEvent( new CustomEvent( 'portfolio:profile-updated', { detail: { avatar: data.avatar || '' } } ) );
+        }
+        return true;
       } else {
         Toast( {
           title: 'Unexpected response from server',
@@ -105,12 +109,13 @@ export function useUserForm() {
         title: error.response?.data?.message || 'Failed to update profile',
         type: TOAST_STATUS.error
       } );
+      return false;
     }
   };
 
   const handleCancel = () => {
     if ( originalData ) {
-      reset( originalData );
+      reset( cloneProfileData( originalData ) );
       clearErrors();
     }
   };
@@ -128,6 +133,7 @@ export function useUserForm() {
     isSubmitting,
     onSubmit,
     originalData,
+    loadError,
     handleCancel
   };
 }

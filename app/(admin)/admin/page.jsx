@@ -1,14 +1,14 @@
 'use client';
 
-import BarChart from '@/components/admin/BarChart';
-import LineChart from '@/components/admin/LineChart';
-import PieChart from '@/components/admin/PieChart';
-import ChartContainer from '@/components/ChartContainer';
-import Loader from '@/components/Loader';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import ActionQueue from './components/ActionQueue';
+import AudienceOverview from './components/AudienceOverview';
+import ContentHealth from './components/ContentHealth';
 import DashboardHeader from './components/DashboardHeader';
+import OverviewLoading from './components/OverviewLoading';
 import RecentContacts from './components/RecentContacts';
-import StatsGrid from './components/StatsGrid';
-import { STATS_CONFIG } from './constants/dashboardConfig';
+import { OperationsGrid, OverviewPage } from './components/Overview.styles';
 import { useDashboard } from './hooks/useDashboard';
 
 export default function Dashboard() {
@@ -17,110 +17,75 @@ export default function Dashboard() {
     refreshing,
     period,
     dashboardData,
+    error,
     handleRefresh,
     handlePeriodChange
   } = useDashboard();
 
-  if ( loading ) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Loader type="ClipLoader" color="#00ff99" size={ 50 } />
-      </div>
-    );
-  }
+  if ( loading ) {return <OverviewLoading />;}
+  if ( !dashboardData ) {return (
+    <OverviewPage>
+      <DashboardHeader
+        generatedAt={ null }
+        onRefresh={ handleRefresh }
+        refreshing={ refreshing }
+      />
+      <Alert
+        severity="error"
+        variant="outlined"
+        action={ <Button color="inherit" size="small" onClick={ handleRefresh }>Try Again</Button> }
+      >
+        { error || 'Dashboard data is unavailable. Try again.' }
+      </Alert>
+    </OverviewPage>
+  );}
 
-  const { stats = {}, charts = {}, recentContacts = [] } = dashboardData || {};
+  const {
+    stats = {},
+    charts = {},
+    actionQueue = [],
+    contentSummary = {},
+    recentContacts = [],
+    meta = {}
+  } = dashboardData;
+  const databaseAvailable = meta.databaseAvailable === true;
 
   return (
-    <div className="container mx-auto p-6 space-y-6 h-full overflow-y-auto">
+    <OverviewPage>
       <DashboardHeader
-        period={ period }
-        onPeriodChange={ handlePeriodChange }
+        generatedAt={ meta.generatedAt }
         onRefresh={ handleRefresh }
         refreshing={ refreshing }
       />
 
-      <StatsGrid stats={ stats } statsConfig={ STATS_CONFIG } />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartContainer
-          title="Visits Over Time"
-          data={ charts.visits }
-          emptyMessage="No visit data available"
-          delay={ 0.3 }
+      { error && (
+        <Alert
+          severity="error"
+          variant="outlined"
+          action={ <Button color="inherit" size="small" onClick={ handleRefresh }>Try Again</Button> }
         >
-          <LineChart
-            data={ charts.visits }
-            dataKey="count"
-            name="Visits"
-            color="#00ff99"
-          />
-        </ChartContainer>
+          { error }
+        </Alert>
+      ) }
 
-        <ChartContainer
-          title="CV Downloads Over Time"
-          data={ charts.cvDownloads }
-          emptyMessage="No download data available"
-          delay={ 0.4 }
-        >
-          <LineChart
-            data={ charts.cvDownloads }
-            dataKey="count"
-            name="Downloads"
-            color="#3b82f6"
-          />
-        </ChartContainer>
-      </div>
+      { !databaseAvailable && (
+        <Alert severity="warning" variant="outlined">
+          Live inbox and audience data are unavailable. Publishing checks and public previews remain available.
+        </Alert>
+      ) }
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartContainer
-          title="Top Visited Pages"
-          data={ charts.visitsByPath }
-          emptyMessage="No page visit data available"
-          delay={ 0.5 }
-        >
-          <BarChart
-            data={ charts.visitsByPath }
-            dataKey="count"
-            name="Visits"
-            color="#8b5cf6"
-          />
-        </ChartContainer>
+      <OperationsGrid>
+        <ActionQueue items={ actionQueue } sx={ { gridArea: 'attention' } } />
+        <RecentContacts contacts={ recentContacts } pendingCount={ stats.pendingContacts || 0 } sx={ { gridArea: 'inbox' } } />
+        <ContentHealth summary={ contentSummary } sx={ { gridArea: 'content' } } />
+      </OperationsGrid>
 
-        <ChartContainer
-          title="Projects by Category"
-          data={ charts.projectsByCategory }
-          emptyMessage="No project data available"
-          delay={ 0.6 }
-        >
-          <PieChart
-            data={ charts.projectsByCategory }
-            dataKey="count"
-            nameKey="category"
-          />
-        </ChartContainer>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartContainer
-          title="Contacts by Status"
-          data={ charts.contactsByStatus }
-          emptyMessage="No contact data available"
-          delay={ 0.7 }
-        >
-          <PieChart
-            data={ charts.contactsByStatus }
-            dataKey="count"
-            nameKey="status"
-          />
-        </ChartContainer>
-
-        <RecentContacts
-          contacts={ recentContacts }
-          delay={ 0.8 }
-          onRefresh={ handleRefresh }
-        />
-      </div>
-    </div>
+      <AudienceOverview
+        charts={ charts }
+        databaseAvailable={ databaseAvailable }
+        period={ period }
+        onPeriodChange={ handlePeriodChange }
+      />
+    </OverviewPage>
   );
 }

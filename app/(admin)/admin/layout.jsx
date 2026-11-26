@@ -1,43 +1,20 @@
 'use client';
 
-import Header from '@/components/Header';
-import { ADMIN_LINKS } from '@/constants/route';
-import Cookies from 'js-cookie';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { AdminShell } from '@/components/styled/Admin.styles';
+import localFont from 'next/font/local';
+import AdminNavigationShell from './components/AdminNavigationShell';
 
-function AdminLayout( { children } ) {
-  const router = useRouter();
+const adminSans = localFont( { src: '../../(user)/fonts/GeistVF.woff', display: 'swap' } );
+const adminMono = localFont( { src: '../../(user)/fonts/GeistMonoVF.woff', display: 'swap' } );
+
+export default function AdminLayout( { children } ) {
   const pathname = usePathname();
-  const [isLogin, setIsLogin] = useState( null );
-
-  useEffect( () => {
-    const token = Cookies.get( 'token' );
-
-    if ( !token && pathname.startsWith( '/admin' ) && pathname !== '/admin/login' ) {
-      router.replace( '/admin/login' );
-    }
-
-    if ( token && pathname === '/admin/login' ) {
-      router.replace( '/admin' );
-    }
-    setIsLogin( token );
-  }, [pathname, router] );
+  const isLogin = pathname === '/admin/login';
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      { isLogin && <Header
-        isAdmin={ true }
-        title="Admin"
-        links={ ADMIN_LINKS }
-      /> }
-
-      <div className="flex-1 overflow-hidden">
-        { children }
-      </div>
-    </div>
+    <AdminShell $sansFont={ adminSans.style.fontFamily } $monoFont={ adminMono.style.fontFamily }>
+      { isLogin ? children : <AdminNavigationShell>{ children }</AdminNavigationShell> }
+    </AdminShell>
   );
-
 }
-
-export default AdminLayout;

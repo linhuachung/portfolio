@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import { InputField } from '@/components/InputField';
 import { SelectField } from '@/components/SelectField';
 import { COUNTRIES, getCitiesByCountry } from '@/constants/address-data';
@@ -5,7 +6,7 @@ import { validateCityForCountry } from '@/lib/address-utils';
 import { useEffect, useRef } from 'react';
 import { useWatch } from 'react-hook-form';
 
-export function AddressField( { control, setValue, setError, clearErrors, disabled = false, className, isSubmitting = false } ) {
+export function AddressField( { control, setValue, setError, clearErrors, disabled = false, isSubmitting = false } ) {
   const country = useWatch( { control, name: 'addressCountry' } );
   const city = useWatch( { control, name: 'addressCity' } );
   const previousCountryRef = useRef( country );
@@ -62,8 +63,8 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
   };
 
   return (
-    <div className={ `${className} space-y-4` }>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+    <Box sx={ { display: 'grid', gap: 2 } }>
+      <Box sx={ { display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 } }>
         <SelectField
           name="addressCountry"
           options={ COUNTRIES }
@@ -73,8 +74,6 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           isSubmitting={ isSubmitting }
           disabled={ disabled }
           onValueChange={ handleCountryChange }
-          labelFocusClass="top-0.5"
-          labelInFocusClass="top-5"
         />
 
         <SelectField
@@ -85,22 +84,17 @@ export function AddressField( { control, setValue, setError, clearErrors, disabl
           control={ control }
           isSubmitting={ isSubmitting }
           disabled={ disabled || !country }
-          labelFocusClass="top-0.5"
-          labelInFocusClass="top-5"
         />
-      </div>
+      </Box>
 
       <InputField
-        className="mb-0"
         control={ control }
         placeholder="Enter address"
         name="address"
         disabled={ disabled }
         isSubmitting={ isSubmitting }
-        labelFocusClass="-top-2"
-        labelInFocusClass="top-[14px]"
       />
-    </div>
+    </Box>
   );
 }
 

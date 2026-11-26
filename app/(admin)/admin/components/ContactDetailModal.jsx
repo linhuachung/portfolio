@@ -1,32 +1,47 @@
 'use client';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import Loader from '@/components/Loader';
 import Toast from '@/components/Toast';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import MuiLink from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getServiceLabel } from '@/constants/email';
 import { TOAST_STATUS } from '@/constants/toast';
 import { formatPhoneForDisplayWithCountry, generateTelLink } from '@/lib/phone-utils';
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AdminRow, StatusBadge } from '@/components/styled/Admin.styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 
-const getStatusStyles = ( status ) => {
-  const styles = {
-    pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    read: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    replied: 'bg-green-500/20 text-green-400 border-green-500/30',
-    archived: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-  };
-  return styles[status] || styles.pending;
-};
+const ModalStack = styled( Box )( ( { theme } ) => ( { minWidth: 0, display: 'grid', gap: theme.spacing( 3 ), marginTop: theme.spacing( 2 ) } ) );
+const SectionStack = styled( Box )( ( { theme } ) => ( { minWidth: 0, display: 'grid', gap: theme.spacing( 2 ) } ) );
+const Panel = styled( Box )( ( { theme } ) => ( { minWidth: 0, maxWidth: '100%', padding: theme.spacing( 2 ), border: `1px solid ${theme.palette.divider}`, borderRadius: 8, backgroundColor: alpha( theme.palette.background.default, .55 ) } ) );
+const PanelTitle = styled( Typography )( ( { theme } ) => ( { marginBottom: theme.spacing( 1.5 ), color: theme.palette.text.primary, fontSize: '.875rem', fontWeight: 650 } ) );
+const DetailLabel = styled( Typography )( ( { theme } ) => ( { marginBottom: theme.spacing( .5 ), color: theme.palette.text.secondary, fontSize: '.75rem' } ) );
+const DetailValue = styled( Typography )( ( { theme } ) => ( { color: theme.palette.text.primary, fontSize: '.9rem', fontWeight: 500 } ) );
+const DetailLink = styled( MuiLink )( ( { theme } ) => ( { color: theme.palette.primary.main, fontSize: '1rem', '&:hover': { textDecoration: 'underline' } } ) );
+const ReplyItem = styled( Box )( ( { theme } ) => ( { padding: theme.spacing( 1.5 ), border: `1px solid ${alpha( theme.palette.success.main, .25 )}`, borderRadius: 6, backgroundColor: theme.palette.background.paper } ) );
+const AiToolbar = styled( Box )( ( { theme } ) => ( {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing( 1 ),
+  marginBottom: theme.spacing( 1.5 ),
+  padding: theme.spacing( 1 ),
+  border: `1px solid ${alpha( theme.palette.primary.main, .2 )}`,
+  borderRadius: 8,
+  backgroundColor: alpha( theme.palette.primary.main, .055 ),
+  [theme.breakpoints.down( 'sm' )]: { alignItems: 'stretch', flexDirection: 'column' }
+} ) );
 
 const formatDateTime = ( dateString ) => {
   const date = new Date( dateString );
@@ -44,6 +59,8 @@ const formatDateTime = ( dateString ) => {
 };
 
 export default function ContactDetailModal( { contactId, open, onOpenChange, onStatusUpdate } ) {
+  const theme = useTheme();
+  const compact = useMediaQuery( theme.breakpoints.down( 'sm' ) );
   const [contact, setContact] = useState( null );
   const [loading, setLoading] = useState( false );
   const [updating, setUpdating] = useState( false );
@@ -53,6 +70,31 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
   const [replyMessage, setReplyMessage] = useState( '' );
   const [showReplyForm, setShowReplyForm] = useState( false );
   const [editingReplyId, setEditingReplyId] = useState( null );
+  const [generatingDraft, setGeneratingDraft] = useState( false );
+  const [aiTone, setAiTone] = useState( 'professional' );
+  const [aiError, setAiError] = useState( '' );
+  const [replyValidationError, setReplyValidationError] = useState( '' );
+  const dialogContentRef = useRef( null );
+  const replyPanelRef = useRef( null );
+  const replyInputRef = useRef( null );
+
+  const revealReplyComposer = useCallback( ( focusInput = true ) => {
+    window.requestAnimationFrame( () => {
+      window.requestAnimationFrame( () => {
+        const content = dialogContentRef.current;
+        const panel = replyPanelRef.current;
+        if ( content && panel ) {
+          const contentRect = content.getBoundingClientRect();
+          const panelRect = panel.getBoundingClientRect();
+          content.scrollTo( {
+            top: content.scrollTop + panelRect.top - contentRect.top - 12,
+            behavior: 'smooth'
+          } );
+        }
+        if ( focusInput ) {replyInputRef.current?.focus( { preventScroll: true } );}
+      } );
+    } );
+  }, [] );
 
   useEffect( () => {
     if ( open && contactId ) {
@@ -62,6 +104,8 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
       setError( null );
       setHasAutoMarkedAsRead( false );
     }
+  // fetchContactDetail is intentionally tied to the modal identity.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, contactId] );
 
   const fetchContactDetail = async () => {
@@ -74,7 +118,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
     setError( null );
 
     try {
-      console.log( 'Fetching contact detail for ID:', contactId );
       const response = await fetch( `/api/admin/contact/${contactId}` );
 
       if ( !response.ok ) {
@@ -83,8 +126,6 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
       }
 
       const result = await response.json();
-      console.log( 'Contact detail response:', result );
-
       if ( result.status === 200 && result.data ) {
         const contactData = result.data;
         setContact( contactData );
@@ -108,9 +149,12 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
 
   const handleSendReply = async () => {
     if ( !contactId || !replyMessage.trim() ) {
+      setReplyValidationError( 'Write a reply or generate a draft before sending.' );
+      revealReplyComposer();
       return;
     }
 
+    setReplyValidationError( '' );
     setSendingReply( true );
     setError( null );
 
@@ -172,10 +216,42 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
     }
   };
 
+  const handleGenerateDraft = async () => {
+    if ( !contactId ) {return;}
+    setGeneratingDraft( true );
+    setAiError( '' );
+    setShowReplyForm( true );
+    setEditingReplyId( null );
+    setReplyValidationError( '' );
+    revealReplyComposer( false );
+
+    try {
+      const response = await fetch( `/api/admin/contact/${contactId}/ai-draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( { tone: aiTone } )
+      } );
+      const result = await response.json().catch( () => ( {} ) );
+      if ( !response.ok || !result.data?.draft ) {
+        throw new Error( result.message || 'Unable to create an AI draft.' );
+      }
+
+      setReplyMessage( result.data.draft );
+      revealReplyComposer();
+      Toast( { title: 'AI draft ready. Review it before sending.', type: TOAST_STATUS.success } );
+    } catch ( draftError ) {
+      setAiError( draftError.message || 'Unable to create an AI draft.' );
+    } finally {
+      setGeneratingDraft( false );
+    }
+  };
+
   const handleEditReply = ( reply ) => {
     setReplyMessage( reply.message );
     setEditingReplyId( reply.id );
     setShowReplyForm( true );
+    setReplyValidationError( '' );
+    revealReplyComposer();
   };
 
   const handleDeleteReply = async ( replyId ) => {
@@ -217,12 +293,22 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
     setShowReplyForm( false );
     setReplyMessage( '' );
     setEditingReplyId( null );
+    setAiError( '' );
+    setReplyValidationError( '' );
   };
 
   const handleNewReply = () => {
     setShowReplyForm( true );
     setReplyMessage( '' );
     setEditingReplyId( null );
+    setAiError( '' );
+    setReplyValidationError( '' );
+    revealReplyComposer();
+  };
+
+  const requestClose = () => {
+    if ( showReplyForm && replyMessage.trim() && !window.confirm( 'Discard this unsent reply draft?' ) ) {return;}
+    onOpenChange( false );
   };
 
   const updateStatusSilently = async ( newStatus ) => {
@@ -316,240 +402,287 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
   const displayName = contact?.name || ( contact ? `${contact.firstname} ${contact.lastname}`.trim() : '' );
 
   return (
-    <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-[#f5f5f5] dark:bg-primary">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-white">
-            Contact Details
-          </DialogTitle>
-        </DialogHeader>
+    <Dialog
+      open={ open }
+      onClose={ requestClose }
+      disablePortal
+      fullScreen={ compact }
+      fullWidth
+      maxWidth="md"
+      slotProps={ { paper: { sx: {
+        maxHeight: compact ? '100dvh' : 'min(880px, calc(100dvh - 48px))',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        bgcolor: 'background.paper'
+      } } } }
+    >
+      <DialogTitle sx={ { position: 'sticky', top: 0, zIndex: 2, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper', fontSize: '1.5rem', fontWeight: 650 } }>
+        Contact Details
+      </DialogTitle>
+      <DialogContent ref={ dialogContentRef } sx={ { flex: 1, minHeight: 0, overflowX: 'hidden', overflowY: 'auto', px: { xs: 2, sm: 3 } } }>
 
         { loading && (
-          <div className="flex items-center justify-center py-12">
-            <Loader type="ClipLoader" color="#00ff99" size={ 40 } />
-          </div>
+          <Box sx={ { display: 'flex', alignItems: 'center', justifyContent: 'center', py: 6 } }>
+            <Loader type="ClipLoader" size={ 40 } />
+          </Box>
         ) }
 
         { error && (
-          <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <p className="text-red-500 dark:text-red-400">{ error }</p>
-          </div>
+          <Box sx={ { p: 2, border: 1, borderColor: 'error.main', borderRadius: 2, bgcolor: theme => alpha( theme.palette.error.main, .08 ) } }>
+            <Typography component="p" color="error.main">{ error }</Typography>
+          </Box>
         ) }
 
         { !loading && !error && contact && (
-          <div className="space-y-6 mt-4">
+          <ModalStack>
             { /* Status Badge & Update */ }
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <span
-                  className={ cn(
-                    'px-3 py-1.5 rounded-lg text-sm font-medium border',
-                    getStatusStyles( contact.status )
-                  ) }
-                >
+            <AdminRow sx={ { justifyContent: 'space-between', flexWrap: 'wrap' } }>
+              <AdminRow sx={ { gap: 1.5 } }>
+                <StatusBadge component="span" $status={ contact.status } sx={ { px: 1.5, py: .75, border: 1, borderColor: 'currentColor', fontSize: '.875rem', fontWeight: 600 } }>
                   { contact.status.toUpperCase() }
-                </span>
+                </StatusBadge>
                 { updating && (
-                  <Loader type="ClipLoader" color="#00ff99" size={ 16 } />
+                  <Loader type="ClipLoader" size={ 16 } />
                 ) }
-              </div>
-              <div className="flex items-center gap-2">
+              </AdminRow>
+              <AdminRow sx={ { gap: 1 } }>
                 <Select
                   value={ contact.status }
-                  onValueChange={ updateStatus }
+                  onChange={ event => updateStatus( event.target.value ) }
                   disabled={ updating }
+                  size="small"
+                  inputProps={ { 'aria-label': 'Contact status' } }
+                  sx={ { width: 140 } }
                 >
-                  <SelectTrigger className="w-[140px] h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="read">Read</SelectItem>
-                    <SelectItem value="replied">Replied</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
-                  </SelectContent>
+                  <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="read">Read</MenuItem>
+                  <MenuItem value="replied">Replied</MenuItem>
+                  <MenuItem value="archived">Archived</MenuItem>
                 </Select>
-                <div className="flex flex-col items-end gap-1">
+                <Box sx={ { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: .5 } }>
                   { contact.emailOpenedAt && (
-                    <span className="text-xs text-green-600 dark:text-green-400 whitespace-nowrap">
+                    <Typography component="span" sx={ { color: 'success.main', fontSize: '.75rem', whiteSpace: 'nowrap' } }>
                     📧 Opened: { new Date( contact.emailOpenedAt ).toLocaleString() }
-                    </span>
+                    </Typography>
                   ) }
                   { contact.repliedAt && (
-                    <span className="text-sm text-gray-600 dark:text-white/60 whitespace-nowrap">
+                    <Typography component="span" sx={ { color: 'text.secondary', fontSize: '.875rem', whiteSpace: 'nowrap' } }>
                     Replied: { new Date( contact.repliedAt ).toLocaleDateString() }
-                    </span>
+                    </Typography>
                   ) }
-                </div>
-              </div>
-            </div>
+                </Box>
+              </AdminRow>
+            </AdminRow>
 
             { /* Date & Time */ }
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 dark:bg-secondary rounded-lg border border-gray-200 dark:border-white/10">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Date Sent</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{ date }</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Time Sent</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{ time }</p>
-              </div>
-            </div>
+            <Panel sx={ { display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 2 } }>
+              <Box>
+                <DetailLabel component="p">Date Sent</DetailLabel>
+                <DetailValue component="p">{ date }</DetailValue>
+              </Box>
+              <Box>
+                <DetailLabel component="p">Time Sent</DetailLabel>
+                <DetailValue component="p">{ time }</DetailValue>
+              </Box>
+            </Panel>
 
             { /* Contact Information */ }
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-50 dark:bg-secondary rounded-lg border border-gray-200 dark:border-white/10">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-white/80 mb-3">
+            <SectionStack>
+              <Panel>
+                <PanelTitle component="h3">
                   Contact Information
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Name</p>
-                    <p className="text-base font-medium text-gray-900 dark:text-white">
+                </PanelTitle>
+                <Box sx={ { display: 'grid', gap: 1.5 } }>
+                  <Box>
+                    <DetailLabel component="p">Name</DetailLabel>
+                    <DetailValue component="p">
                       { displayName }
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Email</p>
-                    <a
+                    </DetailValue>
+                  </Box>
+                  <Box>
+                    <DetailLabel component="p">Email</DetailLabel>
+                    <DetailLink
                       href={ `mailto:${contact.email}` }
-                      className="text-base text-accent-light dark:text-accent hover:underline"
                     >
                       { contact.email }
-                    </a>
-                  </div>
+                    </DetailLink>
+                  </Box>
                   { contact.phone && (
-                    <div>
-                      <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Phone</p>
-                      <a
+                    <Box>
+                      <DetailLabel component="p">Phone</DetailLabel>
+                      <DetailLink
                         href={ generateTelLink( contact.phone ) }
-                        className="text-base text-accent-light dark:text-accent hover:underline"
                       >
                         { formatPhoneForDisplayWithCountry( contact.phone ) }
-                      </a>
-                    </div>
+                      </DetailLink>
+                    </Box>
                   ) }
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-white/50 mb-1">Service</p>
-                    <p className="text-base text-gray-900 dark:text-white">
+                  <Box>
+                    <DetailLabel component="p">Service</DetailLabel>
+                    <DetailValue component="p">
                       { getServiceLabel( contact.service ) }
-                    </p>
-                  </div>
-                </div>
-              </div>
+                    </DetailValue>
+                  </Box>
+                </Box>
+              </Panel>
 
               { /* Message */ }
-              <div className="p-4 bg-gray-50 dark:bg-secondary rounded-lg border border-gray-200 dark:border-white/10">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-white/80 mb-3">
+              <Panel>
+                <PanelTitle component="h3">
                   Message
-                </h3>
-                <div className="p-3 bg-white dark:bg-primary rounded border border-gray-200 dark:border-white/10">
-                  <p className="text-sm text-gray-700 dark:text-white/80 whitespace-pre-wrap">
+                </PanelTitle>
+                <Box sx={ { p: 1.5, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'background.paper' } }>
+                  <Typography component="p" sx={ { color: 'text.secondary', fontSize: '.875rem', whiteSpace: 'pre-wrap' } }>
                     { contact.message }
-                  </p>
-                </div>
-              </div>
+                  </Typography>
+                </Box>
+              </Panel>
 
               { /* Replies Section */ }
-              <div className="p-4 bg-gray-50 dark:bg-secondary rounded-lg border border-gray-200 dark:border-white/10">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-white/80">
+              <Panel>
+                <AdminRow sx={ { justifyContent: 'space-between', mb: 2 } }>
+                  <Typography component="h3" sx={ { fontSize: '.875rem', fontWeight: 650 } }>
                     Replies ({ contact.replies?.length || 0 })
-                  </h3>
-                  { !showReplyForm && (
+                  </Typography>
+                  { !showReplyForm && <AdminRow sx={ { gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' } }>
+                    <Button variant="outlined" size="small" onClick={ handleNewReply }>Write Reply</Button>
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="px-3 py-1"
-                      onClick={ handleNewReply }
+                      variant="contained"
+                      size="small"
+                      startIcon={ <AutoAwesomeOutlinedIcon /> }
+                      onClick={ handleGenerateDraft }
+                      disabled={ generatingDraft }
                     >
-                      + Add Reply
+                      { generatingDraft ? 'Drafting…' : 'Draft with AI' }
                     </Button>
-                  ) }
-                </div>
+                  </AdminRow> }
+                </AdminRow>
 
                 { /* Replies List */ }
                 { contact.replies && contact.replies.length > 0 ? (
-                  <div className="space-y-3 mb-4">
+                  <Box sx={ { display: 'grid', gap: 1.5, mb: 2 } }>
                     { contact.replies.map( ( reply ) => (
-                      <div
+                      <ReplyItem
                         key={ reply.id }
-                        className="p-3 bg-white dark:bg-primary rounded border border-green-200 dark:border-green-500/20"
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1">
-                            <p className="text-sm text-gray-700 dark:text-white/80 whitespace-pre-wrap mb-2">
+                        <Box sx={ { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 } }>
+                          <Box sx={ { flex: 1 } }>
+                            <Typography component="p" sx={ { mb: 1, color: 'text.secondary', fontSize: '.875rem', whiteSpace: 'pre-wrap' } }>
                               { reply.message }
-                            </p>
-                            <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-white/60">
-                              <span>
+                            </Typography>
+                            <AdminRow sx={ { gap: 1.5, color: 'text.secondary', fontSize: '.75rem' } }>
+                              <Typography component="span">
                                 { new Date( reply.createdAt ).toLocaleString() }
-                              </span>
+                              </Typography>
                               { reply.emailSent && (
-                                <span className="text-green-600 dark:text-green-400">
+                                <Typography component="span" color="success.main">
                                   📧 Sent
-                                </span>
+                                </Typography>
                               ) }
                               { reply.updatedAt && reply.updatedAt !== reply.createdAt && (
-                                <span className="text-blue-600 dark:text-blue-400">
+                                <Typography component="span" color="info.main">
                                   (Edited)
-                                </span>
+                                </Typography>
                               ) }
-                            </div>
-                          </div>
+                            </AdminRow>
+                          </Box>
                           { !showReplyForm && (
-                            <div className="flex gap-2">
+                            <AdminRow sx={ { gap: 1 } }>
                               <Button
-                                variant="outline"
-                                size="sm"
-                                className="px-2 py-1 text-xs"
+                                variant="outlined"
+                                size="small"
+                                sx={ { px: 1, py: .5, fontSize: '.75rem' } }
                                 onClick={ () => handleEditReply( reply ) }
                               >
                                 Edit
                               </Button>
                               <Button
-                                variant="outline"
-                                size="sm"
-                                className="px-2 py-1 text-xs text-red-600 hover:text-red-700 dark:text-red-400"
+                                variant="outlined"
+                                size="small"
+                                color="error"
+                                sx={ { px: 1, py: .5, fontSize: '.75rem' } }
                                 onClick={ () => handleDeleteReply( reply.id ) }
                               >
                                 Delete
                               </Button>
-                            </div>
+                            </AdminRow>
                           ) }
-                        </div>
-                      </div>
+                        </Box>
+                      </ReplyItem>
                     ) ) }
-                  </div>
+                  </Box>
                 ) : (
-                  <p className="text-sm text-gray-500 dark:text-white/60 mb-4">
+                  <Typography component="p" sx={ { mb: 2, color: 'text.secondary', fontSize: '.875rem' } }>
                     No replies yet. Click &quot;Add Reply&quot; to send your first reply.
-                  </p>
+                  </Typography>
                 ) }
-              </div>
+              </Panel>
 
               { /* Reply Form */ }
               { showReplyForm && (
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-200 dark:border-blue-500/30">
-                  <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-3">
+                <Panel ref={ replyPanelRef } sx={ { scrollMarginTop: 12, borderColor: 'info.main', bgcolor: theme => alpha( theme.palette.info.main, .07 ) } }>
+                  <Typography component="h3" sx={ { mb: 1.5, color: 'info.main', fontSize: '.875rem', fontWeight: 650 } }>
                     { editingReplyId ? 'Edit Reply' : 'New Reply' }
-                  </h3>
-                  <Textarea
+                  </Typography>
+                  { !editingReplyId && <AiToolbar>
+                    <Box sx={ { minWidth: 0 } }>
+                      <Typography component="p" sx={ { fontSize: '.78rem', fontWeight: 700 } }>AI-assisted draft</Typography>
+                      <Typography component="p" sx={ { color: 'text.secondary', fontSize: '.68rem', lineHeight: 1.4 } }>Customer text is sent to Google Gemini only when you generate a draft. Review and edit every draft before sending.</Typography>
+                    </Box>
+                    <AdminRow sx={ {
+                      width: { xs: '100%', sm: 'auto' },
+                      gap: 1,
+                      flexShrink: 0,
+                      flexWrap: 'wrap',
+                      '& .MuiInputBase-root, & .MuiButton-root': { minWidth: 0, flex: { xs: '1 1 110px', sm: 'initial' } }
+                    } }>
+                      <Select
+                        value={ aiTone }
+                        onChange={ event => setAiTone( event.target.value ) }
+                        size="small"
+                        inputProps={ { 'aria-label': 'AI reply tone' } }
+                        disabled={ generatingDraft || sendingReply }
+                      >
+                        <MenuItem value="professional">Professional</MenuItem>
+                        <MenuItem value="warm">Warm</MenuItem>
+                        <MenuItem value="concise">Concise</MenuItem>
+                      </Select>
+                      <Button
+                        variant="outlined"
+                        startIcon={ <AutoAwesomeOutlinedIcon /> }
+                        onClick={ handleGenerateDraft }
+                        disabled={ generatingDraft || sendingReply }
+                      >
+                        { generatingDraft ? 'Drafting…' : replyMessage.trim() ? 'Regenerate' : 'Generate' }
+                      </Button>
+                    </AdminRow>
+                  </AiToolbar> }
+                  { aiError && <Typography role="alert" component="p" sx={ { mb: 1.5, color: 'error.main', fontSize: '.76rem' } }>{ aiError }</Typography> }
+                  <TextField
+                    inputRef={ replyInputRef }
+                    label="Reply Message"
+                    name="replyMessage"
                     value={ replyMessage }
                     onChange={ ( e ) => setReplyMessage( e.target.value ) }
-                    placeholder="Type your reply message here..."
-                    className="min-h-[120px] mb-3"
+                    placeholder="Write or generate a reply…"
+                    sx={ { mb: 1.5, '& .MuiInputBase-root': { minHeight: 120, fontSize: '.9rem', lineHeight: 1.45 } } }
                     disabled={ sendingReply }
+                    error={ Boolean( replyValidationError ) }
+                    helperText={ replyValidationError || 'Review the draft carefully. Sending emails is never automatic.' }
+                    fullWidth
+                    multiline
+                    minRows={ 4 }
                   />
-                  <div className="flex gap-2">
+                  <AdminRow sx={ { gap: 1 } }>
                     <Button
                       onClick={ handleSendReply }
-                      disabled={ !replyMessage.trim() || sendingReply }
-                      className="bg-blue-600 hover:bg-blue-700"
+                      disabled={ sendingReply }
+                      color="info"
                     >
                       { sendingReply ? (
                         <>
-                          <Loader type="ClipLoader" color="#ffffff" size={ 16 } className="mr-2" />
+                          <Loader type="ClipLoader" color="currentColor" size={ 16 } />
                           { editingReplyId ? 'Updating...' : 'Sending...' }
                         </>
                       ) : (
@@ -557,25 +690,23 @@ export default function ContactDetailModal( { contactId, open, onOpenChange, onS
                       ) }
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="outlined"
                       onClick={ handleCancelReply }
                       disabled={ sendingReply }
                     >
                       Cancel
                     </Button>
-                  </div>
-                </div>
+                  </AdminRow>
+                </Panel>
               ) }
-            </div>
-          </div>
+            </SectionStack>
+          </ModalStack>
         ) }
 
-        <DialogFooter>
-          <Button onClick={ () => onOpenChange( false ) } variant="outline">
-            Close
-          </Button>
-        </DialogFooter>
       </DialogContent>
+      <DialogActions sx={ { position: 'sticky', bottom: 0, zIndex: 2, borderTop: 1, borderColor: 'divider', bgcolor: 'background.paper' } }>
+        <Button onClick={ requestClose } variant="outlined">Close</Button>
+      </DialogActions>
     </Dialog>
   );
 }

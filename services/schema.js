@@ -58,61 +58,6 @@ export const validationEditProfileSchema = Yup.object().shape( {
     .max( 200, 'Address must not exceed 200 characters' )
     .nullable()
     .transform( ( value ) => value || null ),
-  stats: Yup.object().shape( {
-    years: Yup.number()
-      .required( 'Years of experience is required' )
-      .transform( ( value, originalValue ) => {
-        // Convert empty string to NaN so required validation can catch it
-        if ( originalValue === '' || originalValue === null || originalValue === undefined ) {
-          return NaN;
-        }
-        const num = Number( originalValue );
-        return isNaN( num ) ? NaN : num;
-      } )
-      .typeError( 'Years of experience must be a valid number' )
-      .min( 0, 'Years of experience must be 0 or greater' )
-      .integer( 'Years of experience must be a whole number' )
-      .max( 100, 'Years of experience cannot exceed 100' ),
-    projects: Yup.number()
-      .required( 'Projects completed is required' )
-      .transform( ( value, originalValue ) => {
-        if ( originalValue === '' || originalValue === null || originalValue === undefined ) {
-          return NaN;
-        }
-        const num = Number( originalValue );
-        return isNaN( num ) ? NaN : num;
-      } )
-      .typeError( 'Projects completed must be a valid number' )
-      .min( 0, 'Projects completed must be 0 or greater' )
-      .integer( 'Projects completed must be a whole number' )
-      .max( 10000, 'Projects completed cannot exceed 10000' ),
-    technologies: Yup.number()
-      .required( 'Technologies mastered is required' )
-      .transform( ( value, originalValue ) => {
-        if ( originalValue === '' || originalValue === null || originalValue === undefined ) {
-          return NaN;
-        }
-        const num = Number( originalValue );
-        return isNaN( num ) ? NaN : num;
-      } )
-      .typeError( 'Technologies mastered must be a valid number' )
-      .min( 0, 'Technologies mastered must be 0 or greater' )
-      .integer( 'Technologies mastered must be a whole number' )
-      .max( 1000, 'Technologies mastered cannot exceed 1000' ),
-    commits: Yup.number()
-      .required( 'Code commits is required' )
-      .transform( ( value, originalValue ) => {
-        if ( originalValue === '' || originalValue === null || originalValue === undefined ) {
-          return NaN;
-        }
-        const num = Number( originalValue );
-        return isNaN( num ) ? NaN : num;
-      } )
-      .typeError( 'Code commits must be a valid number' )
-      .min( 0, 'Code commits must be 0 or greater' )
-      .integer( 'Code commits must be a whole number' )
-      .max( 1000000, 'Code commits cannot exceed 1000000' )
-  } ),
   cvPath: Yup.string(),
   socialLinks: Yup.array().of( Yup.object().shape( {
     type: Yup.string()

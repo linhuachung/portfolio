@@ -6,6 +6,7 @@ import prismadb from '@/lib/prisma';
 import { prepareSocialLinksForDB } from '@/lib/social-links-utils';
 import { formatUserData, normalizeOptionalField, normalizeStats } from '@/lib/user-formatter';
 import { NextResponse } from 'next/server';
+import { withTimeout } from '@/lib/promise-timeout';
 
 // GET user profile
 export async function GET( req ) {
@@ -16,13 +17,13 @@ export async function GET( req ) {
     }
 
     // Get first user (portfolio owner)
-    const user = await prismadb.user.findFirst( {
+    const user = await withTimeout( prismadb.user.findFirst( {
       include: {
         socialLinks: {
           orderBy: { order: 'asc' }
         }
       }
-    } );
+    } ), 3500 );
 
     if ( !user ) {
       return createErrorResponse( STATUS_CODES.NOT_FOUND, 'User not found' );

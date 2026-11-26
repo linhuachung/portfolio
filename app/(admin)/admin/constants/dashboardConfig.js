@@ -1,62 +1,32 @@
-import {
-  FaBriefcase,
-  FaCode,
-  FaDownload,
-  FaEnvelope,
-  FaEye,
-  FaFileAlt,
-  FaGraduationCap,
-  FaProjectDiagram
-} from 'react-icons/fa';
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
+import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
+import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 export const STATS_CONFIG = [
   {
-    key: 'totalProjects',
-    title: 'Total Projects',
-    icon: FaProjectDiagram,
-    color: 'accent'
-  },
-  {
-    key: 'publishedProjects',
-    title: 'Published Projects',
-    icon: FaFileAlt,
-    color: 'green'
-  },
-  {
-    key: 'totalSkills',
-    title: 'Total Skills',
-    icon: FaCode,
-    color: 'blue'
-  },
-  {
-    key: 'totalExperiences',
-    title: 'Experiences',
-    icon: FaBriefcase,
-    color: 'purple'
-  },
-  {
-    key: 'totalEducation',
-    title: 'Education',
-    icon: FaGraduationCap,
+    key: 'pendingContacts',
+    title: 'New Inquiries',
+    icon: DraftsOutlinedIcon,
     color: 'orange'
   },
   {
-    key: 'totalContacts',
-    title: 'Contact Messages',
-    icon: FaEnvelope,
-    color: 'accent'
+    key: 'publishedProjects',
+    title: 'Public Projects',
+    icon: FolderOpenOutlinedIcon,
+    color: 'green'
   },
   {
     key: 'totalVisits',
     title: 'Total Visits',
-    icon: FaEye,
-    color: 'blue'
+    icon: VisibilityOutlinedIcon,
+    color: 'accent'
   },
   {
     key: 'totalCvDownloads',
     title: 'CV Downloads',
-    icon: FaDownload,
-    color: 'green'
+    icon: DownloadOutlinedIcon,
+    color: 'purple'
   }
 ];
 

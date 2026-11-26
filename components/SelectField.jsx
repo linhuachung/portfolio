@@ -1,12 +1,6 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { FORM_STYLES, getInputBorderStyles } from '@/constants/form-styles';
+import { FormField, FormItem } from '@/components/form/FormPrimitives';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 
 export function SelectField( {
   isSubmitting,
@@ -16,9 +10,7 @@ export function SelectField( {
   labelFocus,
   placeholder,
   disabled = false,
-  onValueChange,
-  labelFocusClass = '',
-  labelInFocusClass = ''
+  onValueChange
 } ) {
   return (
     <FormField
@@ -26,12 +18,11 @@ export function SelectField( {
       name={ name }
       render={ ( { field, fieldState } ) => {
         const error = fieldState?.error;
-        const showError = !!error;
         const value = field.value || '';
-        const isFocused = !!value && !isSubmitting;
-        const displayLabel = isFocused && labelFocus ? labelFocus : placeholder;
+        const displayLabel = value && labelFocus ? labelFocus : placeholder;
 
-        const handleValueChange = ( newValue ) => {
+        const handleValueChange = ( event ) => {
+          const newValue = event.target.value;
           field.onChange( newValue );
           if ( onValueChange ) {
             onValueChange( newValue );
@@ -39,38 +30,24 @@ export function SelectField( {
         };
 
         return (
-          <FormItem className="relative w-full">
-            <FormLabel
-              htmlFor={ name }
-              className={ `absolute left-4 transition-all duration-200 pointer-events-none text-gray-500 dark:text-gray-400 ${
-                isFocused
-                  ? `z-10 -top-1 text-xs px-2 text-gray-600 dark:text-white/80 bg-secondary-light dark:bg-secondary ${labelFocusClass}`
-                  : `top-[14px] text-sm ${labelInFocusClass}`
-              } ${showError ? 'text-red-600 dark:text-red-400' : ''}` }
-            >
-              { displayLabel }
-            </FormLabel>
-            <Select
+          <FormItem>
+            <TextField
+              select
+              id={ name }
+              name={ field.name }
               value={ value }
-              onValueChange={ handleValueChange }
-              disabled={ disabled }
+              onChange={ handleValueChange }
+              onBlur={ field.onBlur }
+              disabled={ disabled || isSubmitting }
+              label={ displayLabel }
+              error={ !!error }
+              helperText={ error?.message }
+              fullWidth
             >
-              <FormControl>
-                <SelectTrigger
-                  className={ `w-full pt-2 pb-2 bg-secondary-light dark:bg-secondary border-2 ${getInputBorderStyles( showError, true )} ${disabled ? FORM_STYLES.disabled : ''}` }
-                >
-                  <SelectValue/>
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                { options.map( ( { value: optionValue, label } ) => (
-                  <SelectItem key={ optionValue } value={ optionValue }>
-                    { label }
-                  </SelectItem>
-                ) ) }
-              </SelectContent>
-            </Select>
-            <FormMessage className="ml-1"/>
+              { options.map( ( { value: optionValue, label } ) => (
+                <MenuItem key={ optionValue } value={ optionValue }>{ label }</MenuItem>
+              ) ) }
+            </TextField>
           </FormItem>
         );
       } }

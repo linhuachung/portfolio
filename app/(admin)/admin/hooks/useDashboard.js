@@ -12,9 +12,12 @@ export function useDashboard( initialPeriod = 'month' ) {
   const [refreshing, setRefreshing] = useState( false );
   const [period, setPeriod] = useState( initialPeriod );
   const [dashboardData, setDashboardData] = useState( null );
+  const [error, setError] = useState( '' );
   const intervalRef = useRef( null );
+  const requestSequenceRef = useRef( 0 );
 
   const fetchDashboardData = useCallback( async ( showLoading = true ) => {
+    const requestSequence = ++requestSequenceRef.current;
     try {
       if ( showLoading ) {
         setLoading( true );
@@ -23,23 +26,30 @@ export function useDashboard( initialPeriod = 'month' ) {
       }
 
       const result = await getDashboardData( period );
+      if ( requestSequence !== requestSequenceRef.current ) {return;}
 
       if ( result.success && result.data ) {
         setDashboardData( result.data );
+        setError( '' );
       } else {
+        setError( result.message || 'Failed to load dashboard data' );
         Toast( {
           title: result.message || 'Failed to load dashboard data',
           type: TOAST_STATUS.error
         } );
       }
     } catch ( error ) {
+      if ( requestSequence !== requestSequenceRef.current ) {return;}
+      setError( 'An error occurred while loading dashboard data' );
       Toast( {
         title: 'An error occurred while loading dashboard data',
         type: TOAST_STATUS.error
       } );
     } finally {
-      setLoading( false );
-      setRefreshing( false );
+      if ( requestSequence === requestSequenceRef.current ) {
+        setLoading( false );
+        setRefreshing( false );
+      }
     }
   }, [period] );
 
@@ -70,6 +80,7 @@ export function useDashboard( initialPeriod = 'month' ) {
     refreshing,
     period,
     dashboardData,
+    error,
     handleRefresh,
     handlePeriodChange
   };

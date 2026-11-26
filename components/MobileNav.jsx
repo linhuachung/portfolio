@@ -1,37 +1,81 @@
 'use client';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { CiMenuFries } from 'react-icons/ci';
 
-function MobileNav( { links, isAdmin, title } ) {
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MuiLink from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { BrandAvatar, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '@/components/styled/Navigation.styles';
+
+function MobileNav( { links, isAdmin, avatar, loggingOut = false, onLogout } ) {
   const pathname = usePathname();
+  const [open, setOpen] = useState( false );
+
   return (
-    <Sheet>
-      <SheetTrigger className="flex justify-center items-center">
-        <CiMenuFries className="text-[32px] text-accent-light dark:text-accent"/>
-      </SheetTrigger>
-      <SheetContent className="flex flex-col bg-[#f5f5f5] dark:bg-primary">
-        <div className="mt-32 mb-40 text-center text-2xl">
-          <Link href="/"
-            className="text-4xl font-semibold text-gray-900 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all group">
-            { !isAdmin ? 'Chung' : title }
-            <span className="text-accent-light dark:text-accent group-hover:text-gray-900 dark:group-hover:text-white">.</span>
-          </Link>
-        </div>
-        <nav className="flex flex-col justify-center items-center gap-8">
-          { links.map( ( { name, path } ) => {
-            return <Link
+    <>
+      <MenuButton aria-label="Open navigation menu" onClick={ () => setOpen( true ) }>
+        <MenuIcon fontSize="large"/>
+      </MenuButton>
+      <MobileDrawer
+        anchor="right"
+        open={ open }
+        onClose={ () => setOpen( false ) }
+        slotProps={ { paper: { 'aria-labelledby': 'mobile-navigation-title' } } }
+      >
+        <Typography component="h2" id="mobile-navigation-title" sx={ { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)' } }>Navigation</Typography>
+        <IconButton
+          aria-label="Close navigation menu"
+          onClick={ () => setOpen( false ) }
+          sx={ { position: 'absolute', right: 24, top: 24 } }
+        >
+          <CloseIcon/>
+        </IconButton>
+        <MobileBrand>
+          <MuiLink
+            component={ NextLink }
+            underline="none"
+            color="inherit"
+            href={ isAdmin ? '/admin' : '/' }
+            aria-label={ isAdmin ? 'Admin home' : 'Lin Hua Chung, home' }
+            onClick={ () => setOpen( false ) }
+          >
+            <BrandAvatar src={ avatar || undefined } alt="" aria-hidden="true" sx={ { width: 44, height: 44 } } />
+          </MuiLink>
+        </MobileBrand>
+        <MobileLinks component="nav" aria-label="Mobile navigation">
+          { links.map( ( { name, path } ) => (
+            <MuiLink
+              component={ NextLink }
+              underline="none"
+              color="inherit"
               href={ path }
+              aria-current={ path === pathname ? 'page' : undefined }
               key={ path }
-              className={ `${path === pathname && 'text-accent-light dark:text-accent border-b-2 border-accent-light dark:border-accent'} text-xl capitalize text-gray-700 dark:text-white hover:text-accent-light dark:hover:text-accent transition-all` }
+              onClick={ () => setOpen( false ) }
             >
               { name }
-            </Link>;
-          } ) }
-        </nav>
-      </SheetContent>
-    </Sheet>
+            </MuiLink>
+          ) ) }
+        </MobileLinks>
+        { isAdmin && (
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={ <LogoutOutlinedIcon/> }
+            disabled={ loggingOut }
+            onClick={ onLogout }
+            sx={ { mt: 3, alignSelf: 'stretch', justifyContent: 'flex-start' } }
+          >
+            { loggingOut ? 'Signing Out…' : 'Sign Out' }
+          </Button>
+        ) }
+      </MobileDrawer>
+    </>
   );
 }
 

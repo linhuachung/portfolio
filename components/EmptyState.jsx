@@ -1,10 +1,11 @@
 'use client';
+import Box from '@mui/material/Box';
 
-export default function EmptyState( { message = 'No data available', height = 'h-[300px]' } ) {
+export default function EmptyState( { message = 'No data available', height = 300 } ) {
   return (
-    <div className={ `flex items-center justify-center ${height} text-gray-600 dark:text-white/60` }>
+    <Box sx={ { minHeight: typeof height === 'number' ? height : 200, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'text.secondary' } }>
       { message }
-    </div>
+    </Box>
   );
 }
 

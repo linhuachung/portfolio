@@ -3,11 +3,15 @@ import { DataResponse } from '@/lib/data-response';
 import prismadb from '@/lib/prisma';
 import { sendReplyEmail } from '@/lib/resend-reply';
 import { NextResponse } from 'next/server';
+import { verifyAuth } from '@/lib/auth-utils';
+import { handleApiError } from '@/lib/api-error-handler';
 
 /**
  * GET - Get all replies for a contact
  */
 export async function GET( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     const resolvedParams = await params;
     const { id } = resolvedParams;
@@ -38,11 +42,7 @@ export async function GET( req, { params } ) {
     );
 
   } catch ( error ) {
-    console.error( 'Error fetching replies:', error );
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
+    return handleApiError( error, 'Get contact replies' );
   }
 }
 
@@ -50,6 +50,8 @@ export async function GET( req, { params } ) {
  * POST - Create a new reply
  */
 export async function POST( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     const resolvedParams = await params;
     const { id } = resolvedParams;
@@ -187,7 +189,7 @@ export async function POST( req, { params } ) {
         emailSent = true;
       } catch ( emailErr ) {
         console.error( 'Failed to send reply email:', emailErr );
-        emailError = emailErr.message;
+        emailError = 'Email delivery failed';
       }
     }
 
@@ -222,10 +224,6 @@ export async function POST( req, { params } ) {
     );
 
   } catch ( error ) {
-    console.error( 'Error creating reply:', error );
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
+    return handleApiError( error, 'Create contact reply' );
   }
 }

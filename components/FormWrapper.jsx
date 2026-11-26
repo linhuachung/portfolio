@@ -1,23 +1,54 @@
-import { Form } from '@/components/ui/form';
+import { Form } from '@/components/form/FormPrimitives';
 import Loader from '@/components/Loader';
+import Box from '@mui/material/Box';
+import { alpha, styled } from '@mui/material/styles';
 
-const FormWrapper = ( { children, form, isLoading, onSubmit, className = '', loaderType } ) => {
-  const hasCustomLayout = className.includes( '!p-0' ) || className.includes( 'overflow-hidden' );
+const FormRoot = styled( Box, { shouldForwardProp: property => property !== '$plain' } )( ( { theme, $plain } ) => ( {
+  position: 'relative',
+  minHeight: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: $plain ? 0 : theme.spacing( 3 ),
+  padding: $plain ? 0 : theme.spacing( 3 ),
+  borderRadius: $plain ? 0 : 12,
+  backgroundColor: $plain ? 'transparent' : theme.palette.background.paper,
+  overflow: $plain ? 'hidden' : 'visible'
+} ) );
+
+const LoadingOverlay = styled( Box )( ( { theme } ) => ( {
+  position: 'absolute',
+  zIndex: theme.zIndex.modal,
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 'inherit',
+  backgroundColor: alpha( '#000', .6 )
+} ) );
+
+const FormContent = styled( Box, { shouldForwardProp: property => property !== '$loading' } )( ( { $loading } ) => ( {
+  minHeight: 0,
+  flex: 1,
+  opacity: $loading ? .5 : 1,
+  pointerEvents: $loading ? 'none' : 'auto'
+} ) );
+
+const FormWrapper = ( { children, form, isLoading, onSubmit, loaderType, plain = false } ) => {
   return (
     <Form { ...form }>
-      <form
+      <FormRoot
+        component="form"
         onSubmit={ form.handleSubmit( onSubmit ) }
-        className={ `relative flex flex-col ${hasCustomLayout ? '' : 'gap-6'} p-10 bg-[#f5f5f5] dark:bg-secondary rounded-xl ${className}` }
-        style={ { height: className.includes( 'h-full' ) ? '100%' : 'auto' } }
+        $plain={ plain }
       >
         { isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl z-10">
-            <Loader type={ loaderType } color="#00ff99" size={ 30 }/>
-          </div>
+          <LoadingOverlay>
+            <Loader type={ loaderType } size={ 30 }/>
+          </LoadingOverlay>
         ) }
 
-        <div className={ isLoading ? 'opacity-50 pointer-events-none' : '' }>{ children }</div>
-      </form>
+        <FormContent $loading={ isLoading }>{ children }</FormContent>
+      </FormRoot>
     </Form>
   );
 };

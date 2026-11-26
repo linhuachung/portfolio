@@ -1,77 +1,97 @@
 'use client';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { BsArrowDownRight } from 'react-icons/bs';
 
-const services = [
-  {
-    num: '01',
-    title: 'Frontend Development',
-    description: 'Building responsive, high-performance web applications using ReactJS, NextJS, and modern JavaScript. Specializing in component-based architecture, state management with Redux, and seamless API integration for optimal user experiences.',
-    href: '/work'
-  },
-  {
-    num: '02',
-    title: 'UI/UX Implementation',
-    description: 'Translating design mockups into pixel-perfect, accessible interfaces using HTML5, CSS3, and Tailwind CSS. Focus on responsive design, cross-browser compatibility, and modern CSS techniques for engaging user interfaces.',
-    href: '/work'
-  },
-  {
-    num: '03',
-    title: 'Performance Optimization',
-    description: 'Optimizing web applications for speed and efficiency through code splitting, lazy loading, and modern bundling techniques. Implementing best practices for Core Web Vitals and ensuring smooth user interactions.',
-    href: '/work'
-  },
-  {
-    num: '04',
-    title: 'Full-Stack Integration',
-    description: 'Developing complete web solutions with NodeJS backend integration, RESTful API development, and database management. Ensuring seamless communication between frontend and backend systems.',
-    href: '/work'
-  }
-];
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { projects, services } from '@/content/public-content';
+import { createQueryHref, getAllowedValue } from '@/lib/url-state';
+import NextLink from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { Kicker, PageHeading, SectionTitle } from '@/app/(user)/components/PublicLayout.styles';
+import { CapabilityList, DetailNumber, DetailPanel, SelectorLayout, ServiceButton, ServiceProjectLink, ServiceSelector, ServicesScreen } from './Services.styles';
 
-function Services() {
-  return (
-    <section className="min-h-[80vh] flex flex-col justify-center py-12 xl:py-0">
-      <div className="container mx-auto">
-        <motion.div
-          initial={ { opacity: 0 } }
-          animate={ {
-            opacity: 1,
-            transition: {
-              delay: 2.4,
-              duration: 0.4,
-              ease: 'easeIn'
-            }
-          } }
-          className="grid grid-cols-1 md:grid-cols-2 gap-[60px]"
-        >
-          { services.map( ( service, index ) => {
-            return (
-              <div key={ index } className="flex-1 flex flex-col justify-center gap-6 group">
-                <div className="w-full flex justify-between items-center">
-                  <div
-                    className="text-5xl font-extrabold text-outline text-transparent group-hover:text-outline-hover transition-all duration-500"
-                  >
-                    { service.num }
-                  </div>
-                  <Link
-                    href={ service.href }
-                    className="w-[70px] h-[70px] rounded-full bg-gray-800 dark:bg-white group-hover:bg-accent-light dark:group-hover:bg-accent transition-all duration-500 flex justify-center items-center hover:-rotate-45"
-                  >
-                    <BsArrowDownRight className="text-white dark:text-primary text-3xl"/>
-                  </Link>
-                </div>
-                <h2 className="text-[42px] font-bold leading-none text-gray-900 dark:text-white group-hover:text-accent-light dark:group-hover:text-accent transition-all duration-500">{ service.title }</h2>
-                <p className="text-gray-700 dark:text-white/60">{ service.description }</p>
-                <div className="border-b border-gray-300 dark:border-white/20 w-full"></div>
-              </div>
-            );
-          } ) }
-        </motion.div>
-      </div>
-    </section>
-  );
+const serviceSlugs = services.map( item => item.slug );
+const compactServiceLabels = {
+  frontend: 'Frontend',
+  ui: 'UI',
+  performance: 'Performance',
+  fullstack: 'Full-stack'
+};
+
+export default function ServicesPage() {
+  return <Suspense fallback={ <ServicesScreen/> }><ServicesContent/></Suspense>;
 }
 
-export default Services;
+function ServicesContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const selectedSlug = getAllowedValue( searchParams, 'service', serviceSlugs, 'frontend' );
+  const selected = services.find( item => item.slug === selectedSlug );
+
+  const selectService = ( slug ) => {
+    router.push( createQueryHref( pathname, searchParams, { service: slug } ), { scroll: false } );
+  };
+
+  const onTabKeyDown = event => {
+    const currentIndex = serviceSlugs.indexOf( selectedSlug );
+    let nextIndex = null;
+    if ( event.key === 'ArrowUp' || event.key === 'ArrowLeft' ) {nextIndex = ( currentIndex - 1 + services.length ) % services.length;}
+    if ( event.key === 'ArrowDown' || event.key === 'ArrowRight' ) {nextIndex = ( currentIndex + 1 ) % services.length;}
+    if ( event.key === 'Home' ) {nextIndex = 0;}
+    if ( event.key === 'End' ) {nextIndex = services.length - 1;}
+    if ( nextIndex === null ) {return;}
+    event.preventDefault();
+    selectService( serviceSlugs[nextIndex] );
+    requestAnimationFrame( () => event.currentTarget.parentElement?.parentElement?.querySelectorAll( '[role="tab"]' )[nextIndex]?.focus() );
+  };
+
+  return (
+    <ServicesScreen component="section" aria-labelledby="services-title">
+      <PageHeading component="header">
+        <Box>
+          <Kicker component="p">Engineering focus · 01–04</Kicker>
+          <SectionTitle component="h1" id="services-title">How I contribute to product teams.</SectionTitle>
+        </Box>
+      </PageHeading>
+
+      <SelectorLayout>
+        <ServiceSelector component="ol" role="tablist" aria-label="Capabilities">
+          { services.map( service => (
+            <Box component="li" key={ service.slug } role="presentation">
+              <ServiceButton
+                id={ `service-tab-${service.slug}` }
+                type="button"
+                role="tab"
+                aria-selected={ service.slug === selectedSlug }
+                aria-label={ service.title }
+                aria-controls="service-panel"
+                tabIndex={ service.slug === selectedSlug ? 0 : -1 }
+                onKeyDown={ onTabKeyDown }
+                onClick={ () => selectService( service.slug ) }
+              >
+                <Typography component="span" data-service-number>{ service.number }</Typography>
+                <Typography component="span" data-service-label>{ service.title }</Typography>
+                <Typography component="span" data-service-compact>{ compactServiceLabels[service.slug] }</Typography>
+              </ServiceButton>
+            </Box>
+          ) ) }
+        </ServiceSelector>
+
+        <DetailPanel component="article" id="service-panel" role="tabpanel" aria-labelledby={ `service-tab-${selected.slug}` } data-focus={ selected.number } key={ selected.slug }>
+          <DetailNumber aria-hidden="true">Focus { selected.number }</DetailNumber>
+          <Box>
+            <Kicker component="p">{ selected.title }</Kicker>
+            <SectionTitle component="h2">{ selected.description }</SectionTitle>
+          </Box>
+          <CapabilityList component="ul">
+            { selected.capabilities.map( capability => <Box component="li" key={ capability }>{ capability }</Box> ) }
+          </CapabilityList>
+          <ServiceProjectLink component={ NextLink } href={ `/resume?section=experience&role=${projects.find( project => project.slug === selected.project )?.experienceSlug}&panel=projects&project=${selected.project}` }>
+            { selected.projectLabel } <Typography component="span" aria-hidden="true">↗</Typography>
+          </ServiceProjectLink>
+        </DetailPanel>
+      </SelectorLayout>
+    </ServicesScreen>
+  );
+}

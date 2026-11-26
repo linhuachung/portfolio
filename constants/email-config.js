@@ -13,7 +13,7 @@ export const EMAIL_DEFAULTS = {
 };
 
 export const EMAIL_TRACKING = {
-  CONTACT_EMAIL: ( contactId, baseUrl ) => `${baseUrl}/api/admin/contact/${contactId}/track-email`,
-  REPLY_EMAIL: ( contactId, baseUrl ) => `${baseUrl}/api/admin/contact/${contactId}/track-reply`
+  CONTACT_EMAIL: ( contactId, baseUrl ) => `${baseUrl}/api/user/contact/${contactId}/track-email`,
+  REPLY_EMAIL: ( contactId, replyId, baseUrl ) => `${baseUrl}/api/user/contact/${contactId}/replies/${replyId}/track-open`
 };
 

@@ -1,43 +1,60 @@
 'use client';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
+import { alpha, styled } from '@mui/material/styles';
+
+const colorMap = {
+  accent: 'primary.main',
+  blue: 'info.main',
+  green: 'success.main',
+  purple: 'secondary.main',
+  orange: 'warning.main'
+};
+
+const Card = styled( Box, { shouldForwardProp: property => property !== '$color' } )( ( { theme, $color } ) => {
+  const palettePath = colorMap[$color] || colorMap.accent;
+  const [key, shade] = palettePath.split( '.' );
+  const value = theme.palette[key]?.[shade] || theme.palette.primary.main;
+  return {
+    padding: theme.spacing( 2.25 ),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderRadius: 0,
+    color: value,
+    backgroundColor: 'transparent',
+    '& [data-stat-icon]': {
+      borderColor: alpha( value, .25 ),
+      backgroundColor: alpha( value, .07 )
+    }
+  };
+} );
 
 export default function StatCard( { title, value, icon: Icon, color = 'accent', trend, trendValue } ) {
-  const colorClasses = {
-    accent: 'bg-accent-light/10 dark:bg-accent/10 text-accent-light dark:text-accent border-accent-light/20 dark:border-accent/20',
-    blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    green: 'bg-green-500/10 text-green-400 border-green-500/20',
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    orange: 'bg-orange-500/10 text-orange-400 border-orange-500/20'
-  };
-
   return (
-    <motion.div
+    <Card
+      component={ motion.div }
       initial={ { opacity: 0, y: 20 } }
       animate={ { opacity: 1, y: 0 } }
-      transition={ { duration: 0.5 } }
-      className={ `p-6 rounded-xl border ${colorClasses[color]} backdrop-blur-sm` }
+      transition={ { duration: 0.22 } }
+      $color={ color }
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className={ `p-3 rounded-lg ${colorClasses[color]}` }>
-          { Icon && <Icon className="text-2xl"/> }
-        </div>
+      <Box sx={ { display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 } }>
+        <Box data-stat-icon sx={ { display: 'grid', placeItems: 'center', width: 36, height: 36, border: 1, borderRadius: 2, '& svg': { fontSize: '1.15rem' } } }>
+          { Icon && <Icon/> }
+        </Box>
         { trend && (
-          <div className={ `text-sm ${trend === 'up' ? 'text-green-400' : 'text-red-400'}` }>
+          <Box sx={ { fontSize: '.875rem', color: trend === 'up' ? 'success.main' : 'error.main' } }>
             { trend === 'up' ? '↑' : '↓' } { trendValue }%
-          </div>
+          </Box>
         ) }
-      </div>
-      <h3 className="text-sm text-gray-600 dark:text-white/60 mb-2">{ title }</h3>
-      <div className="text-3xl font-bold text-gray-900 dark:text-white">
-        <CountUp
-          end={ value }
-          duration={ 2 }
-          separator=","
-        />
-      </div>
-    </motion.div>
+      </Box>
+      <Typography component="h3" sx={ { mb: .75, color: 'text.secondary', fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.64rem', fontWeight: 650, letterSpacing: '.07em', textTransform: 'uppercase' } }>{ title }</Typography>
+      <Box sx={ { color: 'text.primary', fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 650, letterSpacing: '-.045em', lineHeight: 1 } }>
+        { Number( value || 0 ).toLocaleString( 'en-US' ) }
+      </Box>
+    </Card>
   );
 }
 

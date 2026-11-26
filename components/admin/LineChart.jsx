@@ -1,4 +1,7 @@
 'use client';
+import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { alpha, useTheme } from '@mui/material/styles';
 
 import {
   Chart as ChartJS,
@@ -24,7 +27,16 @@ ChartJS.register(
   Filler
 );
 
-export default function LineChart( { data, dataKey = 'count', name, color = '#00ff99' } ) {
+export default function LineChart( {
+  data,
+  dataKey = 'count',
+  name,
+  height = 300,
+  ariaLabel = 'Line chart'
+} ) {
+  const theme = useTheme();
+  const reduceMotion = useMediaQuery( '(prefers-reduced-motion: reduce)', { noSsr: true } );
+  const color = theme.palette.primary.main;
   const chartData = {
     labels: data.map( ( item ) => item.date ),
     datasets: [
@@ -32,14 +44,14 @@ export default function LineChart( { data, dataKey = 'count', name, color = '#00
         label: name,
         data: data.map( ( item ) => item[dataKey] || 0 ),
         borderColor: color,
-        backgroundColor: `${color}20`,
+        backgroundColor: alpha( color, .08 ),
         borderWidth: 2,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        fill: false,
+        tension: 0.32,
+        pointRadius: data.length === 1 ? 3 : 0,
+        pointHoverRadius: 4,
         pointBackgroundColor: color,
-        pointBorderColor: color
+        pointBorderColor: theme.palette.background.paper
       }
     ]
   };
@@ -47,43 +59,44 @@ export default function LineChart( { data, dataKey = 'count', name, color = '#00
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: reduceMotion ? false : { duration: 260 },
     plugins: {
       legend: {
         display: false
       },
       tooltip: {
-        backgroundColor: '#27272c',
-        borderColor: '#ffffff20',
+        backgroundColor: theme.palette.background.paper,
+        borderColor: theme.palette.divider,
         borderWidth: 1,
         borderRadius: 8,
-        titleColor: '#fff',
-        bodyColor: '#fff',
+        titleColor: theme.palette.text.primary,
+        bodyColor: theme.palette.text.primary,
         padding: 12,
-        displayColors: true
+        displayColors: false
       }
     },
     scales: {
       x: {
         ticks: {
-          color: '#ffffff60',
+          color: theme.palette.text.secondary,
           font: {
             size: 12
           }
         },
         grid: {
-          color: '#ffffff10',
+          display: false,
           drawBorder: false
         }
       },
       y: {
         ticks: {
-          color: '#ffffff60',
+          color: theme.palette.text.secondary,
           font: {
             size: 12
           }
         },
         grid: {
-          color: '#ffffff10',
+          color: alpha( theme.palette.text.primary, .08 ),
           drawBorder: false
         }
       }
@@ -95,8 +108,8 @@ export default function LineChart( { data, dataKey = 'count', name, color = '#00
   };
 
   return (
-    <div style={ { height: '300px' } }>
+    <Box role="img" aria-label={ ariaLabel } sx={ { height } }>
       <Line data={ chartData } options={ options } />
-    </div>
+    </Box>
   );
 }

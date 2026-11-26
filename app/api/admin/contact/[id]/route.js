@@ -1,6 +1,7 @@
 import STATUS_CODES from '@/constants/status';
 import { createErrorResponse, handleApiError } from '@/lib/api-error-handler';
 import { DataResponse } from '@/lib/data-response';
+import { verifyAuth } from '@/lib/auth-utils';
 import prismadb from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
@@ -11,6 +12,8 @@ export const runtime = 'nodejs';
  * GET - Get contact detail by ID
  */
 export async function GET( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     // Await params for Next.js 15 compatibility
     const resolvedParams = await params;
@@ -70,6 +73,8 @@ export async function GET( req, { params } ) {
  * PUT - Update contact status
  */
 export async function PUT( req, { params } ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
     const resolvedParams = await params;
     const { id } = resolvedParams;

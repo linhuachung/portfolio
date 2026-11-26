@@ -1,41 +1,56 @@
 export const LINKS = [
   {
-    name: "Home",
-    path: "/"
+    name: 'Home',
+    path: '/'
   },
   {
-    name: "Resume",
-    path: "/resume"
+    name: 'Resume',
+    path: '/resume'
   },
   {
-    name: "Work",
-    path: "/work"
+    name: 'Expertise',
+    path: '/services'
   },
   {
-    name: "Contact",
-    path: "/contact"
+    name: 'Contact',
+    path: '/contact'
   }
 ];
 
 export const ADMIN_LINKS = [
   {
-    name: "Dashboard",
-    path: "/admin"
+    name: 'Overview',
+    path: '/admin',
+    group: 'Workspace'
   },
   {
-    name: "User",
-    path: "/admin/user"
+    name: 'Inbox',
+    path: '/admin/contact',
+    group: 'Workspace'
   },
   {
-    name: "Experience",
-    path: "/admin/experience"
+    name: 'Profile',
+    path: '/admin/user',
+    group: 'Content'
   },
   {
-    name: "Education",
-    path: "/admin/education"
+    name: 'Experience',
+    path: '/admin/experience',
+    group: 'Content'
   },
   {
-    name: "Project",
-    path: "/admin/project"
+    name: 'Education',
+    path: '/admin/education',
+    group: 'Content'
+  },
+  {
+    name: 'Projects',
+    path: '/admin/project',
+    group: 'Content'
+  },
+  {
+    name: 'Account',
+    path: '/admin/account',
+    group: 'System'
   }
 ];

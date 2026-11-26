@@ -1,8 +1,9 @@
 import StoreProvider from '@/app/StoreProvider';
+import { ToastHost } from '@/components/Toast';
+import MuiProvider from '@/components/providers/MuiProvider';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { JetBrains_Mono } from 'next/font/google';
-import { ToastContainer } from 'react-toastify';
-import './globals.css';
 
 const jetbrainsMono = JetBrains_Mono( {
   subsets: ['latin'],
@@ -12,8 +13,11 @@ const jetbrainsMono = JetBrains_Mono( {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata = {
-  title: 'ChungLH Portfolio',
-  description: 'Hi! I\'m Lin Hua Chung, a Frontend Developer specializing in modern web technologies. Check out my projects and skills!',
+  title: {
+    default: 'Lin Hua Chung — Frontend Engineer',
+    template: '%s — Lin Hua Chung'
+  },
+  description: 'Frontend Engineer focused on complex forms, API-driven workflows, and product interfaces for banking and commerce.',
   icons: {
     icon: '/favicon.ico'
   }
@@ -27,7 +31,10 @@ export default function RootLayout( { children } ) {
           dangerouslySetInnerHTML={ {
             __html: `
               (function() {
-                const theme = localStorage.getItem('theme') || 'dark';
+                const defaultTheme = window.location.pathname.startsWith('/admin') ? 'dark' : 'light';
+                const storedTheme = localStorage.getItem('theme');
+                const theme = ['light', 'dark'].includes(storedTheme) ? storedTheme : defaultTheme;
+                document.documentElement.style.colorScheme = theme;
                 if (theme === 'dark') {
                   document.documentElement.classList.add('dark');
                 } else {
@@ -38,14 +45,16 @@ export default function RootLayout( { children } ) {
           } }
         />
       </head>
-      <body
-        className={ jetbrainsMono.variable }
-      >
+      <body>
         <ThemeProvider>
-          <StoreProvider>
-            { children }
-            <ToastContainer/>
-          </StoreProvider>
+          <AppRouterCacheProvider>
+            <MuiProvider fontFamily={ jetbrainsMono.style.fontFamily }>
+              <StoreProvider>
+                { children }
+                <ToastHost/>
+              </StoreProvider>
+            </MuiProvider>
+          </AppRouterCacheProvider>
         </ThemeProvider>
       </body>
     </html>

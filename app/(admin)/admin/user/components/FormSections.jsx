@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { AddressField } from '@/components/AddressField';
 import FileUpload from '@/components/FileUpload';
 import ImageUpload from '@/components/ImageUpload';
@@ -7,48 +9,45 @@ import { RichTextEditor } from '@/components/RichTextEditor';
 import { SelectionInputField } from '@/components/SelectionInputField';
 import { TextareaField } from '@/components/TextareaField';
 import { BIO_PARAGRAPH_CONFIG, SOCIAL_LINK_OPTIONS } from '../constants';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import IconButton from '@mui/material/IconButton';
+import { AdminRow, FormSection, SectionHeading } from '@/components/styled/Admin.styles';
 
 export function BasicInfoSection( { control, watch, setValue, setError, clearErrors, disabled = false, isSubmitting = false } ) {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">Basic Information</h3>
+    <FormSection>
+      <SectionHeading component="h2">Basic Information</SectionHeading>
 
       <ImageUpload
         watch={ watch }
-        className="mb-4"
         control={ control }
         name="avatar"
         setValue={ setValue }
         width={ 120 }
         height={ 120 }
         setError={ setError }
+        clearErrors={ clearErrors }
         disabled={ disabled }
       />
 
       <InputField
-        className="mb-4"
         control={ control }
         placeholder="Email"
         name="email"
         required={ true }
         disabled={ disabled }
-        labelInFocusClass="top-[14px]"
-        labelFocusClass="-top-2"
       />
 
       <InputField
-        className="mb-4"
         control={ control }
         placeholder="Name"
         name="name"
         required={ true }
         disabled={ disabled }
-        labelInFocusClass="top-[14px]"
-        labelFocusClass="-top-2"
       />
 
       <PhoneField
-        className="mb-4"
         control={ control }
         placeholder="Phone"
         name="phone"
@@ -56,7 +55,6 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
       />
 
       <TextareaField
-        className="mb-4"
         control={ control }
         placeholder="Bio (Short description)"
         name="bio"
@@ -65,7 +63,6 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
       />
 
       <AddressField
-        className="mb-4"
         control={ control }
         setValue={ setValue }
         setError={ setError }
@@ -73,37 +70,31 @@ export function BasicInfoSection( { control, watch, setValue, setError, clearErr
         disabled={ disabled }
         isSubmitting={ isSubmitting }
       />
-    </div>
+    </FormSection>
   );
 }
 
 export function HomepageContentSection( { control, watch, setValue, setError, disabled = false } ) {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">Homepage Content</h3>
+    <FormSection>
+      <SectionHeading component="h2">Database Profile Copy</SectionHeading>
+      <Typography component="p" sx={ { color: 'text.secondary', fontSize: '.76rem', lineHeight: 1.45 } }>Maintained for operational compatibility. Public pages continue to use the verified local content source.</Typography>
 
       <InputField
-        className="mb-4"
         control={ control }
         placeholder="Title (e.g., Frontend Developer)"
         name="title"
         disabled={ disabled }
-        labelInFocusClass="top-[14px]"
-        labelFocusClass="-top-2"
       />
 
       <InputField
-        className="mb-4"
         control={ control }
         placeholder="Greeting (e.g., Hello I'm)"
         name="greeting"
         disabled={ disabled }
-        labelInFocusClass="top-[14px]"
-        labelFocusClass="-top-2"
       />
 
       <RichTextEditor
-        className="mb-4"
         control={ control }
         placeholder="Bio Paragraph (for homepage - you can use formatting and line breaks)"
         name="bioParagraph"
@@ -114,7 +105,6 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
       />
 
       <FileUpload
-        className="mb-4"
         control={ control }
         name="cvPath"
         watch={ watch }
@@ -124,57 +114,7 @@ export function HomepageContentSection( { control, watch, setValue, setError, di
         maxSizeMB={ 10 }
         disabled={ disabled }
       />
-    </div>
-  );
-}
-
-export function StatisticsSection( { control, disabled = false } ) {
-  return (
-    <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2 mt-0">Statistics</h3>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Years of Experience"
-          name="stats.years"
-          type="number"
-          required={ true }
-          disabled={ disabled }
-        />
-
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Projects Completed"
-          name="stats.projects"
-          type="number"
-          required={ true }
-          disabled={ disabled }
-        />
-
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Technologies Mastered"
-          name="stats.technologies"
-          type="number"
-          required={ true }
-          disabled={ disabled }
-        />
-
-        <InputField
-          className="mb-4"
-          control={ control }
-          placeholder="Code Commits"
-          name="stats.commits"
-          type="number"
-          required={ true }
-          disabled={ disabled }
-        />
-      </div>
-    </div>
+    </FormSection>
   );
 }
 
@@ -253,12 +193,12 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4 border-b border-gray-300 dark:border-white/20 pb-2">
-        <h3 className="text-lg sm:text-xl font-semibold">Social Links</h3>
-        <span className="text-red-600 dark:text-red-400 text-sm">*</span>
-        <span className="text-xs text-gray-600 dark:text-gray-400">Required fields</span>
-      </div>
+    <FormSection>
+      <AdminRow sx={ { flexWrap: 'wrap', pb: 1, borderBottom: 1, borderColor: 'divider' } }>
+        <Typography component="h2" sx={ { fontSize: '1.15rem', fontWeight: 650 } }>Social Links</Typography>
+        <Typography component="span" sx={ { color: 'error.main', fontSize: '.875rem' } }>*</Typography>
+        <Typography component="span" sx={ { color: 'text.secondary', fontSize: '.75rem' } }>Required fields</Typography>
+      </AdminRow>
 
       { currentLinks.map( ( link, index ) => {
         const filteredOptions = getFilteredOptions( index );
@@ -268,10 +208,9 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
         const showAddButton = isLastRow && canAddNewLink();
 
         return (
-          <div key={ index } className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
-            <div className="flex-1 min-w-0">
+          <Box key={ index } sx={ { display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'stretch', sm: 'center' }, gap: 1, mb: 2 } }>
+            <Box sx={ { flex: 1, minWidth: 0 } }>
               <SelectionInputField
-                className="mb-0"
                 control={ control }
                 placeholderInput={ `Enter ${displayType} URL` }
                 name={ `socialLinks.${index}` }
@@ -279,61 +218,37 @@ export function SocialLinksSection( { control, socialLinks, isSubmitting, setVal
                 options={ filteredOptions }
                 disabled={ disabled }
               />
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            </Box>
+            <AdminRow sx={ { flexShrink: 0, gap: 1 } }>
               { showAddButton && !disabled && (
-                <button
+                <IconButton
                   type="button"
                   onClick={ handleAddMore }
-                  className={ `px-3 py-2 rounded-lg transition-colors ${
-                    canAddNewLink()
-                      ? 'text-accent-light dark:text-accent hover:bg-accent-light/10 dark:hover:bg-accent/10'
-                      : 'text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50'
-                  }` }
+                  color="primary"
                   disabled={ isSubmitting || !canAddNewLink() }
                   title={ canAddNewLink() ? 'Add more' : 'Please enter a valid URL (http:// or https://) to add more' }
+                  aria-label="Add social link"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
+                  <AddIcon fontSize="small"/>
+                </IconButton>
               ) }
               { currentLinks.length > 1 && !disabled && (
-                <button
+                <IconButton
                   type="button"
                   onClick={ () => handleRemove( index ) }
-                  className="px-3 py-2 text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                  color="error"
                   disabled={ isSubmitting }
                   title="Remove"
+                  aria-label={ `Remove social link ${index + 1}` }
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
+                  <DeleteOutlineIcon fontSize="small"/>
+                </IconButton>
               ) }
-            </div>
-          </div>
+            </AdminRow>
+          </Box>
         );
       } ) }
-    </div>
+    </FormSection>
   );
 }
 

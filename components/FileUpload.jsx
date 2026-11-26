@@ -1,9 +1,12 @@
 'use client';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import Toast from '@/components/Toast';
-import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import Button from '@mui/material/Button';
+import MuiLink from '@mui/material/Link';
+import { FormField, FormItem, FormLabel, FormMessage } from '@/components/form/FormPrimitives';
+import Input from '@mui/material/InputBase';
 import { FILE_UPLOAD } from '@/constants/file-upload';
 import { getCleanCvFileName } from '@/lib/cv-utils';
 import { TOAST_STATUS } from '@/constants/toast';
@@ -14,7 +17,6 @@ import { FiFile, FiUpload, FiX } from 'react-icons/fi';
 function FileUpload( {
   name,
   control,
-  className,
   watch,
   setValue,
   setError,
@@ -110,66 +112,66 @@ function FileUpload( {
 
   return (
     <FormField control={ control } name={ name } render={ () => (
-      <FormItem className={ `${className} space-y-2 w-full` }>
-        <FormLabel className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">
+      <FormItem>
+        <FormLabel sx={ { mb: 1, fontSize: '.875rem', fontWeight: 650 } }>
           CV File
         </FormLabel>
-        <div className="flex flex-col gap-3">
+        <Box sx={ { display: 'flex', flexDirection: 'column', gap: 1.5 } }>
           { filePath && (
-            <div className="flex items-center justify-between p-3 bg-secondary-light dark:bg-secondary rounded-lg border border-gray-300 dark:border-white/20">
-              <div className="flex items-center gap-2">
-                <FiFile className="text-gray-600 dark:text-gray-400" size={ 20 } />
-                <span className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[300px]">
+            <Box sx={ { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, p: 1.5, border: 1, borderColor: 'divider', borderRadius: 2, bgcolor: 'background.default' } }>
+              <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, color: 'text.secondary' } }>
+                <FiFile size={ 20 } />
+                <Typography component="span" sx={ { maxWidth: 300, overflow: 'hidden', color: 'text.secondary', fontSize: '.875rem', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }>
                   { fileName || getCleanCvFileName( filePath ) }
-                </span>
-              </div>
+                </Typography>
+              </Box>
               { !disabled && (
                 <Button
                   type="button"
-                  variant="ghost"
-                  size="sm"
+                  variant="text"
+                  size="small"
                   onClick={ handleRemove }
                   disabled={ uploading }
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  color="error"
+                  aria-label="Remove CV file"
                 >
                   <FiX size={ 18 } />
                 </Button>
               ) }
-            </div>
+            </Box>
           ) }
 
-          <div className="flex items-center gap-3">
+          <Box sx={ { display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' } }>
             <Input
               type="file"
               accept={ accept }
-              className="hidden"
+              sx={ { display: 'none' } }
               id={ name }
               onChange={ handleFileChange }
-              ref={ fileInputRef }
+              inputRef={ fileInputRef }
               disabled={ uploading || disabled }
             />
             <Button
               type="button"
               onClick={ () => !disabled && fileInputRef.current?.click() }
               disabled={ uploading || disabled }
-              className={ `flex items-center gap-2 ${disabled ? 'opacity-60 cursor-not-allowed' : ''}` }
+              startIcon={ <FiUpload size={ 18 } /> }
             >
-              <FiUpload size={ 18 } />
               { uploading ? 'Uploading...' : filePath ? 'Replace File' : 'Upload CV' }
             </Button>
             { filePath && (
-              <a
+              <MuiLink
                 href={ filePath }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-accent-light dark:text-accent hover:underline"
+                sx={ { color: 'primary.main', fontSize: '.875rem' } }
               >
                 View Current File
-              </a>
+              </MuiLink>
             ) }
-          </div>
-        </div>
-        <FormMessage className="ml-1"/>
+          </Box>
+        </Box>
+        <FormMessage/>
       </FormItem>
     ) }/>
   );

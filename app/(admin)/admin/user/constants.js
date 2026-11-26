@@ -3,13 +3,7 @@
  */
 export const DEFAULT_FORM_VALUES = {
   title: 'Frontend Developer',
-  greeting: 'Hello I\'m',
-  stats: {
-    years: 4,
-    projects: 8,
-    technologies: 4,
-    commits: 500
-  }
+  greeting: 'Hello I\'m'
 };
 
 export const DEFAULT_SOCIAL_LINKS = [

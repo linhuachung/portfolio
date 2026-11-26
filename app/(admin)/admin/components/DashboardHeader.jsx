@@ -1,41 +1,74 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FaSync } from 'react-icons/fa';
-import { PERIOD_OPTIONS } from '../constants/dashboardConfig';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import NextLink from 'next/link';
+import {
+  HeaderActions,
+  OverviewDescription,
+  OverviewEyebrow,
+  OverviewHeaderCopy,
+  OverviewHeaderRoot,
+  OverviewTitle,
+  RefreshButton,
+  UpdatedMeta
+} from './Overview.styles';
 
-export default function DashboardHeader( { period, onPeriodChange, onRefresh, refreshing } ) {
-  return (
-    <div className="flex items-center justify-between mb-6">
-      <div>
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
-        <p className="text-gray-600 dark:text-white/60">Overview of your portfolio analytics</p>
-      </div>
-      <div className="flex items-center gap-4">
-        <Button
-          onClick={ onRefresh }
-          disabled={ refreshing }
-          variant="outline"
-          className="bg-[#f0f0f0] dark:bg-secondary border-gray-300 dark:border-white/20 hover:bg-[#e8e8e8] dark:hover:bg-secondary/80"
-        >
-          <FaSync className={ `mr-2 ${refreshing ? 'animate-spin' : ''}` } />
-          Refresh
-        </Button>
-        <Select value={ period } onValueChange={ onPeriodChange }>
-          <SelectTrigger className="w-[180px] bg-[#f0f0f0] dark:bg-secondary border-gray-300 dark:border-white/20">
-            <SelectValue placeholder="Select period" />
-          </SelectTrigger>
-          <SelectContent>
-            { PERIOD_OPTIONS.map( ( option ) => (
-              <SelectItem key={ option.value } value={ option.value }>
-                { option.label }
-              </SelectItem>
-            ) ) }
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  );
+const dateFormatter = new Intl.DateTimeFormat( 'en-US', {
+  timeZone: 'Asia/Bangkok',
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+} );
+
+function formatUpdatedAt( generatedAt ) {
+  if ( !generatedAt ) {return 'Waiting for live data';}
+  const date = new Date( generatedAt );
+  return Number.isNaN( date.getTime() ) ? 'Update time unavailable' : `Updated ${dateFormatter.format( date )}`;
 }
 
+export default function DashboardHeader( { generatedAt, onRefresh, refreshing } ) {
+  return (
+    <OverviewHeaderRoot>
+      <OverviewHeaderCopy>
+        <OverviewEyebrow component="p">Operations Workspace</OverviewEyebrow>
+        <OverviewTitle component="h1">Overview</OverviewTitle>
+        <OverviewDescription component="p">
+          Prioritize conversations, check publishing readiness, and understand recent audience signals.
+        </OverviewDescription>
+      </OverviewHeaderCopy>
+
+      <HeaderActions>
+        <UpdatedMeta component="p">
+          <AccessTimeOutlinedIcon aria-hidden="true" sx={ { fontSize: 15 } } />
+          { formatUpdatedAt( generatedAt ) }
+        </UpdatedMeta>
+        <Button
+          component={ NextLink }
+          href="/"
+          target="_blank"
+          rel="noreferrer"
+          variant="text"
+          endIcon={ <OpenInNewOutlinedIcon fontSize="small" /> }
+        >
+          View Site
+        </Button>
+        <RefreshButton
+          type="button"
+          onClick={ onRefresh }
+          disabled={ refreshing }
+          variant="outlined"
+          startIcon={ refreshing
+            ? <CircularProgress size={ 15 } color="inherit" aria-hidden="true" />
+            : <RefreshOutlinedIcon fontSize="small" aria-hidden="true" /> }
+        >
+          { refreshing ? 'Refreshing…' : 'Refresh Data' }
+        </RefreshButton>
+      </HeaderActions>
+    </OverviewHeaderRoot>
+  );
+}

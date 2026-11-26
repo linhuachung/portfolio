@@ -1,52 +1,45 @@
-import { NextResponse } from 'next/server';
-import prismadb from '@/lib/prisma';
-import bcrypt from 'bcrypt';
-import { generateToken, generateRefreshToken } from '@/lib/jwt';
 import STATUS_CODES from '@/constants/status';
+import { setAuthCookies } from '@/lib/auth-cookies';
 import { DataResponse } from '@/lib/data-response';
+import prismadb from '@/lib/prisma';
+import { consumeRateLimit, getClientKey } from '@/lib/rate-limit';
+import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
+
+const LOGIN_RATE_LIMIT = { limit: 10, windowMs: 15 * 60 * 1000 };
+const MAX_USERNAME_LENGTH = 100;
+const MAX_PASSWORD_LENGTH = 200;
+
+const invalidCredentials = () => NextResponse.json(
+  DataResponse( STATUS_CODES.UNAUTHORIZED, 'Invalid credentials', null ),
+  { status: STATUS_CODES.UNAUTHORIZED }
+);
+
+function readCredentials( body ) {
+  const username = typeof body.username === 'string' ? body.username.trim() : '';
+  const password = typeof body.password === 'string' ? body.password : '';
+  const valid = username && password && username.length <= MAX_USERNAME_LENGTH && password.length <= MAX_PASSWORD_LENGTH;
+  return valid ? { username, password } : null;
+}
 
 export async function POST( req ) {
+  const rateLimit = consumeRateLimit( getClientKey( req, 'admin-login' ), LOGIN_RATE_LIMIT );
+  if ( !rateLimit.allowed ) {
+    return NextResponse.json( DataResponse( 429, 'Too many login attempts', null ), { status: 429 } );
+  }
+
   try {
-    const { username, password } = await req.json();
-    const user = await prismadb.admin.findUnique( {
-      where: { username }
-    } );
+    const credentials = readCredentials( await req.json().catch( () => ( {} ) ) );
+    if ( !credentials ) {return invalidCredentials();}
 
-    if ( !user ) {
-      return NextResponse.json( DataResponse( STATUS_CODES.NOT_FOUND, 'User not found', null ), { status: STATUS_CODES.NOT_FOUND } );
+    const admin = await prismadb.admin.findUnique( { where: { username: credentials.username } } );
+    if ( !admin || !admin.isActive || !( await bcrypt.compare( credentials.password, admin.password ) ) ) {
+      return invalidCredentials();
     }
 
-    const isMatch = await bcrypt.compare( password, user.password );
-
-    if ( !isMatch ) {
-      return NextResponse.json( DataResponse( STATUS_CODES.UNAUTHORIZED, 'Invalid password', null ), { status: STATUS_CODES.UNAUTHORIZED } );
-    }
-
-    const accessToken = generateToken( {
-      id: user.id,
-      username: user.username,
-      role: user.role
-    } );
-
-    const refreshToken = generateRefreshToken( {
-      id: user.id,
-      username: user.username,
-      role: user.role
-    } );
-
-    // Return both tokens
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Login success', {
-        accessToken,
-        refreshToken
-      } ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
-  } catch ( error ) {
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
+    const response = NextResponse.json( DataResponse( STATUS_CODES.SUCCESS, 'Login success', null ), { status: STATUS_CODES.SUCCESS } );
+    return setAuthCookies( response, admin );
+  } catch {
+    return NextResponse.json( DataResponse( STATUS_CODES.SERVER_ERROR, 'Login unavailable', null ), { status: STATUS_CODES.SERVER_ERROR } );
   }
 }

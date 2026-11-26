@@ -1,64 +1,28 @@
-import { NextResponse } from 'next/server';
-import { verifyRefreshToken, generateToken, generateRefreshToken } from '@/lib/jwt';
 import STATUS_CODES from '@/constants/status';
+import { REFRESH_COOKIE, clearAuthCookies, setAuthCookies } from '@/lib/auth-cookies';
 import { DataResponse } from '@/lib/data-response';
+import { verifyRefreshToken } from '@/lib/jwt';
+import prismadb from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function POST( req ) {
-  try {
-    // Get refresh token from request body or cookies
-    const body = await req.json().catch( () => ( {} ) );
-    let refreshToken = body.refreshToken;
-
-    // Fallback to cookies if not in body
-    if ( !refreshToken ) {
-      const cookieStore = cookies();
-      refreshToken = cookieStore.get( 'refreshToken' )?.value;
-    }
-
-    if ( !refreshToken ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.UNAUTHORIZED, 'Refresh token not found', null ),
-        { status: STATUS_CODES.UNAUTHORIZED }
-      );
-    }
-
-    // Verify refresh token
-    const decoded = verifyRefreshToken( refreshToken );
-
-    if ( !decoded ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.UNAUTHORIZED, 'Invalid or expired refresh token', null ),
-        { status: STATUS_CODES.UNAUTHORIZED }
-      );
-    }
-
-    // Generate new access token and refresh token (token rotation)
-    const newAccessToken = generateToken( {
-      id: decoded.id,
-      username: decoded.username,
-      role: decoded.role || 'admin'
-    } );
-
-    const newRefreshToken = generateRefreshToken( {
-      id: decoded.id,
-      username: decoded.username,
-      role: decoded.role || 'admin'
-    } );
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Token refreshed successfully', {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken
-      } ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
-  } catch ( error ) {
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVER_ERROR, error.message || 'Internal server error', null ),
-      { status: STATUS_CODES.SERVER_ERROR }
-    );
-  }
+function unauthorized() {
+  const response = NextResponse.json( DataResponse( STATUS_CODES.UNAUTHORIZED, 'Unauthorized', null ), { status: STATUS_CODES.UNAUTHORIZED } );
+  return clearAuthCookies( response );
 }
 
+export async function POST() {
+  try {
+    const cookieStore = await cookies();
+    const decoded = verifyRefreshToken( cookieStore.get( REFRESH_COOKIE )?.value );
+    if ( !decoded || decoded.role !== 'admin' ) {return unauthorized();}
+
+    const admin = await prismadb.admin.findUnique( { where: { id: decoded.id } } );
+    if ( !admin || !admin.isActive || admin.role !== 'admin' || admin.username !== decoded.username ) {return unauthorized();}
+
+    const response = NextResponse.json( DataResponse( STATUS_CODES.SUCCESS, 'Token refreshed', null ), { status: STATUS_CODES.SUCCESS } );
+    return setAuthCookies( response, admin );
+  } catch {
+    return unauthorized();
+  }
+}
