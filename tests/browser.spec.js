@@ -685,7 +685,12 @@ for ( const route of routes ) {
 test( 'admin APIs reject unauthenticated requests and test routes are disabled', async ( { request } ) => {
   expect( ( await request.get( '/api/admin/dashboard' ) ).status() ).toBe( 401 );
   expect( ( await request.get( '/api/admin/contact' ) ).status() ).toBe( 401 );
-  expect( ( await request.post( '/api/admin/auth/logout' ) ).status() ).toBe( 401 );
+  // Logout is public so an expired session can still clear its cookies.
+  const logout = await request.post( '/api/admin/auth/logout' );
+  expect( logout.status() ).toBe( 200 );
+  const clearedCookies = logout.headersArray().filter( header => header.name.toLowerCase() === 'set-cookie' ).map( header => header.value );
+  expect( clearedCookies.some( value => /^token=;.*Max-Age=0/i.test( value ) ) ).toBe( true );
+  expect( clearedCookies.some( value => /^refreshToken=;.*Path=\/api\/admin\/auth/i.test( value ) ) ).toBe( true );
   expect( ( await request.post( '/api/admin/auth/change-password', { data: {} } ) ).status() ).toBe( 401 );
   expect( ( await request.get( '/api/test-env' ) ).status() ).toBe( 404 );
   expect( ( await request.post( '/api/test-email', { data: {} } ) ).status() ).toBe( 404 );

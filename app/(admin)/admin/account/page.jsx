@@ -12,6 +12,8 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { ADMIN_ENDPOINT } from '@/constants/endpoint';
+import axiosInstance from '@/lib/axios';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { SourceNotice, StudioDescription, StudioEyebrow, StudioHeader, StudioPage, StudioTitle } from '../components/ContentStudio.styles';
@@ -42,22 +44,14 @@ export default function AccountSecurityPage() {
 
     setSubmitting( true );
     try {
-      const response = await fetch( '/api/admin/auth/change-password', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { currentPassword: fields.currentPassword, newPassword: fields.newPassword } )
-      } );
-      const payload = await response.json().catch( () => ( {} ) );
-      if ( !response.ok ) {
-        if ( payload.data?.field ) {setErrors( { [payload.data.field]: payload.message } );}
-        else {setRequestError( payload.message || 'Unable to change password.' );}
-        return;
-      }
+      await axiosInstance.post( ADMIN_ENDPOINT.CHANGE_PASSWORD, { currentPassword: fields.currentPassword, newPassword: fields.newPassword } );
       setFields( initialFields );
       setComplete( true );
-    } catch {
-      setRequestError( 'Unable to reach the security service. Try again.' );
+    } catch ( error ) {
+      const payload = error.response?.data;
+      if ( !payload ) {setRequestError( 'Unable to reach the security service. Try again.' );}
+      else if ( payload.data?.field ) {setErrors( { [payload.data.field]: payload.message } );}
+      else {setRequestError( payload.message || 'Unable to change password.' );}
     } finally {
       setSubmitting( false );
     }
