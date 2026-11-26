@@ -1,18 +1,22 @@
-/**
- * Contact form constants
- */
-
+/** Conversation topics offered by the public contact form. The value is what gets stored. */
 export const CONTACT_SERVICES = [
-  { value: 'fe', label: 'Frontend Development' },
-  { value: 'be', label: 'Backend Development' },
-  { value: 'fs', label: 'Fullstack Development' }
+  { value: 'frontend', label: 'Product interface or workflow' },
+  { value: 'ui', label: 'Design system or UI implementation' },
+  { value: 'performance', label: 'Performance or accessibility review' },
+  { value: 'fullstack', label: 'Engineering role or collaboration' }
 ];
 
-/**
- * Service labels map derived from CONTACT_SERVICES
- * Used for quick lookup by service code
- */
-export const SERVICE_LABELS = CONTACT_SERVICES.reduce( ( acc, service ) => {
-  acc[service.value] = service.label;
-  return acc;
-}, {} );
+export const CONTACT_SERVICE_VALUES = CONTACT_SERVICES.map( service => service.value );
+
+// Codes used by the previous form; kept so stored messages still show a label.
+const LEGACY_SERVICE_LABELS = {
+  fe: 'Frontend Development',
+  be: 'Backend Development',
+  fs: 'Fullstack Development'
+};
+
+/** Label for a stored service code, for emails and the admin inbox. */
+export const SERVICE_LABELS = {
+  ...LEGACY_SERVICE_LABELS,
+  ...Object.fromEntries( CONTACT_SERVICES.map( service => [service.value, service.label] ) )
+};
