@@ -1,228 +1,59 @@
 import STATUS_CODES from '@/constants/status';
+import { createErrorResponse, handleApiError } from '@/lib/api-error-handler';
+import { verifyAuth } from '@/lib/auth-utils';
+import { REPLY_SELECT, canEmailContact, deliverReply, findContactForReply, findReplySender, readReplyBody } from '@/lib/contact-replies';
 import { DataResponse } from '@/lib/data-response';
 import prismadb from '@/lib/prisma';
-import { sendReplyEmail } from '@/lib/resend-reply';
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth-utils';
-import { handleApiError } from '@/lib/api-error-handler';
 
-/**
- * GET - Get all replies for a contact
- */
+/** GET - all replies for a contact, newest first */
 export async function GET( req, { params } ) {
   const authResult = await verifyAuth( req );
   if ( authResult.error ) {return authResult.error;}
   try {
-    const resolvedParams = await params;
-    const { id } = resolvedParams;
-
-    if ( !id ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.BAD_REQUEST, 'Contact ID is required', null ),
-        { status: STATUS_CODES.BAD_REQUEST }
-      );
-    }
-
+    const { id } = await params;
     const replies = await prismadb.contactReply.findMany( {
       where: { contactId: id },
       orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        message: true,
-        emailSent: true,
-        sentAt: true,
-        createdAt: true,
-        updatedAt: true
-      }
+      select: REPLY_SELECT
     } );
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Replies retrieved successfully', replies ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
+    return NextResponse.json( DataResponse( STATUS_CODES.SUCCESS, 'Replies retrieved successfully', replies ), { status: STATUS_CODES.SUCCESS } );
   } catch ( error ) {
     return handleApiError( error, 'Get contact replies' );
   }
 }
 
-/**
- * POST - Create a new reply
- */
+/** POST - create a reply, email it unless `sendEmail` is false, and mark the contact replied */
 export async function POST( req, { params } ) {
   const authResult = await verifyAuth( req );
   if ( authResult.error ) {return authResult.error;}
   try {
-    const resolvedParams = await params;
-    const { id } = resolvedParams;
+    const { id } = await params;
+    const body = await readReplyBody( req, { sendEmailByDefault: true } );
+    if ( !body ) {return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'Reply message is required' );}
 
-    if ( !id ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.BAD_REQUEST, 'Contact ID is required', null ),
-        { status: STATUS_CODES.BAD_REQUEST }
-      );
-    }
+    const contact = await findContactForReply( id );
+    if ( !contact ) {return createErrorResponse( STATUS_CODES.NOT_FOUND, 'Contact not found' );}
+    if ( !canEmailContact( contact ) ) {return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'Invalid contact email' );}
 
-    const body = await req.json();
+    const sender = await findReplySender();
+    if ( !sender ) {return createErrorResponse( STATUS_CODES.NOT_FOUND, 'User not found' );}
 
-    if ( !body || typeof body !== 'object' ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.BAD_REQUEST, 'Invalid request body', null ),
-        { status: STATUS_CODES.BAD_REQUEST }
-      );
-    }
-
-    const { message, sendEmail = true } = body;
-
-    if ( !message || !message.trim() ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.BAD_REQUEST, 'Reply message is required', null ),
-        { status: STATUS_CODES.BAD_REQUEST }
-      );
-    }
-
-    // Get contact details
-    const contact = await prismadb.contact.findUnique( {
-      where: { id },
-      select: {
-        id: true,
-        firstname: true,
-        lastname: true,
-        name: true,
-        email: true,
-        message: true
-      }
+    const { id: replyId } = await prismadb.contactReply.create( {
+      data: { contactId: id, message: body.message, emailSent: false, sentAt: null },
+      select: { id: true }
     } );
+    const delivery = body.sendEmail
+      ? await deliverReply( { contact, replyId, message: body.message, sender } )
+      : { emailSent: false, emailError: null };
 
-    if ( !contact ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.NOT_FOUND, 'Contact not found', null ),
-        { status: STATUS_CODES.NOT_FOUND }
-      );
-    }
-
-    // Validate contact email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if ( !contact.email || !emailRegex.test( contact.email ) ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.BAD_REQUEST, 'Invalid contact email', null ),
-        { status: STATUS_CODES.BAD_REQUEST }
-      );
-    }
-
-    // Get user (portfolio owner) info for reply email
-    const user = await prismadb.user.findFirst( {
-      select: {
-        email: true,
-        name: true
-      }
-    } );
-
-    if ( !user ) {
-      return NextResponse.json(
-        DataResponse( STATUS_CODES.NOT_FOUND, 'User not found', null ),
-        { status: STATUS_CODES.NOT_FOUND }
-      );
-    }
-
-    // Create reply
-    const reply = await prismadb.contactReply.create( {
-      data: {
-        contactId: id,
-        message: message.trim(),
-        emailSent: false,
-        sentAt: null
-      },
-      select: {
-        id: true,
-        message: true,
-        emailSent: true,
-        sentAt: true,
-        createdAt: true,
-        updatedAt: true
-      }
-    } );
-
-    // Get previous replies (excluding current one) for email history
-    // Get all previous replies, not just those sent via email
-    const previousReplies = await prismadb.contactReply.findMany( {
-      where: {
-        contactId: id,
-        id: { not: reply.id }
-      },
-      orderBy: { createdAt: 'asc' },
-      select: {
-        id: true,
-        message: true,
-        createdAt: true
-      }
-    } );
-
-
-    // Send email if requested
-    let emailSent = false;
-    let emailError = null;
-
-    if ( sendEmail ) {
-      try {
-        await sendReplyEmail( {
-          contactId: contact.id,
-          replyId: reply.id,
-          recipientEmail: contact.email,
-          recipientName: contact.name || `${contact.firstname} ${contact.lastname}`.trim(),
-          replyMessage: message.trim(),
-          originalMessage: contact.message,
-          previousReplies: previousReplies || [],
-          adminName: user.name || 'Portfolio Admin',
-          adminEmail: user.email
-        } );
-
-        // Update reply with email sent status
-        await prismadb.contactReply.update( {
-          where: { id: reply.id },
-          data: {
-            emailSent: true,
-            sentAt: new Date()
-          }
-        } );
-
-        emailSent = true;
-      } catch ( emailErr ) {
-        console.error( 'Failed to send reply email:', emailErr );
-        emailError = 'Email delivery failed';
-      }
-    }
-
-    // Update contact status to replied
-    await prismadb.contact.update( {
-      where: { id },
-      data: {
-        status: 'replied'
-      }
-    } );
-
-    // Get updated reply
-    const updatedReply = await prismadb.contactReply.findUnique( {
-      where: { id: reply.id },
-      select: {
-        id: true,
-        message: true,
-        emailSent: true,
-        sentAt: true,
-        createdAt: true,
-        updatedAt: true
-      }
-    } );
+    await prismadb.contact.update( { where: { id }, data: { status: 'replied' } } );
+    const reply = await prismadb.contactReply.findUnique( { where: { id: replyId }, select: REPLY_SELECT } );
 
     return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Reply created successfully', {
-        reply: updatedReply,
-        emailSent,
-        emailError: emailError || null
-      } ),
+      DataResponse( STATUS_CODES.SUCCESS, 'Reply created successfully', { reply, ...delivery } ),
       { status: STATUS_CODES.SUCCESS }
     );
-
   } catch ( error ) {
     return handleApiError( error, 'Create contact reply' );
   }

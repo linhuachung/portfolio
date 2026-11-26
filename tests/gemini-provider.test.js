@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const routePath = new URL( '../app/api/admin/contact/[id]/ai-draft/route.js', import.meta.url );
-const composerPath = new URL( '../app/(admin)/admin/components/ContactDetailModal.jsx', import.meta.url );
+const composerPath = new URL( '../app/(admin)/admin/components/contact-detail/ReplyComposer.jsx', import.meta.url );
 
 test( 'AI reply route uses a server-side Gemini key and native provider endpoint', async () => {
   const source = await readFile( routePath, 'utf8' );
