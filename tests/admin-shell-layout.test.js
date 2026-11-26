@@ -5,7 +5,7 @@ import test from 'node:test';
 const read = path => readFile( new URL( `../${path}`, import.meta.url ), 'utf8' );
 
 test( 'admin shell reserves permanent drawer width exactly once', async () => {
-  const source = await read( 'app/(admin)/admin/components/AdminNavigationShell.styles.js' );
+  const source = await read( 'src/features/admin-shell/components/AdminNavigationShell/AdminNavigationShell.styles.js' );
   const mainStage = source.slice( source.indexOf( 'export const MainStage' ) );
 
   assert.match( mainStage, /flex:\s*1/ );
@@ -14,7 +14,7 @@ test( 'admin shell reserves permanent drawer width exactly once', async () => {
 } );
 
 test( 'admin shell uses one resilient desktop navigation breakpoint', async () => {
-  const source = await read( 'app/(admin)/admin/components/AdminNavigationShell.jsx' );
+  const source = await read( 'src/features/admin-shell/components/AdminNavigationShell/AdminNavigationShell.jsx' );
   const breakpointUses = source.match( /min-width:\s*1024px/g ) || [];
 
   assert.equal( breakpointUses.length, 3 );
@@ -22,9 +22,9 @@ test( 'admin shell uses one resilient desktop navigation breakpoint', async () =
 
 test( 'admin brand renders the saved profile image instead of name initials', async () => {
   const [shellSource, styleSource, formSource] = await Promise.all( [
-    read( 'app/(admin)/admin/components/AdminNavigationShell.jsx' ),
-    read( 'app/(admin)/admin/components/AdminNavigationShell.styles.js' ),
-    read( 'app/(admin)/admin/user/hooks/useUserForm.js' )
+    read( 'src/features/admin-shell/components/AdminNavigationShell/AdminNavigationShell.jsx' ),
+    read( 'src/features/admin-shell/components/AdminNavigationShell/AdminNavigationShell.styles.js' ),
+    read( 'src/features/profile/hooks/useUserForm/useUserForm.js' )
   ] );
 
   assert.doesNotMatch( shellSource, /<BrandMark[^>]*>\s*LC\s*<\/BrandMark>/ );
@@ -36,7 +36,7 @@ test( 'admin brand renders the saved profile image instead of name initials', as
 } );
 
 test( 'inbox search keeps a readable measure on wide screens', async () => {
-  const source = await read( 'app/(admin)/admin/contact/Inbox.styles.js' );
+  const source = await read( 'src/features/inbox/components/InboxClient/Inbox.styles.js' );
 
   assert.match( source, /minmax\(320px,\s*720px\)/ );
   assert.match( source, /justifyContent:\s*'start'/ );

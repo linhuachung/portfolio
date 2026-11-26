@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseAdminContactQuery } from '../lib/admin-contact-query.js';
+import { parseAdminContactQuery } from '../src/features/inbox/server/contact-query.js';
 
 test( 'admin contact query applies safe defaults and allowlists', () => {
   const parsed = parseAdminContactQuery( new URLSearchParams( 'status=unknown&page=-4&limit=999&sort=random' ) );

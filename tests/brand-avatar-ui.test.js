@@ -6,9 +6,9 @@ const read = path => readFile( new URL( `../${path}`, import.meta.url ), 'utf8' 
 
 test( 'public desktop and mobile brands render the profile image instead of name text', async () => {
   const [headerSource, mobileSource, styleSource] = await Promise.all( [
-    read( 'components/Header.jsx' ),
-    read( 'components/MobileNav.jsx' ),
-    read( 'components/styled/Navigation.styles.js' )
+    read( 'src/features/portfolio/components/Header/Header.jsx' ),
+    read( 'src/features/portfolio/components/MobileNav/MobileNav.jsx' ),
+    read( 'src/features/portfolio/styles/Navigation.styles.js' )
   ] );
 
   assert.doesNotMatch( headerSource, />\s*CHUNG\s*</ );

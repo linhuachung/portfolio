@@ -5,8 +5,8 @@ const connectSources = isDevelopment ? "'self' https: ws:" : "'self' https:";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    // Lint every source folder, not only Next's defaults (app, components, lib).
-    dirs: ['app', 'components', 'lib', 'constants', 'contexts', 'services', 'theme', 'content', 'prisma', 'tests', 'middleware.js']
+    // Lint all source, not only Next's default folders.
+    dirs: ['src', 'prisma', 'tests']
   },
   // Single source for the public résumé link (content/public-content.js points here).
   async redirects() {

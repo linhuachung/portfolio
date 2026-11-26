@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generateRefreshToken, generateToken, verifyRefreshToken, verifyToken } from '../lib/jwt.js';
+import { generateRefreshToken, generateToken, verifyRefreshToken, verifyToken } from '../src/features/auth/server/jwt.js';
 
 test( 'access token preserves the admin authorization claim and rejects tampering', () => {
   const previousSecret = process.env.JWT_SECRET;

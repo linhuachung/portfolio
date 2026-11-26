@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
-import { ADMIN_LINKS } from '../constants/route.js';
+import { ADMIN_LINKS } from '../src/features/admin-shell/constants/navigation.js';
 
 const routeToPage = route => {
   if ( route === '/admin' ) {
-    return path.join( process.cwd(), 'app', '(admin)', 'admin', 'page.jsx' );
+    return path.join( process.cwd(), 'src', 'app', '(admin)', 'admin', 'page.jsx' );
   }
 
-  return path.join( process.cwd(), 'app', '(admin)', 'admin', ...route.split( '/' ).filter( Boolean ).slice( 1 ), 'page.jsx' );
+  return path.join( process.cwd(), 'src', 'app', '(admin)', 'admin', ...route.split( '/' ).filter( Boolean ).slice( 1 ), 'page.jsx' );
 };
 
 test( 'every admin navigation destination has an implemented page', () => {

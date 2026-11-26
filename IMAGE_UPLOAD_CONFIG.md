@@ -751,7 +751,7 @@ npm run dev
 
 ### Upload Handler Architecture
 
-**File**: `lib/upload-handler.js`
+**File**: `src/features/uploads/server/upload-handler.js`
 
 **Functions**:
 - `handleFileUpload(req, uploadType)`: Main handler function

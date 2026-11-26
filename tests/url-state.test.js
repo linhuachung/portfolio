@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createQueryHref, getAllowedValue } from '../lib/url-state.js';
+import { createQueryHref, getAllowedValue } from '../src/features/portfolio/utils/url-state.js';
 
 test( 'query values are constrained to an allowlist', () => {
   const params = new URLSearchParams( 'project=unknown&panel=contributions' );

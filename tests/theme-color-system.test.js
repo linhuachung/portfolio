@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { createTheme } from '@mui/material/styles';
-import { createAppTheme } from '../theme/createAppTheme.js';
+import { createAppTheme } from '../src/shared/theme/createAppTheme.js';
 
 const expectedColors = {
   light: {
@@ -69,9 +69,9 @@ for ( const mode of ['light', 'dark'] ) {
 
 test( 'page layouts delegate field surfaces and state colors to the global MUI theme', async () => {
   const files = [
-    '../app/(admin)/admin/contact/Inbox.styles.js',
-    '../app/(user)/contact/Contact.styles.js',
-    '../app/(admin)/admin/components/Overview.styles.js'
+    '../src/features/inbox/components/InboxClient/Inbox.styles.js',
+    '../src/features/contact/styles/Contact.styles.js',
+    '../src/features/dashboard/styles/Overview.styles.js'
   ];
 
   for ( const file of files ) {

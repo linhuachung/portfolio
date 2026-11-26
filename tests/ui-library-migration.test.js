@@ -29,11 +29,13 @@ test( 'legacy shadcn and Radix UI dependencies have no remaining consumers', asy
   ) );
   assert.deepEqual( legacyDependencies, [] );
 
-  const sourceRoots = ['app', 'components', 'contexts', 'lib'];
+  const sourceRoots = ['src'];
   const sourceFiles = [];
   const collectSourceFiles = async directory => {
     for ( const entry of await readdir( directory, { withFileTypes: true } ) ) {
       const path = `${directory}/${entry.name}`;
+      // Server modules render email HTML, not React UI.
+      if ( entry.isDirectory() && entry.name === 'server' ) {continue;}
       if ( entry.isDirectory() ) {
         await collectSourceFiles( path );
       } else if ( /\.(js|jsx|ts|tsx)$/.test( entry.name ) ) {
@@ -54,11 +56,13 @@ test( 'legacy shadcn and Radix UI dependencies have no remaining consumers', asy
 } );
 
 test( 'interactive and form controls use MUI primitives instead of raw JSX elements', async () => {
-  const sourceRoots = ['app', 'components'];
+  const sourceRoots = ['src'];
   const sourceFiles = [];
   const collectSourceFiles = async directory => {
     for ( const entry of await readdir( directory, { withFileTypes: true } ) ) {
       const path = `${directory}/${entry.name}`;
+      // Server modules render email HTML, not React UI.
+      if ( entry.isDirectory() && entry.name === 'server' ) {continue;}
       if ( entry.isDirectory() ) {
         await collectSourceFiles( path );
       } else if ( /\.(js|jsx|ts|tsx)$/.test( entry.name ) ) {
@@ -80,11 +84,13 @@ test( 'interactive and form controls use MUI primitives instead of raw JSX eleme
 } );
 
 test( 'rendered JSX uses MUI primitives instead of raw structural or typography tags', async () => {
-  const sourceRoots = ['app', 'components'];
+  const sourceRoots = ['src'];
   const sourceFiles = [];
   const collectSourceFiles = async directory => {
     for ( const entry of await readdir( directory, { withFileTypes: true } ) ) {
       const path = `${directory}/${entry.name}`;
+      // Server modules render email HTML, not React UI.
+      if ( entry.isDirectory() && entry.name === 'server' ) {continue;}
       if ( entry.isDirectory() ) {
         await collectSourceFiles( path );
       } else if ( /\.(js|jsx|ts|tsx)$/.test( entry.name ) ) {
@@ -99,7 +105,7 @@ test( 'rendered JSX uses MUI primitives instead of raw structural or typography 
     const source = await readFile( file, 'utf8' );
     const rawTags = [...source.matchAll( /<([a-z][a-z0-9]*)(?=[\s/>])/g )]
       .map( match => match[1] )
-      .filter( tag => !( file === 'app/layout.jsx' && ['html', 'head', 'body', 'script'].includes( tag ) ) );
+      .filter( tag => !( file === 'src/app/layout.jsx' && ['html', 'head', 'body', 'script'].includes( tag ) ) );
     if ( rawTags.length ) {
       rawElementConsumers.push( { file, tags: [...new Set( rawTags )].sort() } );
     }
@@ -110,7 +116,7 @@ test( 'rendered JSX uses MUI primitives instead of raw structural or typography 
 
 test( 'styling is owned by MUI theme and styled components, not global CSS or utility classes', async () => {
   const projectRoot = new URL( '..', import.meta.url );
-  const roots = ['app', 'components', 'theme'];
+  const roots = ['src'];
   const files = [];
   const collect = async directory => {
     for ( const entry of await readdir( new URL( `${directory}/`, projectRoot ), { withFileTypes: true } ) ) {

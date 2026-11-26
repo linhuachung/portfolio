@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateContactPayload } from '../lib/contact-validation.js';
+import { validateContactPayload } from '../src/features/contact/utils/contact-validation.js';
 
 test( 'accepts the new contact contract without phone or split names', () => {
   const result = validateContactPayload( { name: 'Ada Lovelace', email: 'ada@example.com', service: 'frontend', message: 'A sufficiently useful project brief.' } );

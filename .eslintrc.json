@@ -8,35 +8,143 @@
   ],
   "rules": {
     "react-refresh/only-export-components": "warn",
-    "react/jsx-curly-spacing": ["error", { "when": "always", "children": true }],
-    "quotes": ["error", "single"],
-    "object-curly-spacing": ["error", "always", { "objectsInObjects": true }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "react/jsx-curly-spacing": [
+      "error",
+      {
+        "when": "always",
+        "children": true
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always",
+      {
+        "objectsInObjects": true
+      }
+    ],
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "space-in-parens": "off",
-    "space-before-blocks": ["error", "always"],
-    "array-bracket-spacing": ["error", "never"],
+    "space-before-blocks": [
+      "error",
+      "always"
+    ],
+    "array-bracket-spacing": [
+      "error",
+      "never"
+    ],
     "linebreak-style": "off",
     "no-unexpected-multiline": "warn",
-    "keyword-spacing": ["error", { "before": true, "after": true }],
-    "comma-dangle": ["error", "never"],
-    "comma-spacing": ["error", { "before": false, "after": true }],
-    "arrow-spacing": ["error", { "before": true, "after": true }],
-    "indent": ["error", 2, { "SwitchCase": 1 }],
-    "semi": ["error", "always"],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "arrow-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
     "no-trailing-spaces": "error",
     "no-multi-spaces": "error",
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2,
+        "maxEOF": 1
+      }
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
     "prefer-const": "error",
     "no-var": "error",
-    "eqeqeq": ["error", "always"],
-    "curly": ["error", "all"],
-    "no-empty": ["warn", { "allowEmptyCatch": true }],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    "curly": [
+      "error",
+      "all"
+    ],
+    "no-empty": [
+      "warn",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
     "no-case-declarations": "warn"
   },
   "env": {
     "browser": true,
     "node": true,
     "es2021": true
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/features/*/components/**",
+        "src/features/*/hooks/**",
+        "src/features/*/api/**",
+        "src/shared/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "**/server",
+                  "**/server/*"
+                ],
+                "message": "Server-only modules (db, email, auth secrets) must not be imported from client code. Call an API route instead."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

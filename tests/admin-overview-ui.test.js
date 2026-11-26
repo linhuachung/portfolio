@@ -5,7 +5,7 @@ import test from 'node:test';
 const read = path => readFile( new URL( `../${path}`, import.meta.url ), 'utf8' );
 
 test( 'overview is an operations workspace instead of a vanity-card grid', async () => {
-  const source = await read( 'app/(admin)/admin/page.jsx' );
+  const source = await read( 'src/features/dashboard/components/DashboardPage/DashboardPage.jsx' );
 
   assert.doesNotMatch( source, /StatsGrid/ );
   assert.doesNotMatch( source, /ChartContainer/ );
@@ -16,7 +16,7 @@ test( 'overview is an operations workspace instead of a vanity-card grid', async
 } );
 
 test( 'overview styling caps the content rail and prioritizes the operations column', async () => {
-  const source = await read( 'app/(admin)/admin/components/Overview.styles.js' );
+  const source = await read( 'src/features/dashboard/styles/Overview.styles.js' );
 
   assert.match( source, /1280px/ );
   assert.match( source, /minmax\(0,\s*1\.45fr\)/ );
@@ -25,9 +25,9 @@ test( 'overview styling caps the content rail and prioritizes the operations col
 
 test( 'overview modules avoid delayed entrance animation', async () => {
   const sources = await Promise.all( [
-    read( 'app/(admin)/admin/components/ActionQueue.jsx' ),
-    read( 'app/(admin)/admin/components/RecentContacts.jsx' ),
-    read( 'app/(admin)/admin/components/AudienceOverview.jsx' )
+    read( 'src/features/dashboard/components/ActionQueue/ActionQueue.jsx' ),
+    read( 'src/features/dashboard/components/RecentContacts/RecentContacts.jsx' ),
+    read( 'src/features/dashboard/components/AudienceOverview/AudienceOverview.jsx' )
   ] );
 
   sources.forEach( source => {
@@ -37,15 +37,15 @@ test( 'overview modules avoid delayed entrance animation', async () => {
 } );
 
 test( 'overview does not render a healthy workspace after the initial request fails', async () => {
-  const source = await read( 'app/(admin)/admin/page.jsx' );
+  const source = await read( 'src/features/dashboard/components/DashboardPage/DashboardPage.jsx' );
 
   assert.match( source, /if\s*\(\s*!dashboardData\s*\)\s*\{\s*return/ );
 } );
 
 test( 'overview metrics use valid list semantics and reduced-motion styles', async () => {
   const [overviewSource, stylesSource] = await Promise.all( [
-    read( 'app/(admin)/admin/components/AudienceOverview.jsx' ),
-    read( 'app/(admin)/admin/components/Overview.styles.js' )
+    read( 'src/features/dashboard/components/AudienceOverview/AudienceOverview.jsx' ),
+    read( 'src/features/dashboard/styles/Overview.styles.js' )
   ] );
 
   assert.match( overviewSource, /MetricBand component="ul"/ );

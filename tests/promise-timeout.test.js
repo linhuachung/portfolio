@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { OperationTimeoutError, withTimeout } from '../lib/promise-timeout.js';
+import { OperationTimeoutError, withTimeout } from '../src/server/utils/promise-timeout.js';
 
 test( 'withTimeout preserves successful operation results', async () => {
   assert.equal( await withTimeout( Promise.resolve( 'ready' ), 50 ), 'ready' );

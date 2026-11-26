@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { education, experiences, profile, projects } from '../content/public-content.js';
+import { education, experiences, profile, projects } from '../src/content/public-content.js';
 
 test( 'public project content stays within one-screen limits', () => {
   assert.equal( projects.length, 5 );

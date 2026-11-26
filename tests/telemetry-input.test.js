@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseDownloadTelemetry, parseVisitTelemetry } from '../lib/telemetry-input.js';
+import { parseDownloadTelemetry, parseVisitTelemetry } from '../src/features/analytics/server/telemetry-input.js';
 
 test( 'visit telemetry keeps bounded browser metadata and safe local paths', () => {
   assert.deepEqual( parseVisitTelemetry( { path: '/resume?section=skills', userAgent: ' browser ', referer: ' https://example.com ' } ), {

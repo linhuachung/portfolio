@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseDashboardPeriod } from '../lib/admin-dashboard-query.js';
+import { parseDashboardPeriod } from '../src/features/dashboard/server/dashboard-query.js';
 
 test( 'dashboard period only accepts the public allowlist', () => {
   assert.equal( parseDashboardPeriod( new URLSearchParams() ), 'month' );

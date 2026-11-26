@@ -14,7 +14,7 @@ async function routeFiles( directory ) {
 }
 
 test( 'every non-login admin API verifies authorization inside the route', async () => {
-  const root = path.join( process.cwd(), 'app', 'api', 'admin' );
+  const root = path.join( process.cwd(), 'src', 'app', 'api', 'admin' );
   const files = await routeFiles( root );
   const publicAuthRoutes = [
     path.join( root, 'auth', 'login', 'route.js' ),
@@ -33,15 +33,15 @@ test( 'every non-login admin API verifies authorization inside the route', async
 } );
 
 test( 'public telemetry never posts into the admin API namespace', async () => {
-  const source = await fs.readFile( path.join( process.cwd(), 'lib', 'analytics.js' ), 'utf8' );
+  const source = await fs.readFile( path.join( process.cwd(), 'src', 'features', 'analytics', 'api', 'tracking.js' ), 'utf8' );
   assert.equal( source.includes( '/api/admin/' ), false );
-  await fs.access( path.join( process.cwd(), 'app', 'api', 'user', 'analytics', 'visit', 'route.js' ) );
-  await fs.access( path.join( process.cwd(), 'app', 'api', 'user', 'analytics', 'cv-download', 'route.js' ) );
+  await fs.access( path.join( process.cwd(), 'src', 'app', 'api', 'user', 'analytics', 'visit', 'route.js' ) );
+  await fs.access( path.join( process.cwd(), 'src', 'app', 'api', 'user', 'analytics', 'cv-download', 'route.js' ) );
 } );
 
 test( 'email tracking pixels use public user routes', async () => {
-  const source = await fs.readFile( path.join( process.cwd(), 'constants', 'email-config.js' ), 'utf8' );
+  const source = await fs.readFile( path.join( process.cwd(), 'src', 'server', 'email', 'email-config.js' ), 'utf8' );
   assert.equal( source.includes( '/api/admin/' ), false );
-  await fs.access( path.join( process.cwd(), 'app', 'api', 'user', 'contact', '[id]', 'track-email', 'route.js' ) );
-  await fs.access( path.join( process.cwd(), 'app', 'api', 'user', 'contact', '[id]', 'replies', '[replyId]', 'track-open', 'route.js' ) );
+  await fs.access( path.join( process.cwd(), 'src', 'app', 'api', 'user', 'contact', '[id]', 'track-email', 'route.js' ) );
+  await fs.access( path.join( process.cwd(), 'src', 'app', 'api', 'user', 'contact', '[id]', 'replies', '[replyId]', 'track-open', 'route.js' ) );
 } );

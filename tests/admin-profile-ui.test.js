@@ -5,7 +5,7 @@ import test from 'node:test';
 const read = path => readFile( new URL( `../${path}`, import.meta.url ), 'utf8' );
 
 test( 'profile photo editor exposes persistent upload and remove actions', async () => {
-  const source = await read( 'components/ImageUpload.jsx' );
+  const source = await read( 'src/features/uploads/components/ImageUpload/ImageUpload.jsx' );
 
   assert.match( source, /Profile Photo/ );
   assert.match( source, /Upload Photo/ );
@@ -15,13 +15,13 @@ test( 'profile photo editor exposes persistent upload and remove actions', async
 } );
 
 test( 'profile file removal control has an accessible name', async () => {
-  const source = await read( 'components/FileUpload.jsx' );
+  const source = await read( 'src/features/uploads/components/FileUpload/FileUpload.jsx' );
 
   assert.match( source, /aria-label="Remove CV file"/ );
 } );
 
 test( 'profile editor uses the shared admin studio page contract', async () => {
-  const source = await read( 'app/(admin)/admin/user/page.jsx' );
+  const source = await read( 'src/features/profile/components/ProfilePage/ProfilePage.jsx' );
 
   assert.match( source, /StudioPage/ );
   assert.match( source, /Operational Profile/ );
@@ -30,9 +30,9 @@ test( 'profile editor uses the shared admin studio page contract', async () => {
 
 test( 'profile view is read-only text while edit mode mounts editable fields', async () => {
   const [pageSource, viewSource, styleSource] = await Promise.all( [
-    read( 'app/(admin)/admin/user/page.jsx' ),
-    read( 'app/(admin)/admin/user/components/ProfileReadOnlyView.jsx' ),
-    read( 'app/(admin)/admin/user/Profile.styles.js' )
+    read( 'src/features/profile/components/ProfilePage/ProfilePage.jsx' ),
+    read( 'src/features/profile/components/ProfileReadOnlyView/ProfileReadOnlyView.jsx' ),
+    read( 'src/features/profile/styles/Profile.styles.js' )
   ] );
 
   assert.match( pageSource, /ProfileReadOnlyView/ );
@@ -47,7 +47,7 @@ test( 'profile view is read-only text while edit mode mounts editable fields', a
 } );
 
 test( 'profile form drafts do not mutate persisted view data', async () => {
-  const { cloneProfileData } = await import( '../app/(admin)/admin/user/profile-data.js' );
+  const { cloneProfileData } = await import( '../src/features/profile/utils/profile-data.js' );
   const persisted = {
     name: 'Lin Hua Chung',
     socialLinks: [{ type: 'github', url: 'https://github.com/linhuachung', order: 0 }]
@@ -62,7 +62,7 @@ test( 'profile form drafts do not mutate persisted view data', async () => {
 } );
 
 test( 'profile form preserves every stored social link', async () => {
-  const { mergeSocialLinks } = await import( '../lib/social-links-utils.js' );
+  const { mergeSocialLinks } = await import( '../src/features/profile/utils/social-links.js' );
   const merged = mergeSocialLinks( [
     { type: 'github', url: 'https://github.com/linhuachung', order: 0 },
     { type: 'linkedin', url: 'https://linkedin.com/in/linhuachung', order: 1 }
@@ -73,9 +73,9 @@ test( 'profile form preserves every stored social link', async () => {
 
 test( 'content review pages render visual record identities', async () => {
   const sources = await Promise.all( [
-    read( 'app/(admin)/admin/experience/page.jsx' ),
-    read( 'app/(admin)/admin/education/page.jsx' ),
-    read( 'app/(admin)/admin/project/page.jsx' )
+    read( 'src/features/content-studio/components/ExperienceStudioPage/ExperienceStudioPage.jsx' ),
+    read( 'src/features/content-studio/components/EducationStudioPage/EducationStudioPage.jsx' ),
+    read( 'src/features/content-studio/components/ProjectStudioPage/ProjectStudioPage.jsx' )
   ] );
 
   sources.forEach( source => assert.match( source, /RecordAvatar/ ) );

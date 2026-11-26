@@ -5,7 +5,7 @@ import {
   buildOverviewContent,
   formatChartData,
   toRecentContact
-} from '../lib/admin-overview.js';
+} from '../src/features/dashboard/utils/overview.js';
 
 const fixtures = {
   experiences: [{ slug: 'nab', dates: 'Mar 2025–Present' }],

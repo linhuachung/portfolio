@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { consumeRateLimit } from '../lib/rate-limit.js';
+import { consumeRateLimit } from '../src/server/security/rate-limit.js';
 
 test( 'rate limiter blocks requests over the window limit and resets', () => {
   const options = { limit: 2, windowMs: 1000 };

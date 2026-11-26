@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createS3SignedRequest } from '../lib/s3-upload.js';
+import { createS3SignedRequest } from '../src/features/uploads/server/s3-upload.js';
 
 test( 'S3 request signing is deterministic and does not expose the secret', () => {
   const request = createS3SignedRequest( {

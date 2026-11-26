@@ -4,7 +4,7 @@ import {
   buildReplyDraftPrompt,
   extractGeminiResponseText,
   normalizeReplyDraftRequest
-} from '../lib/ai-reply.js';
+} from '../src/features/inbox/server/ai-reply.js';
 
 test( 'AI reply request uses safe defaults and bounded context', () => {
   const request = normalizeReplyDraftRequest( {
