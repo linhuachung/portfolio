@@ -1,4 +1,4 @@
-import { formatEmailAddress, getServiceLabel } from '@/features/contact/constants/email';
+import { formatEmailAddress, getServiceLabel } from '../constants/email';
 import { EMAIL_SUBJECTS, EMAIL_TRACKING } from '@/server/email/email-config';
 import { formatMessageForHtml, getBaseUrl, isValidObjectId } from '@/server/email/email-utils';
 import { getResendClient, getResendFromEmail, handleResendResponse } from '@/server/email/resend-client';

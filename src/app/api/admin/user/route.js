@@ -1,136 +1,28 @@
-import STATUS_CODES from '@/shared/constants/status';
-import { createErrorResponse, handleApiError } from '@/server/http';
 import { verifyAuth } from '@/features/auth/server';
-import { DataResponse } from '@/server/http';
-import prismadb from '@/server/db';
-import { prepareSocialLinksForDB } from '@/features/profile/utils/social-links';
-import { formatUserData, normalizeOptionalField, normalizeStats } from '@/features/profile/server';
-import { NextResponse } from 'next/server';
-import { withTimeout } from '@/server/utils';
+import { getAdminProfile, updateAdminProfile } from '@/features/profile/server';
+import { HttpError, handleApiError, successResponse } from '@/server/http';
+import STATUS_CODES from '@/shared/constants/status';
 
-// GET user profile
+/** GET - owner profile for the admin editor */
 export async function GET( req ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
-    const authResult = await verifyAuth( req );
-    if ( authResult.error ) {
-      return authResult.error;
-    }
-
-    // Get first user (portfolio owner)
-    const user = await withTimeout( prismadb.user.findFirst( {
-      include: {
-        socialLinks: {
-          orderBy: { order: 'asc' }
-        }
-      }
-    } ), 3500 );
-
-    if ( !user ) {
-      return createErrorResponse( STATUS_CODES.NOT_FOUND, 'User not found' );
-    }
-
-    // Format response
-    const userData = formatUserData( user, true );
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'User profile retrieved', userData ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
+    return successResponse( 'User profile retrieved', await getAdminProfile() );
   } catch ( error ) {
     return handleApiError( error, 'Get user profile' );
   }
 }
 
-// PUT update user profile
+/** PUT - update the owner profile and replace its social links */
 export async function PUT( req ) {
+  const authResult = await verifyAuth( req );
+  if ( authResult.error ) {return authResult.error;}
   try {
-    const authResult = await verifyAuth( req );
-    if ( authResult.error ) {
-      return authResult.error;
-    }
-
-    const body = await req.json();
-    const {
-      email,
-      name,
-      avatar,
-      bio,
-      phone,
-      title,
-      greeting,
-      bioParagraph,
-      stats,
-      cvPath,
-      socialLinks,
-      addressCountry,
-      addressCity,
-      address
-    } = body;
-
-    // Get first user (portfolio owner)
-    const existingUser = await prismadb.user.findFirst();
-
-    if ( !existingUser ) {
-      return createErrorResponse( STATUS_CODES.NOT_FOUND, 'User not found' );
-    }
-
-    // Update user - convert empty strings to null for optional fields
-    await prismadb.user.update( {
-      where: { id: existingUser.id },
-      data: {
-        email: email || existingUser.email,
-        name: name || existingUser.name,
-        avatar: normalizeOptionalField( avatar, existingUser.avatar ),
-        bio: normalizeOptionalField( bio, existingUser.bio ),
-        phone: normalizeOptionalField( phone, existingUser.phone ),
-        title: normalizeOptionalField( title, existingUser.title ),
-        greeting: normalizeOptionalField( greeting, existingUser.greeting ),
-        bioParagraph: normalizeOptionalField( bioParagraph, existingUser.bioParagraph ),
-        stats: stats !== undefined ? normalizeStats( stats, existingUser.stats ) : existingUser.stats,
-        cvPath: normalizeOptionalField( cvPath, existingUser.cvPath ),
-        addressCountry: normalizeOptionalField( addressCountry, existingUser.addressCountry ),
-        addressCity: normalizeOptionalField( addressCity, existingUser.addressCity ),
-        address: normalizeOptionalField( address, existingUser.address )
-      }
-    } );
-
-    // Update social links if provided
-    if ( socialLinks && Array.isArray( socialLinks ) ) {
-      // Delete existing social links
-      await prismadb.socialLink.deleteMany( {
-        where: { userId: existingUser.id }
-      } );
-
-      // Prepare and create social links
-      const validSocialLinks = prepareSocialLinksForDB( socialLinks, existingUser.id );
-
-      if ( validSocialLinks.length > 0 ) {
-        await prismadb.socialLink.createMany( {
-          data: validSocialLinks
-        } );
-      }
-    }
-
-    // Fetch updated user with social links
-    const userWithLinks = await prismadb.user.findUnique( {
-      where: { id: existingUser.id },
-      include: {
-        socialLinks: {
-          orderBy: { order: 'asc' }
-        }
-      }
-    } );
-
-    const userData = formatUserData( userWithLinks, true );
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'User profile updated successfully', userData ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-
+    const body = await req.json().catch( () => null );
+    if ( !body || typeof body !== 'object' ) {throw new HttpError( STATUS_CODES.BAD_REQUEST, 'Invalid request body' );}
+    return successResponse( 'User profile updated successfully', await updateAdminProfile( body ) );
   } catch ( error ) {
     return handleApiError( error, 'Update user profile' );
   }
 }
-

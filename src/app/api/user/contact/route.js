@@ -1,30 +1,28 @@
-import STATUS_CODES from '@/shared/constants/status';
-import { createErrorResponse, handleApiError } from '@/server/http';
+import { submitContact } from '@/features/contact/server';
 import { validateContactPayload } from '@/features/contact/utils/contact-validation';
-import { prepareContactData } from '@/features/contact/server';
-import { DataResponse } from '@/server/http';
-import prismadb from '@/server/db';
-import { sendContactEmail } from '@/features/contact/server';
-import { NextResponse } from 'next/server';
+import { createErrorResponse, handleApiError, successResponse } from '@/server/http';
 import { consumeRateLimit, getClientKey } from '@/server/security';
+import STATUS_CODES from '@/shared/constants/status';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+const CONTACT_RATE_LIMIT = { limit: 5, windowMs: 15 * 60 * 1000 };
+
 export async function POST( req ) {
-  const rateLimit = consumeRateLimit( getClientKey( req, 'contact' ), { limit: 5, windowMs: 15 * 60 * 1000 } );
+  const rateLimit = consumeRateLimit( getClientKey( req, 'contact' ), CONTACT_RATE_LIMIT );
   if ( !rateLimit.allowed ) {
     return NextResponse.json( { status: 429, message: 'Too many messages. Please try again later.' }, { status: 429 } );
   }
 
   try {
     const body = await req.json().catch( () => null );
-    if ( !body || typeof body !== 'object' ) {
-      return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'Invalid request body' );
-    }
+    if ( !body || typeof body !== 'object' ) {return createErrorResponse( STATUS_CODES.BAD_REQUEST, 'Invalid request body' );}
 
     const validation = validateContactPayload( body );
     if ( !validation.valid ) {
+      // The form maps each { field, message } back onto its input.
       return NextResponse.json( {
         status: STATUS_CODES.BAD_REQUEST,
         message: 'Validation failed',
@@ -32,27 +30,8 @@ export async function POST( req ) {
       }, { status: STATUS_CODES.BAD_REQUEST } );
     }
 
-    const user = await prismadb.user.findFirst( { select: { id: true, email: true } } );
-    if ( !user ) {return createErrorResponse( STATUS_CODES.NOT_FOUND, 'Contact recipient is unavailable' );}
-
-    const payload = { ...body, ...validation.data };
-    const contact = await prismadb.contact.create( { data: prepareContactData( payload, user.id ) } );
-    let emailSent = false;
-
-    try {
-      const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || user.email;
-      if ( recipientEmail ) {
-        await sendContactEmail( payload, recipientEmail, contact.id );
-        emailSent = true;
-      }
-    } catch ( emailError ) {
-      console.error( 'Contact email notification failed', { name: emailError.name } );
-    }
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Contact form submitted successfully', { id: contact.id, emailSent } ),
-      { status: STATUS_CODES.SUCCESS }
-    );
+    const result = await submitContact( { ...body, ...validation.data } );
+    return successResponse( 'Contact form submitted successfully', result );
   } catch ( error ) {
     return handleApiError( error, 'Submit contact form' );
   }

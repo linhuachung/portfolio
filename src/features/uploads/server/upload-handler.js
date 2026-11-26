@@ -1,8 +1,8 @@
-import { FILE_UPLOAD, generateUniqueFileName } from '@/features/uploads/constants/file-upload';
-import { FILE_REGEX } from '@/features/uploads/constants/regex-patterns';
+import { FILE_UPLOAD, generateUniqueFileName } from '../constants/file-upload';
+import { FILE_REGEX } from '../constants/regex-patterns';
 import STATUS_CODES from '@/shared/constants/status';
 import { createErrorResponse } from '@/server/http/api-error-handler';
-import { uploadFileToS3 } from '@/features/uploads/server/s3-upload';
+import { uploadFileToS3 } from './s3-upload';
 
 /**
  * Upload type configurations

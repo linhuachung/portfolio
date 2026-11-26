@@ -1,8 +1,9 @@
-export class OperationTimeoutError extends Error {
+import { HttpError } from '../http/http-error.js';
+
+export class OperationTimeoutError extends HttpError {
   constructor( message = 'Service temporarily unavailable' ) {
-    super( message );
+    super( 503, message );
     this.name = 'OperationTimeoutError';
-    this.status = 503;
   }
 }
 

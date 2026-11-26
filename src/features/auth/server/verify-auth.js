@@ -1,4 +1,4 @@
-import { verifyToken } from '@/features/auth/server/jwt';
+import { verifyToken } from './jwt';
 import STATUS_CODES from '@/shared/constants/status';
 import { DataResponse } from '@/server/http/data-response';
 import { NextResponse } from 'next/server';

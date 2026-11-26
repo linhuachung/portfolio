@@ -1,4 +1,4 @@
-import { ACCESS_TTL_SECONDS, REFRESH_TTL_SECONDS, generateRefreshToken, generateToken } from '@/features/auth/server/jwt';
+import { ACCESS_TTL_SECONDS, REFRESH_TTL_SECONDS, generateRefreshToken, generateToken } from './jwt';
 
 export const ACCESS_COOKIE = 'token';
 export const REFRESH_COOKIE = 'refreshToken';

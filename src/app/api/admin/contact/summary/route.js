@@ -1,35 +1,14 @@
-import STATUS_CODES from '@/shared/constants/status';
 import { verifyAuth } from '@/features/auth/server';
-import { DataResponse } from '@/server/http';
-import prismadb from '@/server/db';
-import { NextResponse } from 'next/server';
+import { getInboxSummary } from '@/features/inbox/server';
+import { HttpError, handleApiError, successResponse } from '@/server/http';
+import STATUS_CODES from '@/shared/constants/status';
 
 export async function GET( req ) {
   const authResult = await verifyAuth( req );
   if ( authResult.error ) {return authResult.error;}
-
   try {
-    const [unread, total, latest] = await Promise.all( [
-      prismadb.contact.count( { where: { status: 'pending' } } ),
-      prismadb.contact.count(),
-      prismadb.contact.findFirst( {
-        orderBy: { createdAt: 'desc' },
-        select: { id: true, createdAt: true, status: true }
-      } )
-    ] );
-
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SUCCESS, 'Inbox summary retrieved', {
-        unread,
-        total,
-        latest
-      } ),
-      { status: STATUS_CODES.SUCCESS }
-    );
-  } catch {
-    return NextResponse.json(
-      DataResponse( STATUS_CODES.SERVICE_UNAVAILABLE, 'Inbox summary is temporarily unavailable', null ),
-      { status: STATUS_CODES.SERVICE_UNAVAILABLE }
-    );
+    return successResponse( 'Inbox summary retrieved', await getInboxSummary() );
+  } catch ( error ) {
+    return handleApiError( error, 'Inbox summary', new HttpError( STATUS_CODES.SERVICE_UNAVAILABLE, 'Inbox summary is temporarily unavailable' ) );
   }
 }
