@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import { alpha, keyframes, styled } from '@mui/material/styles';
+import { keyframes, styled } from '@mui/material/styles';
 
 export const panelIn = keyframes`
   from { opacity: 0; transform: translateY(-4px); }
@@ -171,9 +171,4 @@ export const TextLink = styled( Link )( ( { theme } ) => ( {
   fontSize: '.76rem',
   fontWeight: 620,
   textUnderlineOffset: '.3rem'
-} ) );
-
-export const Surface = styled( Box )( ( { theme } ) => ( {
-  border: `1px solid ${theme.palette.divider}`,
-  backgroundColor: alpha( theme.palette.background.paper, .72 )
 } ) );

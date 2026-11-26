@@ -43,21 +43,6 @@ export const FILE_REGEX = {
 };
 
 /**
- * Regex patterns for URL validation
- */
-export const URL_REGEX = {
-  /**
-   * Match HTTP or HTTPS protocol
-   */
-  HTTP_PROTOCOL: /^https?:\/\//i,
-
-  /**
-   * Match valid URL format
-   */
-  VALID_URL: /^https?:\/\/.+/i
-};
-
-/**
  * Regex patterns for CV path validation
  */
 export const CV_PATH_REGEX = {
@@ -71,4 +56,3 @@ export const CV_PATH_REGEX = {
    */
   VALID_URL: /^https?:\/\//
 };
-

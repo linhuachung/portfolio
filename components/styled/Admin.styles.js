@@ -1,10 +1,9 @@
 'use client';
 
 import Box from '@mui/material/Box';
-import ButtonBase from '@mui/material/ButtonBase';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { alpha, keyframes, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 
 export const AdminShell = styled( Box, {
   shouldForwardProp: property => !['$sansFont', '$monoFont'].includes( property )
@@ -20,21 +19,6 @@ export const AdminShell = styled( Box, {
     fontFamily: 'var(--portfolio-sans), Arial, sans-serif'
   }
 } ) );
-export const AdminMain = styled( Box )( { flex: 1, minHeight: 0, overflowX: 'hidden', overflowY: 'auto' } );
-export const Centered = styled( Box )( { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' } );
-
-export const AdminPage = styled( Box )( ( { theme } ) => ( {
-  width: 'min(100%, 1536px)',
-  height: '100%',
-  marginInline: 'auto',
-  padding: theme.spacing( 3 ),
-  overflowY: 'auto',
-  display: 'grid',
-  alignContent: 'start',
-  gap: theme.spacing( 3 ),
-  [theme.breakpoints.down( 'sm' )]: { padding: theme.spacing( 2 ), gap: theme.spacing( 2 ) }
-} ) );
-
 export const AdminSurface = styled( Paper )( ( { theme } ) => ( {
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: 12,
@@ -42,13 +26,6 @@ export const AdminSurface = styled( Paper )( ( { theme } ) => ( {
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.paper,
   boxShadow: 'none'
-} ) );
-
-export const AdminGrid = styled( Box )( ( { theme } ) => ( {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  gap: theme.spacing( 3 ),
-  [theme.breakpoints.down( 'lg' )]: { gridTemplateColumns: '1fr' }
 } ) );
 
 export const StatsGridRoot = styled( Box )( ( { theme } ) => ( {
@@ -62,13 +39,6 @@ export const StatsGridRoot = styled( Box )( ( { theme } ) => ( {
 export const AdminRow = styled( Box )( ( { theme } ) => ( {
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing( 2 )
-} ) );
-
-export const AdminColumn = styled( Box )( ( { theme } ) => ( {
-  minWidth: 0,
-  display: 'flex',
-  flexDirection: 'column',
   gap: theme.spacing( 2 )
 } ) );
 
@@ -97,60 +67,6 @@ export const SectionHeading = styled( Typography )( ( { theme } ) => ( {
 export const FormSection = styled( Box )( ( { theme } ) => ( {
   display: 'grid',
   gap: theme.spacing( 2 )
-} ) );
-
-export const ResponsiveFields = styled( Box )( ( { theme } ) => ( {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  gap: theme.spacing( 2 ),
-  [theme.breakpoints.down( 'sm' )]: { gridTemplateColumns: '1fr' }
-} ) );
-
-export const ProfileEditorPage = styled( Box )( ( { theme } ) => ( {
-  height: '100%',
-  width: '100%',
-  padding: theme.spacing( 1, 3 ),
-  overflow: 'hidden',
-  [theme.breakpoints.down( 'sm' )]: { padding: theme.spacing( 1 ) }
-} ) );
-
-export const ProfileEditorSurface = styled( AdminSurface )( ( { theme } ) => ( {
-  height: '100%',
-  width: '100%',
-  maxWidth: 2000,
-  marginInline: 'auto',
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'relative',
-  overflow: 'hidden',
-  padding: theme.spacing( 2, 3 ),
-  [theme.breakpoints.down( 'sm' )]: { padding: theme.spacing( 2 ) }
-} ) );
-
-export const EditorColumns = styled( Box )( ( { theme } ) => ( {
-  height: '100%',
-  minHeight: 0,
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  display: 'grid',
-  gridTemplateColumns: '1fr 1.2fr .8fr',
-  gap: theme.spacing( 2.5 ),
-  alignItems: 'start',
-  padding: theme.spacing( 1 ),
-  [theme.breakpoints.down( 'xl' )]: { gridTemplateColumns: '1fr 1.2fr' },
-  [theme.breakpoints.down( 'lg' )]: { gridTemplateColumns: '1fr' }
-} ) );
-
-export const EditorActions = styled( Box )( ( { theme } ) => ( {
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: theme.spacing( 1 ),
-  marginTop: theme.spacing( 2 ),
-  paddingTop: theme.spacing( 2 ),
-  borderTop: `1px solid ${theme.palette.divider}`,
-  [theme.breakpoints.down( 'sm' )]: { flexDirection: 'column', alignItems: 'stretch', '& .MuiButton-root': { width: '100%' } }
 } ) );
 
 export const LoginPanel = styled( AdminSurface )( ( { theme } ) => ( {
@@ -209,24 +125,6 @@ export const LoginMark = styled( Typography )( ( { theme } ) => ( {
   '& span': { color: theme.palette.primary.main }
 } ) );
 
-export const ContactList = styled( Box )( ( { theme } ) => ( { display: 'grid', gap: theme.spacing( 1.5 ) } ) );
-
-export const ContactRow = styled( ButtonBase )( ( { theme } ) => ( {
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: theme.spacing( 2 ),
-  padding: theme.spacing( 1.5 ),
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: 8,
-  backgroundColor: alpha( theme.palette.background.default, .55 ),
-  cursor: 'pointer',
-  textAlign: 'left',
-  transition: theme.transitions.create( ['border-color', 'background-color', 'box-shadow'], { duration: 180 } ),
-  '&:hover': { borderColor: alpha( theme.palette.text.primary, .35 ), backgroundColor: theme.palette.background.default, boxShadow: `0 4px 18px ${alpha( '#000', .07 )}` }
-} ) );
-
 export const StatusBadge = styled( Box, { shouldForwardProp: property => property !== '$status' } )( ( { theme, $status } ) => {
   const colors = {
     pending: theme.palette.warning.main,
@@ -237,5 +135,3 @@ export const StatusBadge = styled( Box, { shouldForwardProp: property => propert
   const color = colors[$status] || colors.pending;
   return { display: 'inline-flex', borderRadius: 6, padding: theme.spacing( .35, .8 ), color, backgroundColor: alpha( color, .13 ), fontSize: '.72rem', lineHeight: 1.2, textTransform: 'capitalize' };
 } );
-
-export const spin = keyframes`to { transform: rotate(360deg); }`;
