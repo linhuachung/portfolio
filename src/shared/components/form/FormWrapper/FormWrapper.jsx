@@ -1,5 +1,5 @@
-import { Form } from '@/shared/components/form/FormPrimitives';
-import Loader from '@/shared/components/Loader';
+import { Form } from '../FormPrimitives';
+import Loader from '../../Loader';
 import Box from '@mui/material/Box';
 import { alpha, styled } from '@mui/material/styles';
 

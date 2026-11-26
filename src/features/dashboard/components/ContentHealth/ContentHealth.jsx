@@ -6,16 +6,8 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
-import {
-  ContentCopy,
-  ContentGrid,
-  ContentItem,
-  ContentStateIcon,
-  ContentSurface,
-  SurfaceDescription,
-  SurfaceHeader,
-  SurfaceTitle
-} from '../../styles/Overview.styles';
+import { SurfaceDescription, SurfaceHeader, SurfaceTitle } from '../../styles/Overview.styles';
+import { ContentCopy, ContentGrid, ContentItem, ContentStateIcon, ContentSurface } from './ContentHealth.styles';
 
 const contentRecords = [
   { key: 'experience', label: 'Experience', href: '/admin/experience' },

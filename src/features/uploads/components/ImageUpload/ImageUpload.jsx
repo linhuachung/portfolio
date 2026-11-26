@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { alpha, styled } from '@mui/material/styles';
 import Toast from '@/shared/components/Toast';
 import { FormField, FormItem, FormMessage } from '@/shared/components/form/FormPrimitives';
-import { FILE_UPLOAD } from '@/features/uploads/constants/file-upload';
+import { FILE_UPLOAD } from '../../constants/file-upload';
 import { TOAST_STATUS } from '@/shared/constants/toast';
 import axiosInstance from '@/shared/api/http-client';
 import { useEffect, useRef, useState } from 'react';

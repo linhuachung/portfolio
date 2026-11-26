@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { BrandAvatar, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '@/features/portfolio/styles/Navigation.styles';
+import { BrandAvatar, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '../../styles/Navigation.styles';
 
 function MobileNav( { links, avatar } ) {
   const pathname = usePathname();

@@ -3,11 +3,8 @@
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import {
-  OperationsGrid,
-  OverviewPage,
-  SkeletonSurface
-} from '../../styles/Overview.styles';
+import { OperationsGrid, OverviewPage } from '../../styles/Overview.styles';
+import { SkeletonSurface } from './OverviewLoading.styles';
 
 function SurfaceSkeleton( { height, sx } ) {
   const reduceMotion = useMediaQuery( '(prefers-reduced-motion: reduce)', { noSsr: true } );

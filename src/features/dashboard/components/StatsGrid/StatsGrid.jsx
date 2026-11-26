@@ -1,5 +1,5 @@
 'use client';
-import StatCard from '@/features/dashboard/components/StatCard';
+import StatCard from '../StatCard';
 import Box from '@mui/material/Box';
 import { StatsGridRoot } from '@/features/admin-shell/styles/Admin.styles';
 

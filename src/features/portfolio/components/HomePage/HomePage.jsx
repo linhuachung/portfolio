@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import MuiLink from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
-import ResumeLink from '@/features/portfolio/components/ResumeLink';
+import ResumeLink from '../ResumeLink';
 import { profile } from '@/content/public-content';
 import {
   CareerSignal,
@@ -23,8 +23,8 @@ import {
   SignalDot,
   SignalHeader,
   Wordmark
-} from '@/features/portfolio/components/HomePage/HomePage.styles';
-import { Kicker } from '@/features/portfolio/styles/PublicLayout.styles';
+} from './HomePage.styles';
+import { Kicker } from '../../styles/PublicLayout.styles';
 
 const experienceHref = '/resume?section=experience&role=nab&panel=summary';
 

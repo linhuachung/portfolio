@@ -8,18 +8,8 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
-import {
-  ClearState,
-  OverviewSurface,
-  QueueAction,
-  QueueCopy,
-  QueueIcon,
-  QueueItem,
-  QueueList,
-  SurfaceDescription,
-  SurfaceHeader,
-  SurfaceTitle
-} from '../../styles/Overview.styles';
+import { ClearState, OverviewSurface, SurfaceDescription, SurfaceHeader, SurfaceTitle } from '../../styles/Overview.styles';
+import { QueueAction, QueueCopy, QueueIcon, QueueItem, QueueList } from './ActionQueue.styles';
 
 function QueueVisual( { severity } ) {
   return severity === 'high'

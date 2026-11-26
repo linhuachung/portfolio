@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import FormContainer from '@/features/contact/components/ContactForm';
+import FormContainer from '../ContactForm';
 import ResumeLink from '@/features/portfolio/components/ResumeLink';
 import { profile } from '@/content/public-content';
 import MuiLink from '@mui/material/Link';
 import { BodyCopy, DisplayTitle, Kicker } from '@/features/portfolio/styles/PublicLayout.styles';
-import { ContactDetails, ContactIntro, ContactScreen } from '../../styles/Contact.styles';
+import { ContactDetails, ContactIntro, ContactScreen } from './ContactPage.styles';
 
 export default function ContactPage() {
   return (

@@ -1,4 +1,4 @@
-import { FormField, FormItem } from '@/shared/components/form/FormPrimitives';
+import { FormField, FormItem } from '../FormPrimitives';
 import TextField from '@mui/material/TextField';
 
 export function InputField( {

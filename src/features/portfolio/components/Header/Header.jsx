@@ -1,33 +1,11 @@
 'use client';
 
-import MobileNav from '@/features/portfolio/components/MobileNav';
-import Nav from '@/features/portfolio/components/Nav';
-import useTheme from '@/shared/hooks/useTheme';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import MobileNav from '../MobileNav';
+import Nav from '../Nav';
 import NextLink from 'next/link';
 import { useEffect, useState } from 'react';
-import {
-  BrandAvatar,
-  BrandLink,
-  DesktopActions,
-  HeaderCta,
-  HeaderInner,
-  MobileActions,
-  SiteHeader,
-  ThemeButton
-} from '@/features/portfolio/styles/Navigation.styles';
-
-function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'dark';
-
-  return (
-    <ThemeButton onClick={ toggleTheme } aria-label={ isDark ? 'Use light theme' : 'Use dark theme' }>
-      { isDark ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" /> }
-    </ThemeButton>
-  );
-}
+import { BrandAvatar, BrandLink, DesktopActions, HeaderCta, HeaderInner, MobileActions, SiteHeader } from '../../styles/Navigation.styles';
+import ThemeToggle from '../ThemeToggle';
 
 function useProfileAvatar() {
   const [profileAvatar, setProfileAvatar] = useState( '' );

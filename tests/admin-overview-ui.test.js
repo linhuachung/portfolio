@@ -43,13 +43,14 @@ test( 'overview does not render a healthy workspace after the initial request fa
 } );
 
 test( 'overview metrics use valid list semantics and reduced-motion styles', async () => {
-  const [overviewSource, stylesSource] = await Promise.all( [
-    read( 'src/features/dashboard/components/AudienceOverview/AudienceOverview.jsx' ),
-    read( 'src/features/dashboard/styles/Overview.styles.js' )
-  ] );
+  const overviewSource = await read( 'src/features/dashboard/components/AudienceOverview/AudienceOverview.jsx' );
+  // Each component with interactive list items owns its reduced-motion rule.
+  const interactiveStyles = await Promise.all( ['ActionQueue', 'RecentContacts', 'ContentHealth'].map(
+    name => read( `src/features/dashboard/components/${name}/${name}.styles.js` )
+  ) );
 
   assert.match( overviewSource, /MetricBand component="ul"/ );
   assert.match( overviewSource, /Metric component="li"/ );
   assert.doesNotMatch( overviewSource, /MetricBand component="dl"/ );
-  assert.match( stylesSource, /prefers-reduced-motion:\s*reduce/ );
+  interactiveStyles.forEach( source => assert.match( source, /prefers-reduced-motion:\s*reduce/ ) );
 } );

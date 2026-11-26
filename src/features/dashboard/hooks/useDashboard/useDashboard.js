@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getDashboardData } from '@/features/dashboard/api/dashboard-api';
+import { getDashboardData } from '../../api/dashboard-api';
 import Toast from '@/shared/components/Toast';
 import { TOAST_STATUS } from '@/shared/constants/toast';
 

@@ -70,8 +70,11 @@ for ( const mode of ['light', 'dark'] ) {
 test( 'page layouts delegate field surfaces and state colors to the global MUI theme', async () => {
   const files = [
     '../src/features/inbox/components/InboxClient/Inbox.styles.js',
-    '../src/features/contact/styles/Contact.styles.js',
-    '../src/features/dashboard/styles/Overview.styles.js'
+    '../src/features/contact/components/ContactForm/ContactForm.styles.js',
+    '../src/features/dashboard/styles/Overview.styles.js',
+    ...['ActionQueue', 'AudienceOverview', 'ContentHealth', 'DashboardHeader', 'OverviewLoading', 'RecentContacts'].map(
+      name => `../src/features/dashboard/components/${name}/${name}.styles.js`
+    )
   ];
 
   for ( const file of files ) {

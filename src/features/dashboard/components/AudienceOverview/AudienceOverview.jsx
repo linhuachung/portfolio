@@ -4,25 +4,11 @@ import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import LineChart from '@/features/dashboard/components/LineChart';
-import { buildAudienceSummary } from '@/features/dashboard/utils/overview';
+import LineChart from '../LineChart';
+import { buildAudienceSummary } from '../../utils/overview';
 import { PERIOD_OPTIONS } from '../../constants/periods';
-import {
-  AudienceBody,
-  AudienceHeader,
-  AudienceSurface,
-  ChartRegion,
-  ClearState,
-  Metric,
-  MetricBand,
-  PageProgress,
-  PeriodSelect,
-  SurfaceDescription,
-  SurfaceTitle,
-  TopPageList,
-  TopPageRow,
-  TopPagesRegion
-} from '../../styles/Overview.styles';
+import { ClearState, SurfaceDescription, SurfaceTitle } from '../../styles/Overview.styles';
+import { AudienceBody, AudienceHeader, AudienceSurface, ChartRegion, Metric, MetricBand, PageProgress, PeriodSelect, TopPageList, TopPageRow, TopPagesRegion } from './AudienceOverview.styles';
 
 const numberFormatter = new Intl.NumberFormat( 'en-US' );
 

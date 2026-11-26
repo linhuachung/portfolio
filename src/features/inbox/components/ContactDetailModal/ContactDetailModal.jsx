@@ -13,10 +13,13 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { alpha, useTheme } from '@mui/material/styles';
 import { useRef } from 'react';
-import { ContactInfoPanel, MessagePanel, SentAtPanel, StatusBar } from '../ContactSummary';
+import ContactInfoPanel from '../ContactInfoPanel';
+import MessagePanel from '../MessagePanel';
+import SentAtPanel from '../SentAtPanel';
+import StatusBar from '../StatusBar';
 import ReplyComposer from '../ReplyComposer';
 import ReplyList from '../ReplyList';
-import { ModalStack, SectionStack } from '../../styles/ContactDetail.styles';
+import { ModalStack, SectionStack } from './ContactDetailModal.styles';
 import { errorMessage, useContactDetail } from '../../hooks/useContactDetail';
 import { useReplyComposer } from '../../hooks/useReplyComposer';
 

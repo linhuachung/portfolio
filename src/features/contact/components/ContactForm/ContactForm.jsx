@@ -1,6 +1,6 @@
 'use client';
 
-import { validateContactPayload } from '@/features/contact/utils/contact-validation';
+import { validateContactPayload } from '../../utils/contact-validation';
 import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
 import CheckCircleOutlineRounded from '@mui/icons-material/CheckCircleOutlineRounded';
@@ -10,41 +10,17 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useRef, useState } from 'react';
 import { BodyCopy, Kicker } from '@/features/portfolio/styles/PublicLayout.styles';
-import {
-  Confirmation,
-  ContactForm,
-  FieldGrid,
-  FormActions,
-  FormHeader,
-  FormStep,
-  FormStepper,
-  FormTitle,
-  MessageField,
-  PrivacyNote,
-  ReviewChips,
-  ServiceControl,
-  StepCount,
-  SubmitAlert,
-  VisuallyHiddenLegend
-} from '@/features/contact/styles/Contact.styles';
+import { Confirmation, ContactForm, FieldGrid, FormActions, FormHeader, FormStep, FormStepper, FormTitle, MessageField, PrivacyNote, ReviewChips, StepCount, SubmitAlert, VisuallyHiddenLegend } from './ContactForm.styles';
+import { SERVICE_LABELS } from '../../constants/services';
+import ContactField from '../ContactField';
+import ServiceField from '../ServiceField';
 
 const initialData = { name: '', email: '', service: '', message: '' };
-const serviceOptions = [
-  ['frontend', 'Product interface or workflow'],
-  ['ui', 'Design system or UI implementation'],
-  ['performance', 'Performance or accessibility review'],
-  ['fullstack', 'Engineering role or collaboration']
-];
 const stepLabels = ['Contact details', 'Message'];
 
 export default function FormContainer() {
@@ -211,7 +187,7 @@ export default function FormContainer() {
           />
           <ReviewChips direction="row" spacing={ 1 } useFlexGap>
             <Chip size="small" label={ data.name } />
-            <Chip size="small" label={ serviceOptions.find( option => option[0] === data.service )?.[1] } />
+            <Chip size="small" label={ SERVICE_LABELS[data.service] } />
           </ReviewChips>
           <FormActions>
             <Button type="button" variant="text" startIcon={ <ArrowBackRounded /> } onClick={ goBack }>Back</Button>
@@ -222,45 +198,5 @@ export default function FormContainer() {
         </FormStep>
       ) }
     </ContactForm>
-  );
-}
-
-function ContactField( { label, name, type = 'text', value, error, onChange, fieldRef, autoComplete } ) {
-  return (
-    <TextField
-      id={ name }
-      inputRef={ fieldRef }
-      type={ type }
-      name={ name }
-      label={ label }
-      value={ value }
-      onChange={ onChange }
-      autoComplete={ autoComplete }
-      error={ !!error }
-      helperText={ error }
-      fullWidth
-      slotProps={ { htmlInput: { spellCheck: type === 'email' ? false : undefined, 'aria-describedby': error ? `${name}-helper-text` : undefined } } }
-    />
-  );
-}
-
-function ServiceField( { value, error, onChange, fieldRef } ) {
-  return (
-    <ServiceControl fullWidth error={ !!error }>
-      <InputLabel id="service-label">Conversation topic</InputLabel>
-      <Select
-        labelId="service-label"
-        id="service"
-        inputRef={ fieldRef }
-        name="service"
-        label="Conversation topic"
-        value={ value }
-        onChange={ onChange }
-        inputProps={ { autoComplete: 'off', 'aria-describedby': error ? 'service-error' : undefined } }
-      >
-        { serviceOptions.map( ( [optionValue, optionLabel] ) => <MenuItem value={ optionValue } key={ optionValue }>{ optionLabel }</MenuItem> ) }
-      </Select>
-      { error && <FormHelperText id="service-error" role="alert">{ error }</FormHelperText> }
-    </ServiceControl>
   );
 }

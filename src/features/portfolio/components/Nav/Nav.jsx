@@ -1,6 +1,6 @@
 'use client';
 
-import { NavLink, NavRoot } from '@/features/portfolio/styles/Navigation.styles';
+import { NavLink, NavRoot } from '../../styles/Navigation.styles';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 

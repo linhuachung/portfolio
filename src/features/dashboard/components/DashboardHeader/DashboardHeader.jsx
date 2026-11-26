@@ -6,16 +6,7 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import NextLink from 'next/link';
-import {
-  HeaderActions,
-  OverviewDescription,
-  OverviewEyebrow,
-  OverviewHeaderCopy,
-  OverviewHeaderRoot,
-  OverviewTitle,
-  RefreshButton,
-  UpdatedMeta
-} from '../../styles/Overview.styles';
+import { HeaderActions, OverviewDescription, OverviewEyebrow, OverviewHeaderCopy, OverviewHeaderRoot, OverviewTitle, RefreshButton, UpdatedMeta } from './DashboardHeader.styles';
 
 const dateFormatter = new Intl.DateTimeFormat( 'en-US', {
   timeZone: 'Asia/Bangkok',

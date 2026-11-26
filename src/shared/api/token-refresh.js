@@ -1,4 +1,4 @@
-import { ADMIN_ENDPOINT } from '@/shared/api/endpoints';
+import { ADMIN_ENDPOINT } from './endpoints';
 import axios from 'axios';
 
 let refreshPromise = null;

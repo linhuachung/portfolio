@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
-import { InputField } from '@/shared/components/form/InputField';
-import { SelectField } from '@/shared/components/form/SelectField';
+import { InputField } from '../InputField';
+import { SelectField } from '../SelectField';
 import { COUNTRIES, getCitiesByCountry } from '@/shared/constants/address-data';
 import { validateCityForCountry } from '@/shared/utils/address';
 import { useEffect, useRef } from 'react';

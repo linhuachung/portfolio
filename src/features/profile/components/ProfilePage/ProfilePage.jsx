@@ -10,11 +10,9 @@ import Chip from '@mui/material/Chip';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import FormWrapper from '@/shared/components/form/FormWrapper';
-import {
-  BasicInfoSection,
-  HomepageContentSection,
-  SocialLinksSection
-} from '../ProfileFormSections';
+import BasicInfoSection from '../BasicInfoSection';
+import HomepageContentSection from '../HomepageContentSection';
+import SocialLinksSection from '../SocialLinksSection';
 import ProfileReadOnlyView from '../ProfileReadOnlyView';
 import { useUserForm } from '../../hooks/useUserForm';
 import {

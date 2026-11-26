@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { trackVisit } from '@/features/analytics/api/tracking';
+import { trackVisit } from '../../api/tracking';
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();

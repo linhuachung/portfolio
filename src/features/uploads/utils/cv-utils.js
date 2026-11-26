@@ -1,5 +1,5 @@
-import { removeFileNamePrefix } from '@/features/uploads/constants/file-upload';
-import { CV_PATH_REGEX } from '@/features/uploads/constants/regex-patterns';
+import { removeFileNamePrefix } from '../constants/file-upload';
+import { CV_PATH_REGEX } from '../constants/regex-patterns';
 
 /**
  * Validate CV path format

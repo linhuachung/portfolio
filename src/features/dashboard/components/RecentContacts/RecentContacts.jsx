@@ -6,21 +6,8 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
-import {
-  ClearState,
-  InboxIdentity,
-  InboxItem,
-  InboxList,
-  InboxMessage,
-  InboxTime,
-  InboxTopic,
-  OverviewSurface,
-  StatusChip,
-  SurfaceDescription,
-  SurfaceHeader,
-  SurfaceTitle,
-  TextLinkButton
-} from '../../styles/Overview.styles';
+import { ClearState, OverviewSurface, SurfaceDescription, SurfaceHeader, SurfaceTitle } from '../../styles/Overview.styles';
+import { InboxIdentity, InboxItem, InboxList, InboxMessage, InboxTime, InboxTopic, StatusChip, TextLinkButton } from './RecentContacts.styles';
 
 const serviceLabels = {
   frontend: 'Product Interface',

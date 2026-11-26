@@ -2,7 +2,7 @@
  * Email service constants
  */
 
-import { SERVICE_LABELS } from '@/features/contact/constants/services';
+import { SERVICE_LABELS } from './services';
 
 export { SERVICE_LABELS };
 

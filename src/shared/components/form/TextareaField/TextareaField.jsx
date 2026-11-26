@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { FormField, FormItem } from '@/shared/components/form/FormPrimitives';
+import { FormField, FormItem } from '../FormPrimitives';
 import TextField from '@mui/material/TextField';
 
 export function TextareaField( {

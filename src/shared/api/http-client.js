@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ADMIN_ENDPOINT } from '@/shared/api/endpoints';
+import { ADMIN_ENDPOINT } from './endpoints';
 import { refreshAccessToken } from './token-refresh';
 
 const SESSION_ENDPOINTS = new Set( [ADMIN_ENDPOINT.LOGIN, ADMIN_ENDPOINT.REFRESH, ADMIN_ENDPOINT.LOGOUT] );

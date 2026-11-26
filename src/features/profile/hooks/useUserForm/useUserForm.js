@@ -2,7 +2,7 @@ import Toast from '@/shared/components/Toast';
 import { ADMIN_ENDPOINT } from '@/shared/api/endpoints';
 import { TOAST_STATUS } from '@/shared/constants/toast';
 import axiosInstance from '@/shared/api/http-client';
-import { mergeSocialLinks } from '@/features/profile/utils/social-links';
+import { mergeSocialLinks } from '../../utils/social-links';
 import { validationEditProfileSchema } from '../../schemas/profile-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
