@@ -2,8 +2,6 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MuiLink from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -12,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { BrandAvatar, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '@/components/styled/Navigation.styles';
 
-function MobileNav( { links, isAdmin, avatar, loggingOut = false, onLogout } ) {
+function MobileNav( { links, avatar } ) {
   const pathname = usePathname();
   const [open, setOpen] = useState( false );
 
@@ -40,8 +38,8 @@ function MobileNav( { links, isAdmin, avatar, loggingOut = false, onLogout } ) {
             component={ NextLink }
             underline="none"
             color="inherit"
-            href={ isAdmin ? '/admin' : '/' }
-            aria-label={ isAdmin ? 'Admin home' : 'Lin Hua Chung, home' }
+            href="/"
+            aria-label="Lin Hua Chung, home"
             onClick={ () => setOpen( false ) }
           >
             <BrandAvatar src={ avatar || undefined } alt="" aria-hidden="true" sx={ { width: 44, height: 44 } } />
@@ -62,18 +60,6 @@ function MobileNav( { links, isAdmin, avatar, loggingOut = false, onLogout } ) {
             </MuiLink>
           ) ) }
         </MobileLinks>
-        { isAdmin && (
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={ <LogoutOutlinedIcon/> }
-            disabled={ loggingOut }
-            onClick={ onLogout }
-            sx={ { mt: 3, alignSelf: 'stretch', justifyContent: 'flex-start' } }
-          >
-            { loggingOut ? 'Signing Out…' : 'Sign Out' }
-          </Button>
-        ) }
       </MobileDrawer>
     </>
   );

@@ -29,7 +29,7 @@ test( 'admin brand renders the saved profile image instead of name initials', as
 
   assert.doesNotMatch( shellSource, /<BrandMark[^>]*>\s*LC\s*<\/BrandMark>/ );
   assert.match( shellSource, /<BrandMark[^>]*src=\{\s*profileAvatar\s*\|\|\s*undefined\s*\}/ );
-  assert.match( shellSource, /\/api\/admin\/user/ );
+  assert.match( shellSource, /ADMIN_ENDPOINT\.USER/ );
   assert.match( shellSource, /portfolio:profile-updated/ );
   assert.match( formSource, /portfolio:profile-updated/ );
   assert.match( styleSource, /styled\(\s*Avatar\s*\)/ );

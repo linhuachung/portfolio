@@ -29,7 +29,7 @@ test( 'legacy shadcn and Radix UI dependencies have no remaining consumers', asy
   ) );
   assert.deepEqual( legacyDependencies, [] );
 
-  const sourceRoots = ['app', 'components', 'contexts', 'lib', 'store'];
+  const sourceRoots = ['app', 'components', 'contexts', 'lib'];
   const sourceFiles = [];
   const collectSourceFiles = async directory => {
     for ( const entry of await readdir( directory, { withFileTypes: true } ) ) {

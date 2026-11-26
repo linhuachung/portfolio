@@ -23,6 +23,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Tooltip from '@mui/material/Tooltip';
 import axiosInstance from '@/lib/axios';
+import { ADMIN_ENDPOINT } from '@/constants/endpoint';
 import { ADMIN_LINKS } from '@/constants/route';
 import { useTheme } from '@/contexts/ThemeContext';
 import NextLink from 'next/link';
@@ -77,7 +78,7 @@ export default function AdminNavigationShell( { children } ) {
 
   const loadProfileAvatar = useCallback( async () => {
     try {
-      const response = await axiosInstance.get( '/api/admin/user' );
+      const response = await axiosInstance.get( ADMIN_ENDPOINT.USER );
       setProfileAvatar( response?.data?.avatar || '' );
     } catch {
       setProfileAvatar( '' );
@@ -119,7 +120,7 @@ export default function AdminNavigationShell( { children } ) {
     if ( loggingOut ) {return;}
     setLoggingOut( true );
     try {
-      await fetch( '/api/admin/auth/logout', { method: 'POST', credentials: 'include' } );
+      await fetch( ADMIN_ENDPOINT.LOGOUT, { method: 'POST', credentials: 'include' } );
       router.replace( '/admin/login' );
       router.refresh();
     } finally {

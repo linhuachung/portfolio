@@ -1,4 +1,3 @@
-import StoreProvider from '@/app/StoreProvider';
 import { ToastHost } from '@/components/Toast';
 import MuiProvider from '@/components/providers/MuiProvider';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -49,10 +48,8 @@ export default function RootLayout( { children } ) {
         <ThemeProvider>
           <AppRouterCacheProvider>
             <MuiProvider fontFamily={ jetbrainsMono.style.fontFamily }>
-              <StoreProvider>
-                { children }
-                <ToastHost/>
-              </StoreProvider>
+              { children }
+              <ToastHost/>
             </MuiProvider>
           </AppRouterCacheProvider>
         </ThemeProvider>

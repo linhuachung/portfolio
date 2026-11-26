@@ -11,11 +11,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MuiLink from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import STATUS_CODES from '@/constants/status';
+import { ADMIN_ENDPOINT } from '@/constants/endpoint';
 import { TOAST_STATUS } from '@/constants/toast';
-import { useAsyncAction } from '@/lib/hooks';
+import axiosInstance from '@/lib/axios';
 import { validationAdminLoginSchema } from '@/services/schema';
-import { AdminLoginAction } from '@/store/actions/Auth/action';
 import { yupResolver } from '@hookform/resolvers/yup';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -25,7 +24,6 @@ import { AdminPageTitle, LoginMark, LoginNarrative, LoginPanel, LoginShell, Logi
 
 function AdminLogin() {
   const router = useRouter();
-  const { execute } = useAsyncAction();
   const [showPassword, setShowPassword] = useState( false );
   const form = useForm( {
     resolver: yupResolver( validationAdminLoginSchema ),
@@ -39,17 +37,14 @@ function AdminLogin() {
     reset
   } = form;
 
-  const onSubmit = async ( data ) => {
+  const onSubmit = async ( credentials ) => {
     try {
-      const { status } = await execute( AdminLoginAction, data );
-      reset( {
-        username: '',
-        password: ''
-      } );
-      status === STATUS_CODES.SUCCESS && router.push( '/admin' );
+      await axiosInstance.post( ADMIN_ENDPOINT.LOGIN, credentials );
+      reset( { username: '', password: '' } );
+      router.push( '/admin' );
     } catch ( error ) {
       Toast( {
-        title: error.message || 'Login failed. Please check your credentials.',
+        title: error.response?.data?.message || 'Login failed. Please check your credentials.',
         type: TOAST_STATUS.error
       } );
     }

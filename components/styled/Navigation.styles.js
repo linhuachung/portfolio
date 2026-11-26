@@ -145,29 +145,3 @@ export const MobileLinks = styled( Box )( ( { theme } ) => ( {
   '& a[aria-current="page"]': { color: theme.palette.primary.main }
 } ) );
 
-export const AdminHeader = styled( Box )( ( { theme } ) => ( {
-  minHeight: 68,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  color: theme.palette.text.primary,
-  backgroundColor: alpha( theme.palette.background.default, .95 ),
-  backdropFilter: 'blur(12px)'
-} ) );
-
-export const AdminHeaderInner = styled( Box )( {
-  width: 'min(100% - 2rem, 1536px)',
-  height: 68,
-  marginInline: 'auto',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between'
-} );
-
-export const AdminLogoutButton = styled( Button )( ( { theme } ) => ( {
-  minHeight: 38,
-  paddingInline: theme.spacing( 1.25 ),
-  border: `1px solid ${theme.palette.divider}`,
-  color: theme.palette.text.secondary,
-  backgroundColor: 'transparent',
-  fontSize: '.72rem',
-  '&:hover': { borderColor: theme.palette.error.main, color: theme.palette.error.main, backgroundColor: alpha( theme.palette.error.main, .07 ) }
-} ) );
