@@ -8,7 +8,8 @@ import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import Chip from '@mui/material/Chip';
 import { Kicker } from '../../styles/PublicLayout.styles';
-import { AboutDomains, AboutEyebrow, AboutNarrative, AboutSequence, AboutSummary, AboutTitle, AboutViewRoot, FactCopy, FactIcon, FactLabel, FactValue, ProfileFacts, ProfilePanel, ProfilePanelHeading, ProfilePanelMark } from './AboutView.styles';
+import { PanelTitle } from '../../styles/Resume.styles';
+import { AboutDomains, AboutNarrative, AboutSummary, AboutViewRoot, FactCopy, FactIcon, FactLabel, FactValue, ProfileFacts, ProfilePanel } from './AboutView.styles';
 
 const factIcons = {
   'Based in': LocationOnOutlinedIcon,
@@ -21,11 +22,8 @@ export default function AboutView() {
   return (
     <AboutViewRoot component="article" aria-labelledby="about-title">
       <AboutNarrative>
-        <AboutEyebrow>
-          <Kicker component="p">Profile · 04</Kicker>
-          <AboutSequence component="span" aria-hidden="true">04 / 04</AboutSequence>
-        </AboutEyebrow>
-        <AboutTitle component="h2" id="about-title">Clear interfaces for complex workflows.</AboutTitle>
+        <Kicker component="p">Profile</Kicker>
+        <PanelTitle component="h2" id="about-title">Dependable interfaces for banking and commerce teams.</PanelTitle>
         <AboutSummary component="p">{ about.summary }</AboutSummary>
         <AboutDomains component="ul" aria-label="Product domains">
           { about.domains.map( domain => (
@@ -36,11 +34,8 @@ export default function AboutView() {
         </AboutDomains>
       </AboutNarrative>
 
-      <ProfilePanel component="section" square elevation={ 0 } aria-labelledby="profile-facts-title">
-        <ProfilePanelHeading>
-          <Kicker component="h3" id="profile-facts-title">Working profile</Kicker>
-          <ProfilePanelMark component="span" aria-hidden="true">04</ProfilePanelMark>
-        </ProfilePanelHeading>
+      <ProfilePanel component="section" elevation={ 0 } aria-labelledby="profile-facts-title">
+        <Kicker component="h3" id="profile-facts-title">Working profile</Kicker>
         <ProfileFacts component="ul" aria-label="Profile facts">
           { about.facts.map( ( [label, value] ) => {
             const Icon = factIcons[label];

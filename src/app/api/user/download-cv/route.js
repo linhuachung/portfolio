@@ -1,15 +1,13 @@
 import { getOwnerCv } from '@/features/uploads/server';
 import { HttpError } from '@/server/http';
 import { NextResponse } from 'next/server';
+import { profile } from '@/content/public-content';
 
 // Fetches from storage at request time.
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-// This route answers `{ error, code? }` instead of the DataResponse envelope.
-const errorJson = ( { status, message, code } ) => NextResponse.json( { error: message, ...( code && { code } ) }, { status } );
-
-export async function GET() {
+export async function GET( req ) {
   try {
     const { buffer, fileName } = await getOwnerCv();
     return new NextResponse( buffer, {
@@ -22,8 +20,10 @@ export async function GET() {
       }
     } );
   } catch ( error ) {
-    if ( error instanceof HttpError ) {return errorJson( error );}
-    console.error( 'Error downloading CV:', error );
-    return errorJson( { status: 500, message: 'Failed to download CV' } );
+    // Visitors click this from a button: with no uploaded PDF (or storage down) they get
+    // the online CV instead of an error page. The cause is still logged for the owner.
+    if ( !( error instanceof HttpError ) || error.status >= 500 ) {console.error( 'Error downloading CV:', error );}
+    else {console.warn( `CV download unavailable (${error.status}): ${error.message}` );}
+    return NextResponse.redirect( new URL( profile.resume, req.url ), 307 );
   }
 }

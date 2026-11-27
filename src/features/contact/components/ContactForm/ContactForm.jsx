@@ -16,7 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useRef, useState } from 'react';
 import { BodyCopy, Kicker } from '@/features/portfolio/styles/PublicLayout.styles';
 import { Confirmation, ContactForm, FieldGrid, FormActions, FormHeader, FormStep, FormStepper, FormTitle, MessageField, PrivacyNote, ReviewChips, StepCount, SubmitAlert, VisuallyHiddenLegend } from './ContactForm.styles';
-import { SERVICE_LABELS } from '../../constants/services';
+import { CONTACT_SERVICE_VALUES, SERVICE_LABELS } from '../../constants/services';
 import ContactField from '../ContactField';
 import ServiceField from '../ServiceField';
 
@@ -32,6 +32,14 @@ export default function FormContainer() {
   const [pendingFocus, setPendingFocus] = useState( null );
   const fields = useRef( {} );
   const reduceMotion = useMediaQuery( '(prefers-reduced-motion: reduce)', { noSsr: true } );
+
+  // Links such as "Discuss a role" open the form with a topic chosen (`/contact?topic=role`).
+  useEffect( () => {
+    const topic = new URLSearchParams( window.location.search ).get( 'topic' );
+    if ( CONTACT_SERVICE_VALUES.includes( topic ) ) {
+      setData( current => ( current.service ? current : { ...current, service: topic } ) );
+    }
+  }, [] );
 
   useEffect( () => {
     if ( !pendingFocus ) {return undefined;}
@@ -129,7 +137,12 @@ export default function FormContainer() {
       <Confirmation elevation={ 0 } role="status" $reduceMotion={ reduceMotion } data-testid="contact-form-panel">
         <CheckCircleOutlineRounded aria-hidden="true" />
         <Kicker component="p">Message received</Kicker>
-        <FormTitle component="h2">Thank you, { data.name }.</FormTitle>
+        <FormTitle component="h2">
+          Thank you,
+          { ' ' }
+          { data.name }
+          .
+        </FormTitle>
         <BodyCopy component="p">Your note is in. I will review the context and reply by email.</BodyCopy>
         <Button type="button" variant="outlined" startIcon={ <ReplayRounded /> } onClick={ resetForm }>Send another</Button>
       </Confirmation>

@@ -38,11 +38,6 @@ export const PublicShell = styled( Box, {
   '@media (max-height: 430px) and (orientation: landscape)': {
     gridTemplateRows: '48px minmax(0, 1fr)'
   },
-  '@media (min-resolution: 2dppx), (min-width: 2000px)': {
-    position: 'relative',
-    minHeight: '100dvh',
-    overflow: 'visible'
-  },
   '@media (prefers-reduced-motion: reduce)': {
     '& *, & *::before, & *::after': {
       scrollBehavior: 'auto !important',
@@ -93,11 +88,12 @@ export const ScreenPage = styled( ShellContainer )( {
   '@media (max-height: 430px) and (orientation: landscape)': { paddingBlock: '.15rem' }
 } );
 
+// Section eyebrow. Neutral on purpose: green marks state (selected, current), not labels.
 export const Kicker = styled( Typography )( ( { theme } ) => ( {
   margin: 0,
-  color: theme.palette.primary.main,
+  color: theme.palette.text.secondary,
   fontFamily: 'var(--portfolio-mono), monospace',
-  fontSize: 'clamp(.65rem, .8vw, .75rem)',
+  fontSize: 'clamp(.6875rem, .8vw, .75rem)',
   fontWeight: 650,
   letterSpacing: '.08em',
   lineHeight: 1.35,

@@ -8,9 +8,10 @@ import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { BrandAvatar, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '../../styles/Navigation.styles';
+import Box from '@mui/material/Box';
+import { BrandLink, BrandMark, BrandName, MenuButton, MobileBrand, MobileDrawer, MobileLinks } from '../../styles/Navigation.styles';
 
-function MobileNav( { links, avatar } ) {
+function MobileNav( { links } ) {
   const pathname = usePathname();
   const [open, setOpen] = useState( false );
 
@@ -34,16 +35,13 @@ function MobileNav( { links, avatar } ) {
           <CloseIcon/>
         </IconButton>
         <MobileBrand>
-          <MuiLink
-            component={ NextLink }
-            underline="none"
-            color="inherit"
-            href="/"
-            aria-label="Lin Hua Chung, home"
-            onClick={ () => setOpen( false ) }
-          >
-            <BrandAvatar src={ avatar || undefined } alt="" aria-hidden="true" sx={ { width: 44, height: 44 } } />
-          </MuiLink>
+          <BrandLink component={ NextLink } href="/" aria-label="Lin Hua Chung, home" onClick={ () => setOpen( false ) }>
+            <BrandMark component="span" data-mark aria-hidden="true">LC</BrandMark>
+            <BrandName component="span" aria-hidden="true">
+              <Box component="span">Lin Hua Chung</Box>
+              <Box component="span">Frontend Engineer</Box>
+            </BrandName>
+          </BrandLink>
         </MobileBrand>
         <MobileLinks component="nav" aria-label="Mobile navigation">
           { links.map( ( { name, path } ) => (

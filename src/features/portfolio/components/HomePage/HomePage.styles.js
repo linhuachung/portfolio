@@ -5,274 +5,253 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha, keyframes, styled } from '@mui/material/styles';
 import { AnimatedPanel, ScreenPage } from '../../styles/PublicLayout.styles';
+import ResumeLink from '../ResumeLink';
 
-const signalPulse = keyframes`
-  0%, 100% { opacity: .45; transform: scale(.72); }
-  50% { opacity: 1; transform: scale(1); }
-`;
+const NARROW = '@media (max-width: 680px)';
+const LANDSCAPE = '@media (max-height: 430px) and (orientation: landscape)';
+// Phones shorter than an iPhone 14 drop the career path and the facts row from the card.
+const SHORT_PHONE = '@media (max-width: 680px) and (max-height: 760px)';
+const TINY_PHONE = '@media (max-width: 680px) and (max-height: 620px)';
 
-const orbitDrift = keyframes`
-  0%, 100% { opacity: .28; transform: translate3d(0, 0, 0) rotate(-7deg); }
-  50% { opacity: .52; transform: translate3d(-6px, 4px, 0) rotate(2deg); }
+const livePulse = keyframes`
+  0% { box-shadow: 0 0 0 0 var(--pulse-color); }
+  70% { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 `;
 
 export const HomeScreen = styled( ScreenPage )( {
   display: 'grid',
-  gridTemplateColumns: 'minmax(0, .92fr) minmax(420px, 1.08fr)',
-  alignItems: 'stretch',
-  gap: 'clamp(2.4rem, 6vw, 7.5rem)',
-  '@media (max-width: 900px)': {
-    gridTemplateColumns: 'minmax(0, 1fr) minmax(320px, .9fr)',
-    gap: '1.75rem'
+  gridTemplateColumns: 'minmax(0, 1.1fr) minmax(380px, .9fr)',
+  alignItems: 'start',
+  gap: 'clamp(2rem, 6vw, 6.5rem)',
+  // A hero, so it sits in the optical centre once the screen is tall enough to leave room.
+  '@media (min-width: 681px) and (min-height: 700px)': { alignContent: 'center', alignItems: 'center' },
+  '@media (max-width: 900px)': { gridTemplateColumns: 'minmax(0, 1fr) minmax(300px, .95fr)', gap: '1.5rem' },
+  // Upright tablets stack the card under the copy instead of squeezing two columns.
+  '@media (min-width: 681px) and (max-width: 900px) and (min-height: 1000px)': {
+    gridTemplateColumns: 'minmax(0, 40rem)',
+    justifyContent: 'center',
+    gap: '2.5rem'
   },
-  '@media (max-width: 680px)': {
-    gridTemplateColumns: '1fr',
-    gridTemplateRows: 'auto minmax(0, 1fr)',
-    gap: '.85rem'
-  },
-  '@media (max-height: 430px) and (orientation: landscape)': {
-    gridTemplate: 'minmax(0, 1fr) / minmax(0, 1fr) minmax(300px, .88fr)',
-    gap: '1.25rem'
-  }
+  [NARROW]: { gridTemplateColumns: '1fr', alignContent: 'start', gap: '1rem' },
+  [LANDSCAPE]: { gridTemplateColumns: 'minmax(0, 1fr) minmax(280px, .9fr)', gap: '1.25rem' }
 } );
+
+/* ---------- Left: positioning copy ---------- */
 
 export const HomeCopy = styled( AnimatedPanel )( {
   minWidth: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  gap: 'clamp(.72rem, 1.65vh, 1.1rem)',
-  '@media (max-width: 680px)': { justifyContent: 'flex-start', gap: '.58rem' },
-  '@media (max-height: 430px) and (orientation: landscape)': { gap: '.42rem' }
+  gap: 'clamp(.9rem, 2.2vh, 1.4rem)',
+  [NARROW]: { gap: '.7rem' },
+  [LANDSCAPE]: { gap: '.45rem' }
 } );
 
-export const HomeTitle = styled( Typography )( ( { theme } ) => ( {
-  maxWidth: '12ch',
+export const Eyebrow = styled( Typography )( ( { theme } ) => ( {
   margin: 0,
   color: theme.palette.text.primary,
-  fontSize: 'clamp(3.15rem, 6.2vw, 6.4rem)',
-  fontWeight: 560,
-  letterSpacing: '-.055em',
-  lineHeight: .89,
+  fontSize: '1rem',
+  fontWeight: 600,
+  letterSpacing: '-.01em',
+  lineHeight: 1.3,
+  '& > span': { color: theme.palette.primary.main },
+  [NARROW]: { fontSize: '.9375rem' },
+  [LANDSCAPE]: { fontSize: '.8125rem' },
+  // The smallest phones read the name in the card instead.
+  [TINY_PHONE]: { display: 'none' }
+} ) );
+
+export const HomeTitle = styled( Typography )( ( { theme } ) => ( {
+  maxWidth: '11.5em',
+  margin: 0,
+  color: theme.palette.text.primary,
+  fontSize: 'clamp(3.5rem, 5.6vw, 5.5rem)',
+  fontWeight: 580,
+  letterSpacing: '-.05em',
+  lineHeight: .95,
   textWrap: 'balance',
-  '@media (max-width: 900px)': { fontSize: 'clamp(2.8rem, 6.8vw, 4.5rem)' },
-  '@media (max-width: 680px)': { maxWidth: '14ch', fontSize: 'clamp(2.15rem, 10.7vw, 3.35rem)', lineHeight: .92 },
-  '@media (max-height: 430px) and (orientation: landscape)': { maxWidth: '13ch', fontSize: '2.25rem', lineHeight: .91 }
+  '@media (max-width: 900px)': { fontSize: 'clamp(2.5rem, 6.4vw, 3.5rem)' },
+  [NARROW]: { fontSize: 'clamp(2.125rem, 10.7vw, 3.375rem)', lineHeight: .96 },
+  [LANDSCAPE]: { fontSize: '2.25rem' }
 } ) );
 
 export const Positioning = styled( Typography )( ( { theme } ) => ( {
-  maxWidth: '39rem',
+  maxWidth: '34rem',
   margin: 0,
   color: theme.palette.text.secondary,
-  fontSize: 'clamp(.98rem, 1.25vw, 1.16rem)',
-  lineHeight: 1.52,
+  fontSize: 'clamp(1rem, 1.25vw, 1.125rem)',
+  lineHeight: 1.6,
   textWrap: 'pretty',
-  '@media (max-width: 680px)': { maxWidth: '42rem', fontSize: '.86rem', lineHeight: 1.42 },
-  '@media (max-height: 430px) and (orientation: landscape)': { fontSize: '.75rem', lineHeight: 1.35 }
+  [NARROW]: { fontSize: '.9375rem', lineHeight: 1.5 },
+  [LANDSCAPE]: { fontSize: '.8125rem', lineHeight: 1.4 },
+  // On short phones the headline carries the message; the card keeps the facts.
+  '@media (max-width: 680px) and (max-height: 680px)': { display: 'none' }
 } ) );
 
 export const HomeActions = styled( Box )( {
   display: 'flex',
   flexWrap: 'wrap',
-  gap: '.65rem',
-  marginTop: '.25rem',
-  '@media (max-width: 680px)': { marginTop: 0 }
+  gap: '.75rem',
+  marginTop: '.35rem',
+  [NARROW]: { width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.6rem', marginTop: '.15rem' },
+  [LANDSCAPE]: { marginTop: 0 }
 } );
 
-const Action = styled( Button )( ( { theme } ) => ( {
-  minHeight: 42,
+const actionBase = theme => ( {
+  minHeight: 48,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '.4rem',
   border: `1px solid ${theme.palette.text.primary}`,
-  borderRadius: 10,
-  padding: '.68rem 1.05rem',
-  fontSize: '.76rem',
-  fontWeight: 680,
+  borderRadius: 8,
+  padding: '0 1.35rem',
+  fontSize: '.9375rem',
+  fontWeight: 620,
   lineHeight: 1,
-  '@media (max-height: 430px) and (orientation: landscape)': {
-    minHeight: 36,
-    padding: '.55rem .7rem',
-    fontSize: '.68rem'
-  }
-} ) );
+  textDecoration: 'none',
+  textTransform: 'none',
+  transition: 'background-color 160ms ease, color 160ms ease, border-color 160ms ease',
+  whiteSpace: 'nowrap',
+  [NARROW]: { minHeight: 44, padding: '0 .9rem' },
+  '@media (max-width: 360px)': { padding: '0 .5rem', fontSize: '.875rem' },
+  [LANDSCAPE]: { minHeight: 36, padding: '0 .8rem', fontSize: '.8125rem' }
+} );
 
-export const PrimaryAction = styled( Action )( ( { theme } ) => ( {
+export const PrimaryAction = styled( Button )( ( { theme } ) => ( {
+  ...actionBase( theme ),
   color: theme.palette.background.default,
   backgroundColor: theme.palette.text.primary,
   '&:hover': { borderColor: theme.palette.primary.main, backgroundColor: theme.palette.primary.main }
 } ) );
 
-export const SecondaryAction = styled( Action )( ( { theme } ) => ( {
+export const SecondaryAction = styled( Button )( ( { theme } ) => ( {
+  ...actionBase( theme ),
   color: theme.palette.text.primary,
   backgroundColor: 'transparent',
   '&:hover': { color: theme.palette.background.default, backgroundColor: theme.palette.text.primary }
 } ) );
 
-export const ResourceLinks = styled( Box )( ( { theme } ) => ( {
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '.35rem 1rem',
-  '& a': {
-    color: theme.palette.text.secondary,
-    fontFamily: 'var(--portfolio-mono), monospace',
-    fontSize: '.67rem',
-    textDecorationColor: alpha( theme.palette.text.primary, .45 ),
-    textUnderlineOffset: '.28rem'
-  },
-  '& a:hover': { color: theme.palette.text.primary, textDecorationColor: theme.palette.primary.main },
-  '@media (max-width: 680px) and (max-height: 620px)': { display: 'none' },
-  '@media (max-height: 430px) and (orientation: landscape)': { display: 'none' }
-} ) );
+/* ---------- Right: profile card ---------- */
 
-export const IdentityStage = styled( AnimatedPanel )( ( { theme } ) => ( {
-  position: 'relative',
+export const ProfileCard = styled( AnimatedPanel )( ( { theme } ) => ( {
   minWidth: 0,
-  minHeight: 0,
   display: 'grid',
-  gridTemplateRows: 'auto minmax(150px, 1fr) auto auto',
-  isolation: 'isolate',
-  overflow: 'hidden',
-  padding: 'clamp(1rem, 2.1vw, 1.65rem)',
-  borderTop: `1px solid ${theme.palette.text.primary}`,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  backgroundColor: alpha( theme.palette.background.paper, .4 ),
+  gap: 'clamp(1rem, 2.6vh, 1.6rem)',
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: 8,
+  padding: 'clamp(1.25rem, 2.2vw, 2rem)',
+  background: `radial-gradient(120% 70% at 100% 0%, ${alpha( theme.palette.primary.main, .09 )}, transparent 60%), ${alpha( theme.palette.background.paper, .55 )}`,
   animationDelay: '45ms',
-  '&::before': {
-    position: 'absolute',
-    zIndex: -2,
-    inset: '12% -12% 18% 22%',
-    border: `1px solid ${alpha( theme.palette.primary.main, .32 )}`,
-    borderRadius: '50%',
-    content: '""',
-    transform: 'rotate(-7deg)',
-    animation: `${orbitDrift} 7s ease-in-out infinite`
-  },
-  '&::after': {
-    position: 'absolute',
-    zIndex: -3,
-    width: '62%',
-    aspectRatio: '1',
-    right: '-12%',
-    top: '8%',
-    borderRadius: '50%',
-    content: '""',
-    background: `radial-gradient(circle, ${alpha( theme.palette.primary.main, .18 )} 0, transparent 68%)`
-  },
-  '@media (max-width: 680px)': {
-    gridTemplateRows: 'auto minmax(82px, 1fr) auto',
-    padding: '.65rem .75rem',
-    '&::before': { inset: '2% -12% 8% 38%' }
-  },
-  '@media (max-height: 430px) and (orientation: landscape)': {
-    gridTemplateRows: 'auto minmax(76px, 1fr) auto',
-    padding: '.55rem .7rem'
-  }
+  '& > * + *': { borderTop: `1px solid ${theme.palette.divider}`, paddingTop: 'clamp(1rem, 2.6vh, 1.6rem)' },
+  [NARROW]: { gap: '.8rem', padding: '1rem', '& > * + *': { paddingTop: '.8rem' } },
+  [LANDSCAPE]: { gap: '.5rem', padding: '.7rem .85rem', '& > * + *': { paddingTop: '.5rem' } }
 } ) );
 
-export const SignalHeader = styled( Box )( {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: '1rem'
+export const CardSection = styled( Box )( {
+  minWidth: 0,
+  display: 'grid',
+  gap: '.85rem',
+  [NARROW]: { gap: '.6rem' },
+  [LANDSCAPE]: { gap: '.35rem' },
+  '&[data-path]': { [SHORT_PHONE]: { display: 'none' }, [LANDSCAPE]: { display: 'none' } }
 } );
 
-export const CareerSignal = styled( Box )( ( { theme } ) => ( {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '.45rem',
+export const SectionLabel = styled( Typography )( ( { theme } ) => ( {
+  margin: 0,
   color: theme.palette.text.secondary,
   fontFamily: 'var(--portfolio-mono), monospace',
-  fontSize: '.63rem',
-  letterSpacing: '.035em',
+  fontSize: '.6875rem',
+  fontWeight: 600,
+  letterSpacing: '.1em',
+  lineHeight: 1.3,
   textTransform: 'uppercase'
 } ) );
 
-export const SignalDot = styled( Box )( ( { theme } ) => ( {
+// Photo, name, current role and place, with the live "Building at" status on the right.
+export const Identity = styled( Box )( ( { theme } ) => ( {
+  display: 'grid',
+  gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+  alignItems: 'center',
+  gap: '1.1rem',
+  '& p': { margin: 0 },
+  '& p:first-of-type': { color: theme.palette.text.primary, fontSize: 'clamp(1.25rem, 1.7vw, 1.5rem)', fontWeight: 620, letterSpacing: '-.02em', lineHeight: 1.2 },
+  '& p:nth-of-type(2)': { marginTop: '.25rem', color: theme.palette.text.secondary, fontSize: '.9375rem', lineHeight: 1.35 },
+  '& p:nth-of-type(3)': { display: 'flex', alignItems: 'center', gap: '.3rem', marginTop: '.15rem', color: theme.palette.text.secondary, fontSize: '.8125rem', lineHeight: 1.35 },
+  '& p:nth-of-type(3) svg': { fontSize: '.95rem' },
+  [NARROW]: { gridTemplateColumns: 'auto minmax(0, 1fr)', gap: '.8rem', '& p:first-of-type': { fontSize: '1.125rem' }, '& p:nth-of-type(2)': { fontSize: '.8125rem' }, '& p:nth-of-type(3)': { fontSize: '.75rem' } },
+  [LANDSCAPE]: { gridTemplateColumns: 'auto minmax(0, 1fr)', gap: '.6rem', '& p:first-of-type': { fontSize: '.9375rem' }, '& p:nth-of-type(2), & p:nth-of-type(3)': { fontSize: '.75rem' } },
+  // Smaller photo where the card has to share the screen.
+  '& .MuiAvatar-root': {
+    [NARROW]: { width: 60, height: 60, borderRadius: 14, fontSize: 18 },
+    [TINY_PHONE]: { width: 46, height: 46, borderRadius: 11, fontSize: 15 },
+    [LANDSCAPE]: { width: 40, height: 40, borderRadius: 10, fontSize: 13, boxShadow: 'none' }
+  }
+} ) );
+
+export const StatusPill = styled( Box )( ( { theme } ) => ( {
+  alignSelf: 'start',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '.5rem',
+  borderRadius: 999,
+  padding: '.25rem .65rem',
+  color: theme.palette.primary.main,
+  backgroundColor: alpha( theme.palette.primary.main, .1 ),
+  fontSize: '.75rem',
+  fontWeight: 620,
+  lineHeight: 1.3,
+  whiteSpace: 'nowrap',
+  [NARROW]: { display: 'none' },
+  [LANDSCAPE]: { display: 'none' }
+} ) );
+
+export const LiveDot = styled( Box )( ( { theme } ) => ( {
+  '--pulse-color': alpha( theme.palette.primary.main, .5 ),
   width: 7,
   height: 7,
   flex: '0 0 auto',
   borderRadius: '50%',
   backgroundColor: theme.palette.primary.main,
-  animation: `${signalPulse} 2.2s ease-in-out infinite`
+  animation: `${livePulse} 2.2s ease-out infinite`
 } ) );
 
-export const IdentityCanvas = styled( Box )( ( { theme } ) => ( {
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',
-  justifyContent: 'center',
-  overflow: 'hidden',
+// "Résumé" label, then the PDF (filled) and the online view (outlined).
+export const CvRow = styled( Box )( {
+  display: 'grid',
+  gridTemplateColumns: 'auto minmax(0, 1fr) minmax(0, 1fr)',
+  alignItems: 'center',
+  gap: '.6rem',
+  '& > p': { marginRight: '.5rem' },
+  [NARROW]: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', '& > p': { display: 'none' } },
+  [LANDSCAPE]: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', '& > p': { display: 'none' } }
+} );
+
+export const CvAction = styled( ResumeLink )( ( { theme } ) => ( {
+  ...actionBase( theme ),
+  minHeight: 44,
+  padding: '0 .9rem',
+  fontSize: '.875rem',
   color: theme.palette.text.primary,
-  '& > span': {
-    fontFamily: 'var(--portfolio-mono), monospace',
-    fontSize: '.62rem',
-    letterSpacing: '.11em',
-    textTransform: 'uppercase'
-  },
-  '@media (max-width: 680px)': { alignItems: 'flex-start' }
+  backgroundColor: 'transparent',
+  '&:hover': { color: theme.palette.background.default, backgroundColor: theme.palette.text.primary },
+  '&[data-filled]': { color: theme.palette.background.default, backgroundColor: theme.palette.text.primary },
+  '&[data-filled]:hover': { borderColor: theme.palette.primary.main, backgroundColor: theme.palette.primary.main }
 } ) );
 
-export const Wordmark = styled( Typography )( ( { theme } ) => ( {
-  margin: 0,
-  color: 'transparent',
-  fontSize: 'clamp(4.4rem, 10vw, 10.5rem)',
-  fontWeight: 720,
-  letterSpacing: '-.085em',
-  lineHeight: .74,
-  WebkitTextStroke: `1px ${alpha( theme.palette.text.primary, .72 )}`,
-  '@media (max-width: 900px)': { fontSize: 'clamp(4rem, 10.5vw, 6.8rem)' },
-  '@media (max-width: 680px)': { fontSize: 'clamp(3.7rem, 19vw, 6.8rem)', lineHeight: .78 },
-  '@media (max-height: 430px) and (orientation: landscape)': { fontSize: '4.35rem' }
-} ) );
-
-export const CurrentRole = styled( Box )( ( { theme } ) => ( {
+export const StatGrid = styled( Box )( ( { theme } ) => ( {
   display: 'grid',
-  gridTemplateColumns: '3.2rem minmax(0, 1fr)',
-  gap: '.8rem',
-  paddingBlock: 'clamp(.7rem, 1.6vh, 1rem)',
-  borderTop: `1px solid ${theme.palette.divider}`,
-  '& > div': { display: 'grid', gap: '.15rem' },
-  '& > div p:first-of-type': { color: theme.palette.text.primary, fontSize: '.9rem', fontWeight: 650 },
-  '& > div p:last-of-type': { color: theme.palette.text.secondary, fontSize: '.75rem' },
-  '& p': { margin: 0 },
-  '@media (max-width: 680px), (max-height: 430px) and (orientation: landscape)': { display: 'none' }
-} ) );
-
-export const RoleLabel = styled( Typography )( ( { theme } ) => ( {
-  color: theme.palette.primary.main,
-  fontFamily: 'var(--portfolio-mono), monospace',
-  fontSize: '.63rem',
-  fontWeight: 650,
-  letterSpacing: '.08em',
-  textTransform: 'uppercase'
-} ) );
-
-export const ProofRail = styled( Box )( ( { theme } ) => ( {
-  display: 'grid',
-  gridTemplateColumns: '1.12fr 1.18fr .9fr',
+  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
   margin: 0,
-  paddingTop: 'clamp(.7rem, 1.6vh, 1rem)',
-  borderTop: `1px solid ${theme.palette.divider}`,
-  '@media (max-width: 680px)': { gridTemplateColumns: '1.12fr .88fr', paddingTop: '.55rem' },
-  '@media (max-width: 390px)': { gridTemplateColumns: '1fr' }
-} ) );
-
-export const ProofItem = styled( Box )( ( { theme } ) => ( {
-  minWidth: 0,
-  display: 'grid',
-  gap: '.25rem',
-  margin: 0,
-  paddingInline: '.75rem',
-  borderLeft: `1px solid ${theme.palette.divider}`,
-  '&:first-of-type': { paddingLeft: 0, borderLeft: 0 },
-  '& dt': {
-    color: theme.palette.text.secondary,
-    fontFamily: 'var(--portfolio-mono), monospace',
-    fontSize: '.56rem',
-    letterSpacing: '.07em',
-    textTransform: 'uppercase'
-  },
-  '& dd': { margin: 0, color: theme.palette.text.primary, fontSize: '.67rem', lineHeight: 1.35 },
-  '@media (max-width: 680px)': { '&:nth-of-type(3)': { display: 'none' } },
-  '@media (max-width: 390px)': { '&:nth-of-type(2)': { display: 'none' } }
+  paddingInline: 0,
+  paddingBottom: 0,
+  listStyle: 'none',
+  '& > li': { minWidth: 0, display: 'grid', gap: '.3rem', paddingRight: '.75rem' },
+  '& > li + li': { borderLeft: `1px solid ${theme.palette.divider}`, paddingLeft: 'clamp(.75rem, 1.6vw, 1.25rem)' },
+  '& > li > span:first-of-type': { color: theme.palette.text.primary, fontSize: 'clamp(1.75rem, 2.4vw, 2.125rem)', fontWeight: 620, letterSpacing: '-.04em', lineHeight: 1 },
+  '& > li > span:last-of-type': { color: theme.palette.text.secondary, fontSize: '.8125rem', lineHeight: 1.3 },
+  [NARROW]: { '& > li > span:first-of-type': { fontSize: '1.625rem' }, '& > li > span:last-of-type': { fontSize: '.75rem' } },
+  [LANDSCAPE]: { '& > li': { gap: '.1rem' }, '& > li > span:first-of-type': { fontSize: '1.25rem' }, '& > li > span:last-of-type': { fontSize: '.6875rem' } }
 } ) );

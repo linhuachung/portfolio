@@ -14,11 +14,11 @@ const fieldStyles = _theme => ( {
   '& .MuiOutlinedInput-root': {
     minWidth: 0,
     minHeight: 52,
-    borderRadius: 10,
+    borderRadius: 8,
     fontSize: '.88rem'
   },
   '& .MuiInputLabel-root': { fontSize: '.84rem' },
-  '& .MuiFormHelperText-root': { margin: '.25rem 0 0', fontSize: '.68rem', lineHeight: 1.25 },
+  '& .MuiFormHelperText-root': { margin: '.25rem 0 0', fontSize: '.6875rem', lineHeight: 1.25 },
   '@media (max-width: 680px)': {
     '& .MuiOutlinedInput-root': { minHeight: 42 },
     '& .MuiInputBase-input': { paddingBlock: '.65rem' }
@@ -95,19 +95,19 @@ export const StepCount = styled( Chip )( ( { theme } ) => ( {
   flex: '0 0 auto',
   border: `1px solid ${theme.palette.divider}`,
   fontFamily: 'var(--portfolio-mono), monospace',
-  fontSize: '.63rem'
+  fontSize: '.6875rem'
 } ) );
 
 export const FormStepper = styled( Stepper )( ( { theme } ) => ( {
   padding: 0,
   '& .MuiStep-root': { paddingInline: 0 },
-  '& .MuiStepLabel-label': { color: theme.palette.text.secondary, fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.66rem', letterSpacing: '.06em', textTransform: 'uppercase' },
+  '& .MuiStepLabel-label': { color: theme.palette.text.secondary, fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.6875rem', letterSpacing: '.06em', textTransform: 'uppercase' },
   '& .MuiStepLabel-label.Mui-active, & .MuiStepLabel-label.Mui-completed': { color: theme.palette.text.primary, fontWeight: 650 },
   '& .MuiStepIcon-root': { color: theme.palette.divider, fontSize: '1.4rem' },
   '& .MuiStepIcon-root.Mui-active, & .MuiStepIcon-root.Mui-completed': { color: theme.palette.primary.main },
   '& .MuiStepConnector-line': { borderColor: theme.palette.divider },
-  '@media (max-width: 680px)': { '& .MuiStepLabel-label': { fontSize: '.58rem' } },
-  '@media (max-height: 430px) and (orientation: landscape)': { '& .MuiStepIcon-root': { fontSize: '1.15rem' }, '& .MuiStepLabel-label': { fontSize: '.55rem' } }
+  '@media (max-width: 680px)': { '& .MuiStepLabel-label': { fontSize: '.6875rem' } },
+  '@media (max-height: 430px) and (orientation: landscape)': { '& .MuiStepIcon-root': { fontSize: '1.15rem' }, '& .MuiStepLabel-label': { fontSize: '.6875rem' } }
 } ) );
 
 export const SubmitAlert = styled( Alert )( { paddingBlock: '.3rem', fontSize: '.74rem' } );

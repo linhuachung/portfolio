@@ -1,9 +1,10 @@
 /** Conversation topics offered by the public contact form. The value is what gets stored. */
 export const CONTACT_SERVICES = [
+  { value: 'role', label: 'Hiring or role opportunity' },
   { value: 'frontend', label: 'Product interface or workflow' },
   { value: 'ui', label: 'Design system or UI implementation' },
   { value: 'performance', label: 'Performance or accessibility review' },
-  { value: 'fullstack', label: 'Engineering role or collaboration' }
+  { value: 'fullstack', label: 'Full-stack or API collaboration' }
 ];
 
 export const CONTACT_SERVICE_VALUES = CONTACT_SERVICES.map( service => service.value );

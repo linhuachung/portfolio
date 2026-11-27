@@ -13,7 +13,7 @@ const viewports = [
 const routes = [
   '/',
   '/resume?section=experience&role=mercatus&panel=projects&project=mercatus',
-  '/resume?section=experience&role=nab&panel=summary',
+  '/resume?section=experience&role=nab&panel=overview',
   '/resume?section=skills',
   '/resume?section=education',
   '/resume?section=about',
@@ -78,12 +78,38 @@ for ( const viewport of viewports ) {
   } );
 }
 
-test( 'company project state supports controls and browser history', async ( { page } ) => {
+// Retina phones and laptops are what recruiters actually use; layout must not change with pixel density.
+for ( const viewport of [{ width: 390, height: 664 }, { width: 844, height: 390 }, { width: 1440, height: 900 }, { width: 2560, height: 1440 }] ) {
+  test.describe( `retina ${viewport.width}x${viewport.height}`, () => {
+    test.use( { viewport, deviceScaleFactor: 2 } );
+
+    test( 'public routes still fit one screen', async ( { page } ) => {
+      for ( const route of routes ) {
+        await page.goto( route );
+        await expect( page.locator( 'main' ) ).toBeVisible();
+        await expectOneScreenLayout( page, `${route} @2x` );
+      }
+    } );
+  } );
+}
+
+test( 'resume view changes replace the URL so Back leaves the page', async ( { page } ) => {
+  await page.goto( '/' );
   await page.goto( '/resume?section=experience&role=bap&panel=projects&project=dronex' );
-  await page.getByRole( 'link', { name: /04 Bintech/ } ).click();
+  await page.getByRole( 'link', { name: /^Bintech/ } ).click();
   await expect( page ).toHaveURL( /role=bap&panel=projects&project=bintech/ );
+  await page.getByRole( 'tab', { name: 'Overview' } ).click();
+  await expect( page ).toHaveURL( /panel=overview/ );
   await page.goBack();
-  await expect( page ).toHaveURL( /role=bap&panel=projects&project=dronex/ );
+  await expect( page ).toHaveURL( /\/$/ );
+} );
+
+test( 'changing role keeps the open panel and opens that role\'s first project', async ( { page } ) => {
+  await page.goto( '/resume?section=experience&role=bap&panel=projects&project=bintech' );
+  await page.getByRole( 'list', { name: 'Work history' } ).getByRole( 'button', { name: /^Mercatus/ } ).click();
+  await expect( page ).toHaveURL( /role=mercatus&panel=projects/ );
+  await expect( page.getByRole( 'tab', { name: 'Projects' } ) ).toHaveAttribute( 'aria-selected', 'true' );
+  await expect( page.getByRole( 'heading', { name: 'Mercatus Grocery Commerce', level: 3 } ) ).toBeVisible();
 } );
 
 test( 'legacy work URLs redirect into the matching company project in resume', async ( { page } ) => {
@@ -96,13 +122,19 @@ test( 'legacy work URLs redirect into the matching company project in resume', a
 
 test( 'home leads with professional identity instead of a project preview', async ( { page } ) => {
   await page.goto( '/' );
-  await expect( page.getByRole( 'link', { name: 'View Experience' } ) ).toHaveAttribute( 'href', /\/resume\?section=experience&role=nab&panel=summary/ );
+  await expect( page.getByRole( 'link', { name: 'View Experience' } ) ).toHaveAttribute( 'href', /\/resume\?section=experience&role=nab&panel=overview/ );
   await expect( page.getByRole( 'link', { name: 'Contact' } ).first() ).toBeVisible();
   await expect( page.getByRole( 'navigation', { name: 'Professional links' } ).getByRole( 'link' ) ).toHaveCount( 3 );
   await expect( page.getByRole( 'link', { name: /GitHub/ } ) ).toHaveAttribute( 'href', 'https://github.com/linhuachung' );
   await expect( page.getByRole( 'complementary', { name: 'Professional identity' } ) ).toBeVisible();
-  await expect( page.getByText( 'Software Engineer (Frontend)', { exact: true } ) ).toBeVisible();
-  await expect( page.getByText( 'Frontend engineering since 2021', { exact: true } ) ).toBeVisible();
+  await expect( page.getByText( 'Software Engineer (Frontend) · NAB', { exact: true } ) ).toBeVisible();
+  await expect( page.getByRole( 'list', { name: 'Career at a glance' } ) ).toContainText( 'Companies' );
+  // Both forms of the CV: the uploaded PDF and the online view.
+  await expect( page.getByRole( 'link', { name: /Download PDF/ } ) ).toHaveAttribute( 'href', '/api/user/download-cv' );
+  await expect( page.getByRole( 'link', { name: /View online/ } ) ).toHaveAttribute( 'href', '/cv' );
+  const careerPath = page.getByRole( 'list', { name: 'Career path' } );
+  await expect( careerPath.getByRole( 'link' ) ).toHaveCount( 4 );
+  await expect( careerPath.getByRole( 'link', { name: /^BAP/ } ) ).toHaveAttribute( 'href', /role=bap/ );
   await expect( page.getByRole( 'heading', { name: 'Mercatus Grocery Commerce' } ) ).toHaveCount( 0 );
   await expect( page.getByRole( 'img', { name: 'Mercatus grocery commerce storefront interface' } ) ).toHaveCount( 0 );
 } );
@@ -123,7 +155,16 @@ test( 'contact asks for a conversation topic with audience-friendly choices', as
   await expect( page.getByRole( 'option', { name: 'Product interface or workflow' } ) ).toBeVisible();
   await expect( page.getByRole( 'option', { name: 'Design system or UI implementation' } ) ).toBeVisible();
   await expect( page.getByRole( 'option', { name: 'Performance or accessibility review' } ) ).toBeVisible();
-  await expect( page.getByRole( 'option', { name: 'Engineering role or collaboration' } ) ).toBeVisible();
+  await expect( page.getByRole( 'option', { name: 'Full-stack or API collaboration' } ) ).toBeVisible();
+  await expect( page.getByRole( 'option' ).first() ).toHaveText( 'Hiring or role opportunity' );
+} );
+
+test( 'expertise links hiring managers to the contact form with the role topic chosen', async ( { page } ) => {
+  await page.goto( '/services?service=ui' );
+  await expect( page.getByRole( 'complementary', { name: 'Where I did this' } ) ).toContainText( 'Mercatus' );
+  await page.getByRole( 'link', { name: /Discuss a role/ } ).click();
+  await expect( page ).toHaveURL( /\/contact\?topic=role/ );
+  await expect( page.locator( 'input[name="service"]' ) ).toHaveValue( 'role' );
 } );
 
 test( 'contact intro and form never overlap on compact desktop widths', async ( { page } ) => {
@@ -154,9 +195,9 @@ test( 'public buttons share a softened corner language', async ( { page } ) => {
 
 test( 'desktop routes share one top content anchor', async ( { page } ) => {
   await page.setViewportSize( { width: 1440, height: 900 } );
+  // Home is a vertically centred hero, so only the content pages share the top anchor.
   const routesAndHeadings = [
-    ['/', 'Clear interfaces for complex product systems.'],
-    ['/resume', 'Continuous work across product systems.'],
+    ['/resume', 'Lin Hua Chung'],
     ['/services', 'How I contribute to product teams.'],
     ['/contact', 'Tell me what needs to become clearer.']
   ];
@@ -176,7 +217,7 @@ test( 'resume sections start from one shared content rail', async ( { page } ) =
     ['/resume?section=experience', page => page.getByRole( 'list', { name: 'Work history' })],
     ['/resume?section=skills', page => page.getByText( 'Working toolkit', { exact: true })],
     ['/resume?section=education', page => page.getByText( /Education .* 2016.*2022/, { exact: true })],
-    ['/resume?section=about', page => page.getByText( /Profile .* 04/, { exact: true }).first()]
+    ['/resume?section=about', page => page.getByText( 'Profile', { exact: true }).first()]
   ];
   const anchorTops = [];
 
@@ -195,11 +236,26 @@ test( 'services selector and detail start directly below the route heading', asy
   const headingBox = await page.getByRole( 'heading', { name: 'How I contribute to product teams.', level: 1 } ).boundingBox();
   const headingBottom = headingBox.y + headingBox.height;
   const selectorTop = ( await page.getByRole( 'tab', { name: /Frontend Engineering/ } ).boundingBox() ).y;
-  const detailTop = ( await page.getByText( 'Focus 01', { exact: true } ).boundingBox() ).y;
+  const detailTop = ( await page.getByRole( 'tabpanel' ).getByText( 'Frontend Engineering', { exact: true } ).boundingBox() ).y;
 
   expect( selectorTop - headingBottom ).toBeLessThanOrEqual( 80 );
   expect( detailTop - headingBottom ).toBeLessThanOrEqual( 80 );
   expect( Math.abs( selectorTop - detailTop ) ).toBeLessThanOrEqual( 32 );
+} );
+
+test( 'performance links open the merged UI & Performance tab', async ( { page } ) => {
+  await page.goto( '/services?service=performance' );
+  await expect( page.getByRole( 'tab', { name: 'UI & Performance' } ) ).toHaveAttribute( 'aria-selected', 'true' );
+  await expect( page.getByRole( 'tabpanel' ) ).toContainText( 'Rendering and asset improvements' );
+} );
+
+test( 'résumé header offers the PDF and the online CV', async ( { page } ) => {
+  await page.setViewportSize( { width: 1440, height: 900 } );
+  await page.goto( '/resume' );
+  const header = page.locator( 'main section > header' ).first();
+  await expect( page.getByRole( 'link', { name: /Download CV/ } ) ).toHaveAttribute( 'href', '/api/user/download-cv' );
+  await expect( page.getByRole( 'link', { name: /View online/ } ).first() ).toHaveAttribute( 'href', '/cv' );
+  await expect( header.getByRole( 'navigation', { name: 'Professional links' } ).getByRole( 'link' ) ).toHaveCount( 3 );
 } );
 
 test( 'services selector uses compact single-line labels on mobile', async ( { page } ) => {
@@ -207,7 +263,7 @@ test( 'services selector uses compact single-line labels on mobile', async ( { p
   await page.goto( '/services?service=frontend' );
 
   const tabs = page.getByRole( 'tab' );
-  await expect( tabs ).toHaveCount( 4 );
+  await expect( tabs ).toHaveCount( 3 );
   const heights = await tabs.evaluateAll( elements => elements.map( element => element.getBoundingClientRect().height ) );
 
   expect( heights.every( height => height <= 48 ) ).toBe( true );
@@ -247,7 +303,7 @@ test( 'invalid public URL state resolves to approved defaults', async ( { page }
 
 test( '200% text scaling exposes overflow instead of clipping content', async ( { page } ) => {
   await page.setViewportSize( { width: 1024, height: 768 } );
-  await page.goto( '/resume?section=experience&role=nab&panel=contributions' );
+  await page.goto( '/resume?section=experience&role=nab&panel=overview' );
   await page.evaluate( () => { document.documentElement.style.fontSize = '200%'; } );
   const overflow = await page.locator( 'main' ).evaluate( main => ( {
     overflowY: getComputedStyle( main ).overflowY,
@@ -274,12 +330,37 @@ test.describe( 'reduced motion', () => {
   } );
 } );
 
-test( 'resume timeline supports arrows and moves focus to details', async ( { page } ) => {
-  await page.goto( '/resume?section=experience&role=bap&panel=summary' );
-  const bap = page.getByRole( 'button', { name: /BAP 2022/ } );
-  await bap.focus();
-  await bap.press( 'ArrowRight' );
-  await expect( page ).toHaveURL( /role=mercatus/ );
+test( 'resume timeline sizes employers by tenure and stacks on tall phones', async ( { page } ) => {
+  const segmentBoxes = async () => {
+    const timeline = page.getByRole( 'list', { name: 'Work history' } );
+    return Promise.all( ['FPT', 'BAP', 'Mercatus', 'NAB'].map( name => timeline.getByRole( 'button', { name: new RegExp( `^${name}` ) } ).boundingBox() ) );
+  };
+
+  await page.setViewportSize( { width: 1440, height: 900 } );
+  await page.goto( '/resume?section=experience' );
+  const [fpt, bap, mercatus] = await segmentBoxes();
+  expect( bap.width ).toBeGreaterThan( mercatus.width );
+  expect( mercatus.width ).toBeGreaterThan( fpt.width );
+  expect( bap.y ).toBe( fpt.y );
+  await expect( page.getByRole( 'list', { name: 'Career at a glance' } ) ).toContainText( 'companies' );
+
+  await page.setViewportSize( { width: 390, height: 844 } );
+  const stacked = await segmentBoxes();
+  stacked.slice( 1 ).forEach( ( box, index ) => expect( box.y ).toBeGreaterThan( stacked[index].y ) );
+  await expectOneScreenLayout( page, 'resume stacked timeline' );
+} );
+
+test( 'resume timeline arrows move focus and selection together; a click focuses the role', async ( { page } ) => {
+  await page.goto( '/resume?section=experience&role=bap&panel=overview' );
+  const timeline = page.getByRole( 'list', { name: 'Work history' } );
+  await expect( timeline.getByRole( 'button', { name: /^FPT/ } ) ).toHaveAttribute( 'tabindex', '-1' );
+  await timeline.getByRole( 'button', { name: /^BAP/ } ).focus();
+  for ( const [slug, name] of [['mercatus', /^Mercatus/], ['nab', /^NAB/], ['fpt', /^FPT/]] ) {
+    await page.keyboard.press( 'ArrowRight' );
+    await expect( page ).toHaveURL( new RegExp( `role=${slug}` ) );
+    await expect( timeline.getByRole( 'button', { name } ) ).toBeFocused();
+  }
+  await timeline.getByRole( 'button', { name: /^Mercatus/ } ).click();
   await expect( page.getByRole( 'heading', { name: 'Frontend Developer', level: 2 } ) ).toBeFocused();
 } );
 
@@ -287,10 +368,13 @@ test( 'resume skills pair every label with a decorative icon', async ( { page } 
   await page.goto( '/resume?section=skills' );
   const skillItems = page.getByRole( 'list', { name: /skills$/ } ).locator( 'li' );
   const icons = skillItems.locator( 'svg' );
-  await expect( skillItems ).toHaveCount( 15 );
-  await expect( icons ).toHaveCount( 15 );
+  await expect( skillItems ).toHaveCount( 17 );
+  await expect( icons ).toHaveCount( 17 );
+  // Time in roles that used the skill, with the employers named for assistive tech.
+  await expect( page.getByRole( 'list', { name: 'Frontend skills' } ).getByRole( 'listitem' ).filter( { hasText: /^React/ } ) ).toContainText( '4+ yrs at BAP, Mercatus, NAB' );
+  await expect( page.getByRole( 'list', { name: 'Current stack at NAB' } ).getByRole( 'listitem' ) ).toHaveCount( 4 );
   expect( await icons.evaluateAll( elements => elements.every( icon => icon.getAttribute( 'aria-hidden' ) === 'true' ) ) ).toBe( true );
-  await expect( page.getByText( 'TypeScript', { exact: true } ) ).toBeVisible();
+  await expect( page.getByRole( 'list', { name: 'Frontend skills' } ).getByText( 'TypeScript', { exact: true } ) ).toBeVisible();
   await expect( page.getByText( 'Accessibility', { exact: true } ) ).toBeVisible();
 } );
 
@@ -304,12 +388,14 @@ test( 'education restores both source records in a semantic timeline', async ( {
   await expect( page.getByText( '2020–2021', { exact: true } ) ).toBeVisible();
   await expect( page.getByRole( 'link', { name: 'Professional Frontend Developer — view credential' } ) ).toBeVisible();
   await expect( page.getByRole( 'link', { name: 'Professional NodeJS Developer — view credential' } ) ).toBeVisible();
+  // Results as printed on the certificates.
+  await expect( page.getByText( '6 months · Excellent · 9.0 · Oct 2021', { exact: true } ) ).toBeVisible();
 } );
 
 test( 'about presents a balanced profile composition with verified facts and domains', async ( { page } ) => {
   await page.setViewportSize( { width: 1160, height: 490 } );
   await page.goto( '/resume?section=about' );
-  await expect( page.getByRole( 'heading', { name: 'Clear interfaces for complex workflows.', level: 2 } ) ).toBeVisible();
+  await expect( page.getByRole( 'heading', { name: 'Dependable interfaces for banking and commerce teams.', level: 2 } ) ).toBeVisible();
   await expect( page.getByRole( 'list', { name: 'Profile facts' } ).locator( ':scope > li' ) ).toHaveCount( 4 );
   await expect( page.getByRole( 'list', { name: 'Product domains' } ).locator( ':scope > li' ) ).toHaveCount( 3 );
   await expectOneScreenLayout( page, 'resume about desktop compact' );
@@ -517,16 +603,20 @@ for ( const [slug, experienceSlug, title, employer, client] of projectRecords ) 
     await page.goto( `/resume?section=experience&role=${experienceSlug}&panel=projects&project=${slug}` );
     await expect( page.getByRole( 'heading', { name: title, level: 3 } ) ).toBeVisible();
     await expect( page.getByText( employer, { exact: false } ).first() ).toBeVisible();
-    if ( client ) {await expect( page.getByText( client, { exact: true } ) ).toBeVisible();}
     await expect( page.getByRole( 'tab', { name: 'Projects' } ) ).toHaveAttribute( 'aria-selected', 'true' );
     await expectOneScreenLayout( page, `${experienceSlug}/${slug}` );
+    // Small phones drop the meta line; larger screens name the client there.
+    if ( client ) {
+      await page.setViewportSize( { width: 1440, height: 900 } );
+      await expect( page.getByRole( 'tabpanel' ) ).toContainText( client );
+    }
   } );
 }
 
 for ( const [slug, company, role] of roleRecords ) {
   test( `resume renders every panel for ${slug}`, async ( { page } ) => {
     await page.setViewportSize( { width: 667, height: 375 } );
-    for ( const panel of ['summary', 'projects', 'contributions', 'stack'] ) {
+    for ( const panel of ['overview', 'projects'] ) {
       await page.goto( `/resume?section=experience&role=${slug}&panel=${panel}` );
       await expect( page.getByText( company, { exact: false } ).first() ).toBeVisible();
       await expect( page.getByRole( 'heading', { name: role, level: 2 } ) ).toBeVisible();
@@ -546,7 +636,7 @@ test( 'all secondary states fit the opposite compact viewport', async ( { page }
 
   await page.setViewportSize( { width: 320, height: 568 } );
   for ( const [slug] of roleRecords ) {
-    for ( const panel of ['summary', 'projects', 'contributions', 'stack'] ) {
+    for ( const panel of ['overview', 'projects'] ) {
       await page.goto( `/resume?section=experience&role=${slug}&panel=${panel}` );
       await expectOneScreenLayout( page, `portrait resume ${slug}/${panel}` );
     }
@@ -557,7 +647,7 @@ test( 'all secondary states fit the opposite compact viewport', async ( { page }
     await expectOneScreenLayout( page, `portrait resume ${section}` );
   }
 
-  for ( const service of ['frontend', 'ui', 'performance', 'fullstack'] ) {
+  for ( const service of ['frontend', 'ui', 'fullstack'] ) {
     await page.goto( `/services?service=${service}` );
     await expect( page.getByRole( 'tabpanel' ) ).toBeVisible();
     await expectOneScreenLayout( page, `portrait service ${service}` );
@@ -667,8 +757,8 @@ test( 'state matrix produces no browser errors', async ( { page } ) => {
   page.on( 'console', message => { if ( message.type() === 'error' ) {errors.push( message.text() );} } );
   page.on( 'pageerror', error => errors.push( error.message ) );
   for ( const [slug, experienceSlug] of projectRecords ) {await page.goto( `/resume?section=experience&role=${experienceSlug}&panel=projects&project=${slug}` );}
-  for ( const [slug] of roleRecords ) {await page.goto( `/resume?section=experience&role=${slug}&panel=contributions` );}
-  for ( const service of ['frontend', 'ui', 'performance', 'fullstack'] ) {await page.goto( `/services?service=${service}` );}
+  for ( const [slug] of roleRecords ) {await page.goto( `/resume?section=experience&role=${slug}&panel=overview` );}
+  for ( const service of ['frontend', 'ui', 'fullstack'] ) {await page.goto( `/services?service=${service}` );}
   expect( errors ).toEqual( [] );
 } );
 

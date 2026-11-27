@@ -10,11 +10,16 @@ function Nav( { links } ) {
   return (
     <NavRoot component="nav" aria-label="Primary navigation">
       { links?.map( ( { name, path } ) => {
-        return <NavLink component={ NextLink } href={ path } key={ path }
-          aria-current={ path === pathName ? 'page' : undefined }
-        >
-          { name }
-        </NavLink>;
+        return (
+          <NavLink
+            component={ NextLink }
+            href={ path }
+            key={ path }
+            aria-current={ path === pathName ? 'page' : undefined }
+          >
+            { name }
+          </NavLink>
+        );
       } ) }
     </NavRoot>
   );

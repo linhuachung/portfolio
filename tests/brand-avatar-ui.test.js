@@ -4,17 +4,23 @@ import test from 'node:test';
 
 const read = path => readFile( new URL( `../${path}`, import.meta.url ), 'utf8' );
 
-test( 'public desktop and mobile brands render the profile image instead of name text', async () => {
-  const [headerSource, mobileSource, styleSource] = await Promise.all( [
+test( 'the header brand is a typographic wordmark; the photo appears once per page', async () => {
+  const [headerSource, mobileSource, styleSource, homeSource, resumeSource, avatarHookSource] = await Promise.all( [
     read( 'src/features/portfolio/components/Header/Header.jsx' ),
     read( 'src/features/portfolio/components/MobileNav/MobileNav.jsx' ),
-    read( 'src/features/portfolio/styles/Navigation.styles.js' )
+    read( 'src/features/portfolio/styles/Navigation.styles.js' ),
+    read( 'src/features/portfolio/components/HomePage/HomePage.jsx' ),
+    read( 'src/features/portfolio/components/ResumeContentView/ResumeContentView.jsx' ),
+    read( 'src/features/portfolio/hooks/useProfileAvatar/useProfileAvatar.js' )
   ] );
 
-  assert.doesNotMatch( headerSource, />\s*CHUNG\s*</ );
-  assert.doesNotMatch( mobileSource, /!isAdmin\s*\?\s*'Chung'/ );
-  assert.match( headerSource, /\/api\/user\/profile/ );
-  assert.match( headerSource, /<BrandAvatar[^>]*src=\{\s*profileAvatar\s*\|\|\s*undefined\s*\}/ );
-  assert.match( mobileSource, /<BrandAvatar[^>]*src=\{\s*avatar\s*\|\|\s*undefined\s*\}/ );
-  assert.match( styleSource, /export const BrandAvatar\s*=\s*styled\(\s*Avatar\s*\)/ );
+  for ( const source of [headerSource, mobileSource] ) {
+    assert.match( source, /<BrandMark[^>]*>LC<\/BrandMark>/ );
+    assert.match( source, /Lin Hua Chung/ );
+    assert.doesNotMatch( source, /Avatar/ );
+  }
+  assert.match( styleSource, /export const BrandMark\s*=\s*styled\(\s*Box\s*\)/ );
+  assert.match( homeSource, /<ProfileAvatar/ );
+  assert.match( resumeSource, /<ProfileAvatar/ );
+  assert.match( avatarHookSource, /\/api\/user\/profile/ );
 } );

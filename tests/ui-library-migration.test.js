@@ -105,7 +105,9 @@ test( 'rendered JSX uses MUI primitives instead of raw structural or typography 
     const source = await readFile( file, 'utf8' );
     const rawTags = [...source.matchAll( /<([a-z][a-z0-9]*)(?=[\s/>])/g )]
       .map( match => match[1] )
-      .filter( tag => !( file === 'src/app/layout.jsx' && ['html', 'head', 'body', 'script'].includes( tag ) ) );
+      .filter( tag => !( file === 'src/app/layout.jsx' && ['html', 'head', 'body', 'script'].includes( tag ) ) )
+      // SVG path data for MUI createSvgIcon: the way @mui/icons-material itself builds icons.
+      .filter( tag => !( file === 'src/features/portfolio/components/SkillIcon/brand-icons.jsx' && tag === 'path' ) );
     if ( rawTags.length ) {
       rawElementConsumers.push( { file, tags: [...new Set( rawTags )].sort() } );
     }
@@ -131,6 +133,9 @@ test( 'styling is owned by MUI theme and styled components, not global CSS or ut
   assert.equal( packageJson.dependencies['tailwind-merge'], undefined );
   assert.equal( packageJson.devDependencies.tailwindcss, undefined );
   assert.equal( packageJson.devDependencies['tailwindcss-animate'], undefined );
+  // Icons come from @mui/icons-material (brand logos via MUI createSvgIcon); motion from MUI/CSS.
+  assert.equal( packageJson.dependencies['react-icons'], undefined );
+  assert.equal( packageJson.dependencies['framer-motion'], undefined );
 
   const classNameConsumers = [];
   for ( const file of files.filter( file => /\.(js|jsx|ts|tsx)$/.test( file ) ) ) {

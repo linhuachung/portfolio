@@ -28,14 +28,6 @@ export const AdminSurface = styled( Paper )( ( { theme } ) => ( {
   boxShadow: 'none'
 } ) );
 
-export const StatsGridRoot = styled( Box )( ( { theme } ) => ( {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-  gap: theme.spacing( 1.5 ),
-  [theme.breakpoints.down( 'lg' )]: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
-  [theme.breakpoints.down( 'sm' )]: { gridTemplateColumns: '1fr' }
-} ) );
-
 export const AdminRow = styled( Box )( ( { theme } ) => ( {
   display: 'flex',
   alignItems: 'center',

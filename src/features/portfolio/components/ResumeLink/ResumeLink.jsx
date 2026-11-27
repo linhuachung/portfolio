@@ -5,12 +5,20 @@ import { profile } from '@/content/public-content';
 import { trackCvDownload } from '@/features/analytics/api/tracking';
 
 /**
- * Opens the public résumé and records the download for the admin audience overview.
- * `as` lets client pages pass a styled link; server pages use the default MUI link.
+ * Opens the CV and records it for the admin audience overview (one counter for both forms).
+ * `download` links the PDF uploaded in admin; otherwise the online view at /cv (Google Drive).
+ * `as` lets client pages pass a styled link. Server pages wrap it with `styled( ResumeLink )`
+ * instead, so remaining props (the generated class) are forwarded to the link.
  */
-export default function ResumeLink( { as: LinkComponent = MuiLink, children } ) {
+export default function ResumeLink( { as: LinkComponent = MuiLink, download = false, children, ...linkProps } ) {
   return (
-    <LinkComponent href={ profile.resume } target="_blank" rel="noreferrer" onClick={ () => trackCvDownload() }>
+    <LinkComponent
+      { ...linkProps }
+      href={ download ? profile.resumeDownload : profile.resume }
+      target="_blank"
+      rel="noreferrer"
+      onClick={ () => trackCvDownload() }
+    >
       { children }
     </LinkComponent>
   );

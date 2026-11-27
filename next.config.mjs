@@ -4,6 +4,8 @@ const connectSources = isDevelopment ? "'self' https: ws:" : "'self' https:";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The floating dev badge sat over page content in local review.
+  devIndicators: false,
   eslint: {
     // Lint all source, not only Next's default folders.
     dirs: ['src', 'prisma', 'tests']

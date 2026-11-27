@@ -7,8 +7,9 @@ export const profile = {
   introduction: 'I translate operational requirements into clear, resilient interfaces with React, TypeScript, and a practical full-stack perspective.',
   email: 'chunglh1304@gmail.com',
   location: 'Ho Chi Minh City, Vietnam',
-  timezone: 'UTC+7',
+  // Online view (Google Drive, via the /cv redirect) and the PDF the owner uploads in admin.
   resume: '/cv',
+  resumeDownload: '/api/user/download-cv',
   linkedin: 'https://www.linkedin.com/in/lin-hua-chung-200158179/',
   github: 'https://github.com/linhuachung',
   proofPoints: [
@@ -130,6 +131,7 @@ export const projects = [
 export const experiences = [
   {
     slug: 'fpt', shortLabel: 'FPT', company: 'FPT Software', role: 'Frontend Developer', dates: 'Sep 2021–Jan 2022', year: '2021',
+    start: '2021-09', end: '2022-01',
     logo: '/assets/resume/companyIcons/fpt_software.jpg',
     summary: 'Built internal customer-information screens for a banking operations product.',
     contributions: ['Implemented WebSquare5 interfaces with HTML, CSS, and JavaScript', 'Analyzed input-screen behavior and resolved UI defects', 'Delivered requested features with the project team'],
@@ -137,6 +139,7 @@ export const experiences = [
   },
   {
     slug: 'bap', shortLabel: 'BAP', company: 'BAP IT Co., JSC', role: 'Full-stack Developer', dates: 'Feb 2022–Feb 2024', year: '2022',
+    start: '2022-02', end: '2024-02', teamSize: '10+',
     logo: '/assets/resume/companyIcons/bap_it.jpg',
     summary: 'Delivered frontend and Node.js features for products serving the Japanese market.',
     contributions: ['Built React interfaces and Node.js/Express services', 'Translated customer requirements into technical solutions', 'Collaborated with a 10+ person team to deliver and debug product features'],
@@ -144,6 +147,7 @@ export const experiences = [
   },
   {
     slug: 'mercatus', shortLabel: 'Mercatus', company: 'Mercatus Technologies Inc.', role: 'Frontend Developer', dates: 'Mar 2024–Mar 2025', year: '2024',
+    start: '2024-03', end: '2025-03', teamSize: '30+',
     logo: '/assets/resume/companyIcons/mercatus.jpg',
     summary: 'Built e-commerce interfaces for grocery retailers in the United States and Canada.',
     contributions: ['Built and maintained storefront features across AngularJS, React, Next.js, and Drupal', 'Integrated backend APIs and contributed to performance and quality improvements', 'Helped onboard new project members and collaborated across a 30+ person team'],
@@ -151,6 +155,7 @@ export const experiences = [
   },
   {
     slug: 'nab', shortLabel: 'NAB', company: 'NAB Innovation Centre Vietnam', role: 'Software Engineer (Frontend)', dates: 'Mar 2025–Present', year: '2025',
+    start: '2025-03', end: null,
     logo: '/assets/resume/companyIcons/nabvietnam.jpg',
     summary: 'Build customer-onboarding interfaces for NAB banking journeys.',
     contributions: ['Build reusable React and TypeScript components for schema-driven onboarding forms', 'Integrate REST APIs and handle asynchronous data, validation, and error states', 'Collaborate with design and backend teams through planning and code reviews'],
@@ -161,8 +166,8 @@ export const experiences = [
 export const resumeSections = ['experience', 'skills', 'education', 'about'];
 
 export const skills = [
-  { group: 'Frontend', items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'AngularJS'] },
-  { group: 'Interface', items: ['HTML', 'CSS', 'Tailwind CSS', 'Responsive UI', 'Accessibility'] },
+  { group: 'Frontend', items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Redux', 'AngularJS'] },
+  { group: 'Interface', items: ['HTML', 'CSS', 'Ant Design', 'Tailwind CSS', 'Responsive UI', 'Accessibility'] },
   { group: 'Integration', items: ['REST APIs', 'Node.js', 'Express', 'Drupal', 'Jest'] }
 ];
 
@@ -170,8 +175,9 @@ export const education = [
   {
     slug: 'open-university',
     school: 'Ho Chi Minh City Open University',
+    kind: 'University degree',
     programs: [
-      { name: 'Computer Science', credential: '/assets/files/BangDaiHọc_LinHuaChung.pdf' }
+      { name: 'Computer Science', credential: '/assets/files/BangDaiHọc_LinHuaChung.pdf', credentialLabel: 'View diploma' }
     ],
     dates: '2016–2022',
     location: 'Ho Chi Minh City, Vietnam',
@@ -180,9 +186,11 @@ export const education = [
   {
     slug: 'cybersoft',
     school: 'Cybersoft Academy',
+    kind: 'Professional training',
+    // Duration, score, grade and issue date as printed on each certificate.
     programs: [
-      { name: 'Professional Frontend Developer', credential: '/assets/files/LinHuaChung_Frontend.pdf' },
-      { name: 'Professional NodeJS Developer', credential: '/assets/files/LinHuaChung_Backend.pdf' }
+      { name: 'Professional Frontend Developer', credential: '/assets/files/LinHuaChung_Frontend.pdf', credentialLabel: 'View certificate', preview: '/assets/files/LinHuaChung_Frontend.png', duration: '6 months', result: 'Excellent · 9.0', issued: 'Oct 2021' },
+      { name: 'Professional NodeJS Developer', credential: '/assets/files/LinHuaChung_Backend.pdf', credentialLabel: 'View certificate', preview: '/assets/files/LinHuaChung_Backend.png', duration: '2 months', result: 'Excellent · 9.0', issued: 'Jan 2022' }
     ],
     dates: '2020–2021',
     location: 'Ho Chi Minh City, Vietnam',
@@ -197,8 +205,7 @@ export const about = {
 };
 
 export const services = [
-  { slug: 'frontend', number: '01', title: 'Frontend Engineering', description: 'Build maintainable product interfaces from architecture through delivery.', capabilities: ['React and Next.js implementation', 'Typed component architecture', 'API and state integration'], project: 'nab', projectLabel: 'See NAB work' },
-  { slug: 'ui', number: '02', title: 'UI Implementation', description: 'Translate product designs into responsive, accessible interfaces.', capabilities: ['Responsive layout systems', 'Reusable UI components', 'Accessible interaction states'], project: 'mercatus', projectLabel: 'See Mercatus work' },
-  { slug: 'performance', number: '03', title: 'Performance', description: 'Improve interface behavior with focused measurement and practical changes.', capabilities: ['Rendering-path review', 'Asset and bundle strategy', 'Runtime quality checks'], project: 'mercatus', projectLabel: 'See commerce work' },
-  { slug: 'fullstack', number: '04', title: 'Full-stack Integration', description: 'Connect frontend journeys to dependable Node.js services and REST APIs.', capabilities: ['REST API integration', 'Node.js and Express features', 'Validation and error states'], project: 'bintech', projectLabel: 'See full-stack work' }
+  { slug: 'frontend', number: '01', title: 'Frontend Engineering', description: 'Build maintainable product interfaces from architecture through delivery.', capabilities: ['React and Next.js implementation', 'Typed component architecture', 'API and state integration'], project: 'nab' },
+  { slug: 'ui', number: '02', title: 'UI & Performance', description: 'Translate product designs into responsive, accessible and fast interfaces.', capabilities: ['Responsive layout systems', 'Reusable UI components', 'Accessible interaction states', 'Rendering and asset improvements'], project: 'mercatus' },
+  { slug: 'fullstack', number: '03', title: 'Full-stack Integration', description: 'Connect frontend journeys to dependable Node.js services and REST APIs.', capabilities: ['REST API integration', 'Node.js and Express features', 'Validation and error states'], project: 'bintech' }
 ];

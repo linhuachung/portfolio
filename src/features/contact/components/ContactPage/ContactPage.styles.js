@@ -52,8 +52,12 @@ export const ContactDetails = styled( Box )( ( { theme } ) => ( {
     padding: '.42rem 0',
     borderTop: `1px solid ${theme.palette.divider}`
   },
-  '& dt': { color: theme.palette.text.secondary, fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.68rem', textTransform: 'uppercase' },
-  '& dd': { margin: 0, color: theme.palette.text.primary, fontSize: '.82rem' },
+  '& dt': { color: theme.palette.text.secondary, fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.6875rem', textTransform: 'uppercase' },
+  // Icon and text stay on one row (the text wraps beside the icon); only the links row wraps.
+  '& dd': { margin: 0, display: 'flex', alignItems: 'flex-start', gap: '.2rem .35rem', color: theme.palette.text.primary, fontSize: '.82rem' },
+  '& dd:has(> nav)': { flexWrap: 'wrap', alignItems: 'center' },
+  '& dd > svg': { flex: '0 0 auto', marginTop: '.12em', color: theme.palette.text.secondary, fontSize: '.95rem' },
+  '& dd > nav': { marginLeft: '.35rem', gap: '.4rem' },
   '& a': { textUnderlineOffset: '.22rem' },
   '@media (max-width: 680px)': {
     display: 'grid',
@@ -65,7 +69,7 @@ export const ContactDetails = styled( Box )( ( { theme } ) => ( {
   },
   '@media (min-width: 681px) and (max-width: 900px)': {
     '& > div': { gridTemplateColumns: '1fr', gap: '.08rem', padding: '.3rem 0' },
-    '& dt': { fontSize: '.58rem' },
+    '& dt': { fontSize: '.6875rem' },
     '& dd': { fontSize: '.72rem', overflowWrap: 'anywhere' }
   },
   '@media (max-height: 620px)': { '& > div': { paddingBlock: '.2rem' } },
@@ -74,5 +78,6 @@ export const ContactDetails = styled( Box )( ( { theme } ) => ( {
     '& > div:first-of-type': { gridColumn: 1 },
     '& > div:nth-of-type(2)': { display: 'none' }
   },
-  '@media (max-width: 420px) and (max-height: 610px)': { '& > div:nth-of-type(n + 2)': { display: 'none' } }
+  // Phones shorter than ~760px keep only the email; location and links return on taller screens.
+  '@media (max-width: 680px) and (max-height: 760px)': { '& > div:nth-of-type(n + 2)': { display: 'none' } }
 } ) );

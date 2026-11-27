@@ -2,6 +2,7 @@
 
 // Styles shared by several resume views.
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { ScreenPage } from './PublicLayout.styles';
 
@@ -14,6 +15,7 @@ export const ResumeScreen = styled( ScreenPage )( {
   '@media (max-width: 680px)': { paddingBlock: '.4rem' }
 } );
 
+// Skills, Education and About start on the same left edge as the Experience timeline.
 export const StaticView = styled( Box )( {
   maxWidth: 1050,
   width: '100%',
@@ -21,7 +23,21 @@ export const StaticView = styled( Box )( {
   display: 'grid',
   alignContent: 'start',
   gap: '1rem',
-  padding: 'clamp(.75rem, 1.8vh, 1.25rem) clamp(1rem, 3vw, 3rem)',
-  '& > h2': { maxWidth: '19ch' },
-  '@media (max-height: 430px) and (orientation: landscape)': { gap: '.35rem', padding: '.25rem 0', '& > h2': { fontSize: '1.15rem', lineHeight: 1.03 } }
+  '@media (max-width: 680px)': { gap: '.6rem' },
+  '@media (max-height: 430px) and (orientation: landscape)': { gap: '.35rem' }
 } );
+
+/** Section heading inside a résumé panel; always smaller than the page H1. */
+export const PanelTitle = styled( Typography )( ( { theme } ) => ( {
+  maxWidth: '24ch',
+  margin: 0,
+  color: theme.palette.text.primary,
+  fontSize: '1.75rem',
+  fontWeight: 580,
+  letterSpacing: '-.035em',
+  lineHeight: 1.1,
+  textWrap: 'balance',
+  '@media (max-width: 680px)': { fontSize: '1.25rem' },
+  '@media (max-width: 360px)': { fontSize: '1.0625rem' },
+  '@media (max-height: 430px) and (orientation: landscape)': { fontSize: '1rem' }
+} ) );

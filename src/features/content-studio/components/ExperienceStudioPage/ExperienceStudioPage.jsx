@@ -40,7 +40,7 @@ export default function ExperienceAdminPage() {
           <StudioDescription component="p">Review the public career timeline, contribution limits, and project relationships from one place.</StudioDescription>
         </Box>
         <StudioActions>
-          <PreviewButton component={ NextLink } href="/resume?section=experience&role=nab&panel=summary" target="_blank" rel="noreferrer" variant="outlined" endIcon={ <OpenInNewOutlinedIcon /> }>Open Public View</PreviewButton>
+          <PreviewButton component={ NextLink } href="/resume?section=experience&role=nab&panel=overview" target="_blank" rel="noreferrer" variant="outlined" endIcon={ <OpenInNewOutlinedIcon /> }>Open Public View</PreviewButton>
         </StudioActions>
       </StudioHeader>
 
@@ -53,10 +53,22 @@ export default function ExperienceAdminPage() {
       </SourceNotice>
 
       <FactStrip component="dl">
-        <Fact><Typography component="dt">Roles</Typography><Typography component="dd">{ experiences.length }</Typography></Fact>
-        <Fact><Typography component="dt">Current</Typography><Typography component="dd">{ currentRole?.shortLabel || '—' }</Typography></Fact>
-        <Fact><Typography component="dt">Project Employers</Typography><Typography component="dd">{ linkedProjects }</Typography></Fact>
-        <Fact><Typography component="dt">Timeline Starts</Typography><Typography component="dd">2021</Typography></Fact>
+        <Fact>
+          <Typography component="dt">Roles</Typography>
+          <Typography component="dd">{ experiences.length }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Current</Typography>
+          <Typography component="dd">{ currentRole?.shortLabel || '—' }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Project Employers</Typography>
+          <Typography component="dd">{ linkedProjects }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Timeline Starts</Typography>
+          <Typography component="dd">2021</Typography>
+        </Fact>
       </FactStrip>
 
       <RecordList aria-label="Experience records">
@@ -73,15 +85,31 @@ export default function ExperienceAdminPage() {
                 </Box>
               </RecordIdentity>
               <RecordBody>
-                <Typography component="p">{ experience.role } · { experience.summary }</Typography>
+                <Typography component="p">
+                  { experience.role }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { experience.summary }
+                </Typography>
                 <TagRow aria-label={ `${experience.company} technology stack` }>
                   { experience.stack.map( item => <Tag component="span" key={ item }>{ item }</Tag> ) }
                 </TagRow>
-                <Typography component="p">{ experience.contributions.length } verified contributions · { roleProjects.length } linked { roleProjects.length === 1 ? 'project' : 'projects' }</Typography>
+                <Typography component="p">
+                  { experience.contributions.length }
+                  { ' ' }
+                  verified contributions ·
+                  { ' ' }
+                  { roleProjects.length }
+                  { ' ' }
+                  linked
+                  { ' ' }
+                  { roleProjects.length === 1 ? 'project' : 'projects' }
+                </Typography>
               </RecordBody>
               <RecordAside>
                 <StateBadge component="span" $tone={ isCurrent ? 'positive' : 'neutral' }>{ isCurrent ? 'Current' : 'Complete' }</StateBadge>
-                <TextAction component={ NextLink } href={ `/resume?section=experience&role=${experience.slug}&panel=summary` } target="_blank" rel="noreferrer">Preview Role</TextAction>
+                <TextAction component={ NextLink } href={ `/resume?section=experience&role=${experience.slug}&panel=overview` } target="_blank" rel="noreferrer">Preview Role</TextAction>
               </RecordAside>
             </RecordRow>
           );
