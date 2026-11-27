@@ -140,52 +140,60 @@ function ImageUpload( { name, control, watch, setValue, width = 96, setError, cl
   };
 
   return (
-    <FormField control={ control } name={ name } render={ () => (
-      <FormItem>
-        <PhotoEditor>
-          <PhotoPreview>
-            <AvatarPreview src={ preview || undefined } alt={ preview ? 'Current profile photo' : 'No profile photo selected' } $size={ width } />
-            { uploading && <UploadProgress><CircularProgress size={ 28 } aria-label="Uploading profile photo" /></UploadProgress> }
-          </PhotoPreview>
+    <FormField
+      control={ control }
+      name={ name }
+      render={ () => (
+        <FormItem>
+          <PhotoEditor>
+            <PhotoPreview>
+              <AvatarPreview src={ preview || undefined } alt={ preview ? 'Current profile photo' : 'No profile photo selected' } $size={ width } />
+              { uploading && <UploadProgress><CircularProgress size={ 28 } aria-label="Uploading profile photo" /></UploadProgress> }
+            </PhotoPreview>
 
-          <PhotoContent>
-            <Box>
-              <Typography component="h3" sx={ { fontSize: '.9rem', fontWeight: 700 } }>Profile Photo</Typography>
-              <Typography component="p" sx={ { mt: .35, color: 'text.secondary', fontSize: '.75rem', lineHeight: 1.45 } }>
-                PNG or JPG, up to { FILE_UPLOAD.IMAGE.MAX_SIZE_MB } MB. Use a square image for the best result.
-              </Typography>
-            </Box>
-            <HiddenInput
-              type="file"
-              accept={ FILE_UPLOAD.IMAGE.ACCEPTED_TYPES.join( ',' ) }
-              id={ name }
-              onChange={ handleAvatarChange }
-              inputRef={ fileInputRef }
-              disabled={ uploading || disabled }
-              inputProps={ { 'aria-label': 'Choose profile photo' } }
-            />
-            <PhotoActions>
-              <Button
-                type="button"
-                variant="outlined"
-                startIcon={ uploading ? <CircularProgress size={ 16 } color="inherit" /> : <PhotoCameraOutlinedIcon /> }
-                onClick={ () => fileInputRef.current?.click() }
+            <PhotoContent>
+              <Box>
+                <Typography component="h3" sx={ { fontSize: '.9rem', fontWeight: 700 } }>Profile Photo</Typography>
+                <Typography component="p" sx={ { mt: .35, color: 'text.secondary', fontSize: '.75rem', lineHeight: 1.45 } }>
+                  PNG or JPG, up to
+                  { ' ' }
+                  { FILE_UPLOAD.IMAGE.MAX_SIZE_MB }
+                  { ' ' }
+                  MB. Use a square image for the best result.
+                </Typography>
+              </Box>
+              <HiddenInput
+                type="file"
+                accept={ FILE_UPLOAD.IMAGE.ACCEPTED_TYPES.join( ',' ) }
+                id={ name }
+                onChange={ handleAvatarChange }
+                inputRef={ fileInputRef }
                 disabled={ uploading || disabled }
-              >
-                { uploading ? 'Uploading…' : preview ? 'Replace Photo' : 'Upload Photo' }
-              </Button>
-              { preview && (
-                <Button type="button" color="error" startIcon={ <DeleteOutlineOutlinedIcon /> } onClick={ handleRemove } disabled={ uploading || disabled }>
-                  Remove Photo
+                inputProps={ { 'aria-label': 'Choose profile photo' } }
+              />
+              <PhotoActions>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  startIcon={ uploading ? <CircularProgress size={ 16 } color="inherit" /> : <PhotoCameraOutlinedIcon /> }
+                  onClick={ () => fileInputRef.current?.click() }
+                  disabled={ uploading || disabled }
+                >
+                  { uploading ? 'Uploading…' : preview ? 'Replace Photo' : 'Upload Photo' }
                 </Button>
-              ) }
-            </PhotoActions>
-            <Typography component="p" aria-live="polite" sx={ { minHeight: '1.1em', color: 'text.secondary', fontSize: '.7rem' } }>{ status }</Typography>
-          </PhotoContent>
-        </PhotoEditor>
-        <FormMessage />
-      </FormItem>
-    ) } />
+                { preview && (
+                  <Button type="button" color="error" startIcon={ <DeleteOutlineOutlinedIcon /> } onClick={ handleRemove } disabled={ uploading || disabled }>
+                    Remove Photo
+                  </Button>
+                ) }
+              </PhotoActions>
+              <Typography component="p" aria-live="polite" sx={ { minHeight: '1.1em', color: 'text.secondary', fontSize: '.7rem' } }>{ status }</Typography>
+            </PhotoContent>
+          </PhotoEditor>
+          <FormMessage />
+        </FormItem>
+      ) }
+    />
   );
 }
 

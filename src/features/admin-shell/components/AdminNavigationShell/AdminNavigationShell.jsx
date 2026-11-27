@@ -132,7 +132,10 @@ export default function AdminNavigationShell( { children } ) {
     <Box sx={ { height: '100%', display: 'flex', flexDirection: 'column' } }>
       <DrawerHeader>
         <BrandMark data-testid="admin-brand-avatar" src={ profileAvatar || undefined } alt="" aria-hidden="true" />
-        <BrandCopy component="p">Portfolio Admin<Box component="span">Operations Console</Box></BrandCopy>
+        <BrandCopy component="p">
+          Portfolio Admin
+          <Box component="span">Operations Console</Box>
+        </BrandCopy>
       </DrawerHeader>
       <Navigation component="nav" aria-label="Admin navigation">
         { Object.entries( groups ).map( ( [group, links] ) => (

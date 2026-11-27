@@ -52,7 +52,12 @@ function AdminLogin() {
   return (
     <LoginShell>
       <LoginNarrative>
-        <LoginMark component="p">CHUNG<Box component="span">.</Box> / ADMIN</LoginMark>
+        <LoginMark component="p">
+          CHUNG
+          <Box component="span">.</Box>
+          { ' ' }
+          / ADMIN
+        </LoginMark>
         <Box sx={ { position: 'relative', zIndex: 1, display: 'grid', gap: 2 } }>
           <Typography component="p" sx={ { color: 'primary.main', fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.7rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase' } }>Private Workspace</Typography>
           <Typography component="h2" sx={ { maxWidth: '10ch', fontSize: 'clamp(3rem, 5vw, 5.5rem)', fontWeight: 620, letterSpacing: '-.055em', lineHeight: .9 } }>Operate the portfolio with clarity.</Typography>
@@ -64,7 +69,12 @@ function AdminLogin() {
       <LoginStage>
         <LoginPanel>
           <Box sx={ { display: 'grid', gap: 1 } }>
-            <LoginMark component="p" sx={ { display: { md: 'none' }, mb: 2 } }>CHUNG<Box component="span">.</Box> / ADMIN</LoginMark>
+            <LoginMark component="p" sx={ { display: { md: 'none' }, mb: 2 } }>
+              CHUNG
+              <Box component="span">.</Box>
+              { ' ' }
+              / ADMIN
+            </LoginMark>
             <Typography component="p" sx={ { color: 'primary.main', fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.68rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase' } }>Secure Access</Typography>
             <AdminPageTitle component="h1">Portfolio operations</AdminPageTitle>
             <MutedText component="p">Sign in with your administrator credentials.</MutedText>
@@ -121,7 +131,9 @@ function AdminLogin() {
           </Box>
 
           <MuiLink component={ NextLink } href="/" underline="hover" color="text.secondary" sx={ { display: 'inline-flex', alignItems: 'center', gap: .75, width: 'fit-content', fontSize: '.75rem' } }>
-            <ArrowBackOutlinedIcon fontSize="small" aria-hidden="true" /> Back to Portfolio
+            <ArrowBackOutlinedIcon fontSize="small" aria-hidden="true" />
+            { ' ' }
+            Back to Portfolio
           </MuiLink>
         </LoginPanel>
       </LoginStage>

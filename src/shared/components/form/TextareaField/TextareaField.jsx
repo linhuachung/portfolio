@@ -56,10 +56,16 @@ export function TextareaField( {
             { showWordCount && (
               <Box sx={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: .5, color: 'text.secondary', fontSize: '.75rem' } }>
                 <Typography component="span">
-                  { wordCount } { wordCount === 1 ? 'word' : 'words' }
+                  { wordCount }
+                  { ' ' }
+                  { wordCount === 1 ? 'word' : 'words' }
                 </Typography>
                 <Typography component="span" color={ charCount < ( minLength || 0 ) || charCount > ( maxLength || Infinity ) ? 'error.main' : 'inherit' }>
-                  { charCount }/{ maxLength || '∞' } characters
+                  { charCount }
+                  /
+                  { maxLength || '∞' }
+                  { ' ' }
+                  characters
                   { minLength && ` (min: ${minLength})` }
                 </Typography>
               </Box>

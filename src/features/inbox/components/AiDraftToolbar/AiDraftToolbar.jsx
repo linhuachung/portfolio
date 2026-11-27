@@ -33,7 +33,8 @@ export default function AiDraftToolbar( { composer } ) {
         flexShrink: 0,
         flexWrap: 'wrap',
         '& .MuiInputBase-root, & .MuiButton-root': { minWidth: 0, flex: { xs: '1 1 110px', sm: 'initial' } }
-      } }>
+      } }
+      >
         <Select
           value={ composer.tone }
           onChange={ event => composer.setTone( event.target.value ) }

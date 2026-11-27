@@ -52,7 +52,13 @@ export default function ContentHealth( { summary = {}, sx } ) {
                   : <CheckCircleOutlineRoundedIcon fontSize="small" aria-hidden="true" /> }
               </ContentStateIcon>
               <ContentCopy>
-                <Typography component="h3">{ record.label } · { state.total ?? '—' }</Typography>
+                <Typography component="h3">
+                  { record.label }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { state.total ?? '—' }
+                </Typography>
                 <Typography component="p">{ displayDetail }</Typography>
               </ContentCopy>
               <ArrowForwardRoundedIcon aria-hidden="true" sx={ { color: 'text.secondary', fontSize: 18 } } />

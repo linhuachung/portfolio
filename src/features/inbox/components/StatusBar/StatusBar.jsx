@@ -37,12 +37,16 @@ export default function StatusBar( { contact, updating, onStatusChange } ) {
         <Box sx={ { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: .5 } }>
           { contact.emailOpenedAt && (
             <Typography component="span" sx={ { color: 'success.main', fontSize: '.75rem', whiteSpace: 'nowrap' } }>
-              📧 Opened: { new Date( contact.emailOpenedAt ).toLocaleString() }
+              📧 Opened:
+              { ' ' }
+              { new Date( contact.emailOpenedAt ).toLocaleString() }
             </Typography>
           ) }
           { contact.repliedAt && (
             <Typography component="span" sx={ { color: 'text.secondary', fontSize: '.875rem', whiteSpace: 'nowrap' } }>
-              Replied: { new Date( contact.repliedAt ).toLocaleDateString() }
+              Replied:
+              { ' ' }
+              { new Date( contact.repliedAt ).toLocaleDateString() }
             </Typography>
           ) }
         </Box>

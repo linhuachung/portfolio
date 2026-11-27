@@ -55,10 +55,22 @@ export default function ProjectAdminPage() {
       </SourceNotice>
 
       <FactStrip component="dl">
-        <Fact><Typography component="dt">Projects</Typography><Typography component="dd">{ projects.length }</Typography></Fact>
-        <Fact><Typography component="dt">Internal</Typography><Typography component="dd">{ internalCount }</Typography></Fact>
-        <Fact><Typography component="dt">Media Review</Typography><Typography component="dd">{ reviewCount }</Typography></Fact>
-        <Fact><Typography component="dt">External Links</Typography><Typography component="dd">{ projects.filter( project => project.live ).length }</Typography></Fact>
+        <Fact>
+          <Typography component="dt">Projects</Typography>
+          <Typography component="dd">{ projects.length }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Internal</Typography>
+          <Typography component="dd">{ internalCount }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Media Review</Typography>
+          <Typography component="dd">{ reviewCount }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">External Links</Typography>
+          <Typography component="dd">{ projects.filter( project => project.live ).length }</Typography>
+        </Fact>
       </FactStrip>
 
       <RecordList aria-label="Project records">
@@ -67,8 +79,20 @@ export default function ProjectAdminPage() {
             <RecordIdentity>
               <RecordAvatar src={ project.media.src } alt="" variant="rounded">{ project.number }</RecordAvatar>
               <Box>
-                <Typography component="h2">{ project.number } · { project.title }</Typography>
-                <Typography component="p">{ project.employer } · { project.period }</Typography>
+                <Typography component="h2">
+                  { project.number }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { project.title }
+                </Typography>
+                <Typography component="p">
+                  { project.employer }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { project.period }
+                </Typography>
               </Box>
             </RecordIdentity>
             <RecordBody>
@@ -76,7 +100,17 @@ export default function ProjectAdminPage() {
               <TagRow aria-label={ `${project.title} technology stack` }>
                 { project.technologies.map( item => <Tag component="span" key={ item }>{ item }</Tag> ) }
               </TagRow>
-              <Typography component="p">{ project.domain } · { project.market } · { project.media.label }</Typography>
+              <Typography component="p">
+                { project.domain }
+                { ' ' }
+                ·
+                { ' ' }
+                { project.market }
+                { ' ' }
+                ·
+                { ' ' }
+                { project.media.label }
+              </Typography>
             </RecordBody>
             <RecordAside>
               <StateBadge component="span" $tone={ project.confidentiality === 'public' ? 'positive' : 'neutral' }>{ project.confidentiality }</StateBadge>

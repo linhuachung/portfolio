@@ -13,7 +13,11 @@ export default function ReplyList( { replies = [], composerOpen, generating, onN
   return (
     <Panel>
       <AdminRow sx={ { justifyContent: 'space-between', mb: 2 } }>
-        <Typography component="h3" sx={ { fontSize: '.875rem', fontWeight: 650 } }>Replies ({ replies.length })</Typography>
+        <Typography component="h3" sx={ { fontSize: '.875rem', fontWeight: 650 } }>
+          Replies (
+          { replies.length }
+          )
+        </Typography>
         { !composerOpen && (
           <AdminRow sx={ { gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' } }>
             <Button variant="outlined" size="small" onClick={ onNewReply }>Write Reply</Button>

@@ -50,10 +50,22 @@ export default function EducationAdminPage() {
       </SourceNotice>
 
       <FactStrip component="dl">
-        <Fact><Typography component="dt">Institutions</Typography><Typography component="dd">{ education.length }</Typography></Fact>
-        <Fact><Typography component="dt">Programs</Typography><Typography component="dd">{ education.reduce( ( count, item ) => count + item.programs.length, 0 ) }</Typography></Fact>
-        <Fact><Typography component="dt">Credentials</Typography><Typography component="dd">{ credentialCount }</Typography></Fact>
-        <Fact><Typography component="dt">Coverage</Typography><Typography component="dd">100%</Typography></Fact>
+        <Fact>
+          <Typography component="dt">Institutions</Typography>
+          <Typography component="dd">{ education.length }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Programs</Typography>
+          <Typography component="dd">{ education.reduce( ( count, item ) => count + item.programs.length, 0 ) }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Credentials</Typography>
+          <Typography component="dd">{ credentialCount }</Typography>
+        </Fact>
+        <Fact>
+          <Typography component="dt">Coverage</Typography>
+          <Typography component="dd">100%</Typography>
+        </Fact>
       </FactStrip>
 
       <RecordList aria-label="Education records">
@@ -63,7 +75,13 @@ export default function EducationAdminPage() {
               <RecordAvatar src={ item.logo } alt="" variant="rounded">{ item.school.slice( 0, 2 ) }</RecordAvatar>
               <Box>
                 <Typography component="h2">{ item.school }</Typography>
-                <Typography component="p">{ item.dates } · { item.location }</Typography>
+                <Typography component="p">
+                  { item.dates }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { item.location }
+                </Typography>
               </Box>
             </RecordIdentity>
             <RecordBody>

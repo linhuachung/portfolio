@@ -118,7 +118,13 @@ export default function InboxClient() {
       <InboxNotice role="status" aria-live="polite">
         <NotificationsActiveOutlinedIcon aria-hidden="true" />
         <Box>
-          <Typography component="p">{ payload?.counts?.pending || 0 } new { payload?.counts?.pending === 1 ? 'message' : 'messages' }</Typography>
+          <Typography component="p">
+            { payload?.counts?.pending || 0 }
+            { ' ' }
+            new
+            { ' ' }
+            { payload?.counts?.pending === 1 ? 'message' : 'messages' }
+          </Typography>
           <Typography component="p">Opening a new inquiry marks it as read. Replies always require your review before sending.</Typography>
         </Box>
       </InboxNotice>
@@ -161,7 +167,15 @@ export default function InboxClient() {
               </MessagePreview>
               <InboxMeta>
                 <StatusBadge component="span" $status={ contact.status }>{ contact.status }</StatusBadge>
-                <Typography component="p">{ dateFormatter.format( new Date( contact.createdAt ) ) } · { contact.replyCount } { contact.replyCount === 1 ? 'reply' : 'replies' }</Typography>
+                <Typography component="p">
+                  { dateFormatter.format( new Date( contact.createdAt ) ) }
+                  { ' ' }
+                  ·
+                  { ' ' }
+                  { contact.replyCount }
+                  { ' ' }
+                  { contact.replyCount === 1 ? 'reply' : 'replies' }
+                </Typography>
               </InboxMeta>
             </InboxRow>
           ) ) }
@@ -175,10 +189,22 @@ export default function InboxClient() {
         </EmptyInbox>
       ) }
 
-      { payload && <InboxFooter>
-        <InboxCount component="p">{ payload?.pagination?.total || 0 } messages · Page { payload?.pagination?.page || 1 } of { payload?.pagination?.pages || 1 }</InboxCount>
-        <Pagination page={ payload?.pagination?.page || 1 } count={ payload?.pagination?.pages || 1 } onChange={ ( _, nextPage ) => updateQuery( { page: nextPage, message: null } ) } size="small" color="primary" />
-      </InboxFooter> }
+      { payload && (
+        <InboxFooter>
+          <InboxCount component="p">
+            { payload?.pagination?.total || 0 }
+            { ' ' }
+            messages · Page
+            { ' ' }
+            { payload?.pagination?.page || 1 }
+            { ' ' }
+            of
+            { ' ' }
+            { payload?.pagination?.pages || 1 }
+          </InboxCount>
+          <Pagination page={ payload?.pagination?.page || 1 } count={ payload?.pagination?.pages || 1 } onChange={ ( _, nextPage ) => updateQuery( { page: nextPage, message: null } ) } size="small" color="primary" />
+        </InboxFooter>
+      ) }
 
       { selectedContactId && (
         <ContactDetailModal
