@@ -26,6 +26,8 @@ export const ExperienceViewRoot = styled( Box )( {
   gridTemplateRows: 'auto minmax(0, 1fr)',
   gap: 'clamp(.8rem, 2.4vh, 1.6rem)',
   [NARROW]: { gap: '.6rem' },
+  // iPhone SE class: the timeline's two-line year labels take the height back from here.
+  '@media (max-width: 680px) and (max-height: 600px)': { gap: '.35rem' },
   [LANDSCAPE]: {
     gridTemplate: '1fr / minmax(230px, .7fr) minmax(0, 1fr)',
     alignItems: 'start',
@@ -42,12 +44,15 @@ export const RoleDetail = styled( AnimatedPanel )( ( { theme } ) => ( {
   borderTop: `1px solid ${theme.palette.divider}`,
   padding: 'clamp(1rem, 2.5vh, 1.6rem) 0 0',
   '& > header': { gridRow: '1 / 3', display: 'grid', alignContent: 'start', gap: '.55rem' },
+  // Phones read the dates in the facts line just below, so the eyebrow keeps only the company.
+  [COMPACT]: { '& > header [data-dates]': { display: 'none' } },
   [ROOMY]: { paddingTop: '2rem' },
   [TABLET]: { gridTemplate: 'auto auto minmax(0, 1fr) / 1fr', rowGap: '.9rem', '& > header': { gridRow: 'auto' } },
   [NARROW]: {
     gridTemplate: 'auto auto minmax(0, 1fr) / 1fr',
     gap: '.4rem',
     paddingTop: '.6rem',
+    '@media (max-height: 600px)': { gap: '.3rem', paddingTop: '.4rem' },
     '& > header': { gridRow: 'auto', gap: '.3rem' }
   },
   [LANDSCAPE]: {
@@ -229,6 +234,8 @@ export const ProjectSelector = styled( Box )( ( { theme } ) => ( {
   listStyle: 'none',
   '& .MuiButton-root': { width: '100%', minHeight: 40, justifyContent: 'flex-start', border: `1px solid ${theme.palette.divider}`, borderRadius: 8, color: theme.palette.text.secondary, padding: '.3rem .7rem', fontSize: '.8125rem', lineHeight: 1.2, textAlign: 'left', textTransform: 'none' },
   '& .MuiButton-root[aria-current="true"]': { borderColor: theme.palette.primary.main, color: theme.palette.text.primary, fontWeight: 620, backgroundColor: alpha( theme.palette.primary.main, .08 ) },
+  // The narrowest phones show just the project name; the years sit on the timeline above.
+  '@media (max-width: 360px)': { '& [data-years]': { display: 'none' } },
   [theme.breakpoints.down( 'sm' )]: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
   [LANDSCAPE]: { gap: '.2rem', '& .MuiButton-root': { minHeight: 36, padding: '.15rem .4rem', fontSize: '.6875rem' } }
 } ) );

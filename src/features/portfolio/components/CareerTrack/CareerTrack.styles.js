@@ -15,8 +15,6 @@ const pulse = keyframes`
 const VERTICAL_TRACK = '@media (max-width: 900px) and (min-height: 740px), (max-height: 430px) and (orientation: landscape)';
 const TALL_VERTICAL = '@media (max-width: 900px) and (min-height: 1000px)';
 const NARROW_TRACK = '@media (max-width: 680px)';
-// Narrow and not vertical: the squeezed horizontal bar, which uses abbreviated tenure ("2y 1m").
-const NARROW_HORIZONTAL = '@media (max-width: 680px) and (max-height: 739px)';
 const SMALLEST = '@media (max-width: 389px)';
 // Small phones (iPhone SE class) keep the bar, name and tenure but drop the logos.
 const TINY_TRACK = '@media (max-width: 680px) and (max-height: 600px)';
@@ -180,20 +178,17 @@ export const SegmentDuration = styled( Box )( ( { theme } ) => ( {
   lineHeight: 1.25,
   whiteSpace: 'nowrap',
   [ROOMY]: { fontSize: '.75rem' },
-  [NARROW_HORIZONTAL]: { '& [data-full]': { display: 'none' } },
+  // Horizontal segments can be narrow, so they show years ("2021–22"); the stacked list has room for full months.
+  '& [data-full]': { display: 'none' },
   [VERTICAL_TRACK]: { fontSize: '.75rem', '& [data-full]': { display: 'inline' } },
   [LANDSCAPE]: { fontSize: '.6875rem' }
 } ) );
 
-export const ShortDuration = styled( Box )( {
-  display: 'none',
-  [NARROW_HORIZONTAL]: { display: 'inline' },
+export const YearRange = styled( Box )( {
+  display: 'inline',
+  // Narrow segments wrap after the dash rather than clip the year range.
+  [NARROW_TRACK]: { minWidth: 0, whiteSpace: 'normal', lineHeight: 1.2 },
   [VERTICAL_TRACK]: { display: 'none' }
-} );
-
-export const SegmentDates = styled( Box )( {
-  display: 'none',
-  [VERTICAL_TRACK]: { display: 'inline' }
 } );
 
 export const SegmentDetail = styled( Box )( ( { theme } ) => ( {
@@ -205,9 +200,7 @@ export const SegmentDetail = styled( Box )( ( { theme } ) => ( {
   lineHeight: 1.3,
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  '& > span': { display: 'block', overflow: 'hidden', textOverflow: 'ellipsis' },
-  '& > span + span': { marginTop: '.15rem', fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.6875rem' },
-  [ROOMY]: { fontSize: '.875rem', '& > span + span': { marginTop: '.2rem', fontSize: '.75rem' } },
+  [ROOMY]: { fontSize: '.875rem' },
   [NARROW_TRACK]: { display: 'none' },
   [VERTICAL_TRACK]: { display: 'none' }
 } ) );

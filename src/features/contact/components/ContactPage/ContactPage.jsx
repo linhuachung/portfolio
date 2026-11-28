@@ -15,8 +15,8 @@ export default function ContactPage() {
     <ContactScreen component="section" aria-labelledby="contact-title">
       <ContactIntro component="header">
         <Kicker component="p">Contact · Start with context</Kicker>
-        <DisplayTitle component="h1" id="contact-title">Tell me what needs to become clearer.</DisplayTitle>
-        <BodyCopy component="p">Hiring for a frontend role, or scoping product work? Send a short note or email me directly.</BodyCopy>
+        <DisplayTitle component="h1" id="contact-title">Hiring for a frontend role? Email or LinkedIn is fastest.</DisplayTitle>
+        <BodyCopy component="p">Scoping product work instead? Send a short note below.</BodyCopy>
         <ContactDetails component="dl">
           <Box>
             <Typography component="dt">Email</Typography>

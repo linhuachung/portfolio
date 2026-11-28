@@ -3,6 +3,7 @@
 import Box from '@mui/material/Box';
 import { about } from '@/content/public-content';
 import CenterFocusStrongOutlinedIcon from '@mui/icons-material/CenterFocusStrongOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
@@ -15,7 +16,8 @@ const factIcons = {
   'Based in': LocationOnOutlinedIcon,
   Experience: WorkOutlineOutlinedIcon,
   Languages: TranslateOutlinedIcon,
-  Focus: CenterFocusStrongOutlinedIcon
+  Focus: CenterFocusStrongOutlinedIcon,
+  'This site': CodeOutlinedIcon
 };
 
 export default function AboutView() {

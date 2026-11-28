@@ -54,8 +54,14 @@ export default function EducationView() {
               { item.programs.map( program => (
                 <Box component="li" key={ program.name } data-preview={ program.preview ? true : undefined }>
                   { program.preview && (
-                    <CertificateThumb component="span">
-                      <Box component={ Image } src={ program.preview } alt="" width={ 84 } height={ 119 }/>
+                    <CertificateThumb component="span" data-shape={ program.previewShape || 'portrait' }>
+                      <Box
+                        component={ Image }
+                        src={ program.preview }
+                        alt=""
+                        width={ program.previewShape === 'landscape' ? 160 : 84 }
+                        height={ program.previewShape === 'landscape' ? 114 : 119 }
+                      />
                     </CertificateThumb>
                   ) }
                   <Box>

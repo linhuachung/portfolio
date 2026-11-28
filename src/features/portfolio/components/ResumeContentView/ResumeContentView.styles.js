@@ -58,7 +58,9 @@ export const CompactCareer = styled( Box )( ( { theme } ) => ( {
     justifyContent: 'space-between',
     gap: '.75rem',
     '& > span': { color: theme.palette.text.secondary, fontSize: '.8125rem', fontWeight: 560, lineHeight: 1.3 },
-    '& > div': { display: 'flex', flex: '0 0 auto', gap: '.4rem' }
+    '& > div': { display: 'flex', flex: '0 0 auto', gap: '.4rem' },
+    // The narrowest phones keep this to one line beside the CV buttons.
+    '@media (max-width: 400px)': { '& [data-markets]': { display: 'none' } }
   }
 } ) );
 
@@ -106,8 +108,10 @@ export const CareerStats = styled( Box )( ( { theme } ) => ( {
   listStyle: 'none',
   '& > li': {
     display: 'grid',
+    justifyItems: 'center',
     gap: '.3rem',
     padding: '0 1.1rem',
+    textAlign: 'center',
     color: theme.palette.text.secondary,
     fontFamily: 'var(--portfolio-mono), monospace',
     fontSize: '.6875rem',

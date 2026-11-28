@@ -24,7 +24,8 @@ export const ContactIntro = styled( Box )( {
   display: 'grid',
   alignContent: 'start',
   gap: 'clamp(.7rem, 1.6vh, 1rem)',
-  '& h1': { maxWidth: '9.5ch', fontSize: 'clamp(2.8rem, 4.6vw, 4.9rem)', lineHeight: .94 },
+  // A recruiter-facing question, so longer than a slogan: wider measure, smaller display size.
+  '& h1': { maxWidth: '13ch', fontSize: 'clamp(2.4rem, 3.6vw, 3.6rem)', lineHeight: .98 },
   '@media (max-width: 680px)': {
     gap: '.4rem',
     '& h1': { maxWidth: '15ch', fontSize: 'clamp(1.9rem, 9vw, 2.35rem)', lineHeight: .98 },
@@ -32,11 +33,11 @@ export const ContactIntro = styled( Box )( {
   },
   '@media (min-width: 681px) and (max-width: 900px)': {
     gap: '.55rem',
-    '& h1': { maxWidth: '7.5ch', fontSize: '2.5rem', lineHeight: .96 },
+    '& h1': { maxWidth: '11ch', fontSize: '2.1rem', lineHeight: .98 },
     '& > p:last-of-type': { fontSize: '.76rem' }
   },
-  '@media (max-height: 620px)': { '& > p:last-of-type': { display: 'none' } },
-  '@media (max-height: 430px) and (orientation: landscape)': { '& h1': { fontSize: '2rem' } },
+  '@media (max-height: 620px), (max-width: 680px) and (max-height: 680px)': { '& > p:last-of-type': { display: 'none' } },
+  '@media (max-height: 430px) and (orientation: landscape)': { '& h1': { maxWidth: '16ch', fontSize: '1.6rem' } },
   '@media (max-width: 420px) and (max-height: 610px)': {
     '& > p': { display: 'none' },
     '& h1': { maxWidth: '100%', fontSize: '1.55rem', lineHeight: .98 }

@@ -171,7 +171,7 @@ test( 'contact intro and form never overlap on compact desktop widths', async ( 
   await page.setViewportSize( { width: 760, height: 502 } );
   await page.goto( '/contact' );
 
-  const heading = await page.getByRole( 'heading', { name: 'Tell me what needs to become clearer.', level: 1 } ).boundingBox();
+  const heading = await page.getByRole( 'heading', { name: 'Hiring for a frontend role? Email or LinkedIn is fastest.', level: 1 } ).boundingBox();
   const form = await page.getByTestId( 'contact-form-panel' ).boundingBox();
   expect( heading.x + heading.width + 12 ).toBeLessThanOrEqual( form.x );
   await expectOneScreenLayout( page, 'contact compact desktop' );
@@ -199,7 +199,7 @@ test( 'desktop routes share one top content anchor', async ( { page } ) => {
   const routesAndHeadings = [
     ['/resume', 'Lin Hua Chung'],
     ['/services', 'How I contribute to product teams.'],
-    ['/contact', 'Tell me what needs to become clearer.']
+    ['/contact', 'Hiring for a frontend role? Email or LinkedIn is fastest.']
   ];
   const headingTops = [];
 
@@ -371,7 +371,11 @@ test( 'resume skills pair every label with a decorative icon', async ( { page } 
   await expect( skillItems ).toHaveCount( 17 );
   await expect( icons ).toHaveCount( 17 );
   // Time in roles that used the skill, with the employers named for assistive tech.
-  await expect( page.getByRole( 'list', { name: 'Frontend skills' } ).getByRole( 'listitem' ).filter( { hasText: /^React/ } ) ).toContainText( '4+ yrs at BAP, Mercatus, NAB' );
+  const react = page.getByRole( 'list', { name: 'Frontend skills' } ).getByRole( 'listitem' ).filter( { hasText: /^React/ } );
+  await expect( react ).toContainText( 'Used at BAP, Mercatus, NAB' );
+  // No computed year counts: they read inconsistently against LinkedIn and the CV.
+  await expect( react ).not.toContainText( 'yrs' );
+  await expect( page.getByRole( 'list', { name: 'Also used skills' } ) ).toContainText( 'AngularJS' );
   await expect( page.getByRole( 'list', { name: 'Current stack at NAB' } ).getByRole( 'listitem' ) ).toHaveCount( 4 );
   expect( await icons.evaluateAll( elements => elements.every( icon => icon.getAttribute( 'aria-hidden' ) === 'true' ) ) ).toBe( true );
   await expect( page.getByRole( 'list', { name: 'Frontend skills' } ).getByText( 'TypeScript', { exact: true } ) ).toBeVisible();
@@ -396,7 +400,7 @@ test( 'about presents a balanced profile composition with verified facts and dom
   await page.setViewportSize( { width: 1160, height: 490 } );
   await page.goto( '/resume?section=about' );
   await expect( page.getByRole( 'heading', { name: 'Dependable interfaces for banking and commerce teams.', level: 2 } ) ).toBeVisible();
-  await expect( page.getByRole( 'list', { name: 'Profile facts' } ).locator( ':scope > li' ) ).toHaveCount( 4 );
+  await expect( page.getByRole( 'list', { name: 'Profile facts' } ).locator( ':scope > li' ) ).toHaveCount( 5 );
   await expect( page.getByRole( 'list', { name: 'Product domains' } ).locator( ':scope > li' ) ).toHaveCount( 3 );
   await expectOneScreenLayout( page, 'resume about desktop compact' );
 } );
@@ -407,7 +411,7 @@ test( 'contact validation focuses the first invalid field and back preserves val
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await expect( page.getByLabel( 'Full Name' ) ).toBeFocused();
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByRole( 'button', { name: 'Back' } ).click();
@@ -433,7 +437,7 @@ test( 'contact presents a composed MUI brief with subtle step motion', async ( {
   expect( parseFloat( duration ) ).toBeGreaterThan( 0 );
 
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await expect( page.getByRole( 'heading', { name: 'Add the context that matters.', level: 2 } ) ).toBeVisible();
@@ -548,7 +552,7 @@ test( 'skip navigation and non-auth form fields follow interface guidance', asyn
   await page.goto( '/contact' );
   await expect( page.locator( 'input[name="service"]' ) ).toHaveAttribute( 'autocomplete', 'off' );
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await expect( page.getByLabel( 'Message' ) ).toHaveAttribute( 'autocomplete', 'off' );
@@ -664,7 +668,7 @@ test( 'contact exposes client validation errors and focuses the invalid field on
   await expect( page.getByLabel( 'Full Name' ) ).toBeFocused();
 
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByRole( 'button', { name: 'Send Message' } ).click();
@@ -682,13 +686,13 @@ test( 'contact recovers from API field errors without hiding the target field', 
   await page.setViewportSize( { width: 320, height: 568 } );
   await page.goto( '/contact' );
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByLabel( 'Message' ).fill( 'Please help with this onboarding workflow.' );
   await page.getByRole( 'button', { name: 'Send Message' } ).click();
   await expect( page.getByText( 'This email cannot be used.' ) ).toBeVisible();
-  await expect( page.getByLabel( 'Email' ) ).toBeFocused();
+  await expect( page.getByLabel( 'Email', { exact: true } ) ).toBeFocused();
   await expect( page.getByTestId( 'contact-form-step' ) ).toHaveCount( 1 );
   await expectOneScreenLayout( page, 'contact API field error' );
 } );
@@ -702,7 +706,7 @@ test( 'contact handles rate limiting, preserves data, and keeps email fallback a
   await page.setViewportSize( { width: 667, height: 375 } );
   await page.goto( '/contact' );
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Product interface or workflow' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByLabel( 'Message' ).fill( 'Please help with this onboarding workflow.' );
@@ -723,7 +727,7 @@ test( 'contact handles an unexpected server error without losing the message', a
   await page.setViewportSize( { width: 320, height: 568 } );
   await page.goto( '/contact' );
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Performance or accessibility review' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByLabel( 'Message' ).fill( 'Please review this performance problem.' );
@@ -741,7 +745,7 @@ test( 'contact success replaces the form and sends only the public contract', as
   } );
   await page.goto( '/contact' );
   await page.getByLabel( 'Full Name' ).fill( 'Ada Lovelace' );
-  await page.getByLabel( 'Email' ).fill( 'ada@example.com' );
+  await page.getByLabel( 'Email', { exact: true } ).fill( 'ada@example.com' );
   await chooseService( page, 'Design system or UI implementation' );
   await page.getByRole( 'button', { name: 'Continue to Message' } ).click();
   await page.getByLabel( 'Message' ).fill( 'Please help implement this interface.' );

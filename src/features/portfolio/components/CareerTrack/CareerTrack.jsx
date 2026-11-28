@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Image from 'next/image';
 import { forwardRef } from 'react';
-import { NowBadge, Segment, SegmentBar, SegmentBody, SegmentCompany, SegmentDates, SegmentDetail, SegmentDuration, SegmentHeading, SegmentLogo, SegmentRole, ShortDuration, TrackList } from './CareerTrack.styles';
+import { NowBadge, Segment, SegmentBar, SegmentBody, SegmentCompany, SegmentDetail, SegmentDuration, SegmentHeading, SegmentLogo, SegmentRole, YearRange, TrackList } from './CareerTrack.styles';
 
 /**
  * One segment per employer, sized by tenure, so the length of each stay reads at a glance.
@@ -36,30 +36,13 @@ const CareerTrack = forwardRef( function CareerTrack( { roles, activeSlug, onSel
                     <SegmentRole component="span">{ role.role }</SegmentRole>
                   </SegmentCompany>
                   <SegmentDuration component="span">
-                    <SegmentDates component="span">
-                      { role.startLabel }
-                      { ' ' }
-                      –
-                      { ' ' }
-                      { role.endLabel }
-                      { ' ' }
-                      ·
-                    </SegmentDates>
-                    <Box component="span" data-full>{ role.duration }</Box>
-                    <ShortDuration component="span">{ role.shortDuration }</ShortDuration>
+                    <Box component="span" data-full>{ `${role.startLabel} – ${role.endLabel}` }</Box>
+                    { /* A break opportunity after the dash lets narrow segments wrap "2021–2022" instead of clipping it. */ }
+                    <YearRange component="span">{ role.years.replace( '–', '–​' ) }</YearRange>
                     { role.isCurrent && <NowBadge component="span">Now</NowBadge> }
                   </SegmentDuration>
                 </SegmentHeading>
-                <SegmentDetail component="span">
-                  <Box component="span">{ role.role }</Box>
-                  <Box component="span">
-                    { role.startLabel }
-                    { ' ' }
-                    –
-                    { ' ' }
-                    { role.endLabel }
-                  </Box>
-                </SegmentDetail>
+                <SegmentDetail component="span">{ role.role }</SegmentDetail>
               </SegmentBody>
             </Segment>
           </Box>

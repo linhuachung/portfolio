@@ -67,13 +67,13 @@ export const HomeTitle = styled( Typography )( ( { theme } ) => ( {
   maxWidth: '11.5em',
   margin: 0,
   color: theme.palette.text.primary,
-  fontSize: 'clamp(3.5rem, 5.6vw, 5.5rem)',
+  fontSize: 'clamp(2.75rem, 4.4vw, 4.25rem)',
   fontWeight: 580,
   letterSpacing: '-.05em',
   lineHeight: .95,
   textWrap: 'balance',
   '@media (max-width: 900px)': { fontSize: 'clamp(2.5rem, 6.4vw, 3.5rem)' },
-  [NARROW]: { fontSize: 'clamp(2.125rem, 10.7vw, 3.375rem)', lineHeight: .96 },
+  [NARROW]: { fontSize: 'clamp(1.75rem, 8.4vw, 2.75rem)', lineHeight: 1 },
   [LANDSCAPE]: { fontSize: '2.25rem' }
 } ) );
 
@@ -238,7 +238,8 @@ export const CvAction = styled( ResumeLink )( ( { theme } ) => ( {
   backgroundColor: 'transparent',
   '&:hover': { color: theme.palette.background.default, backgroundColor: theme.palette.text.primary },
   '&[data-filled]': { color: theme.palette.background.default, backgroundColor: theme.palette.text.primary },
-  '&[data-filled]:hover': { borderColor: theme.palette.primary.main, backgroundColor: theme.palette.primary.main }
+  '&[data-filled]:hover': { borderColor: theme.palette.primary.main, backgroundColor: theme.palette.primary.main },
+  '@media (max-width: 360px)': { padding: '0 .5rem', fontSize: '.8125rem' }
 } ) );
 
 export const StatGrid = styled( Box )( ( { theme } ) => ( {
@@ -252,6 +253,7 @@ export const StatGrid = styled( Box )( ( { theme } ) => ( {
   '& > li + li': { borderLeft: `1px solid ${theme.palette.divider}`, paddingLeft: 'clamp(.75rem, 1.6vw, 1.25rem)' },
   '& > li > span:first-of-type': { color: theme.palette.text.primary, fontSize: 'clamp(1.75rem, 2.4vw, 2.125rem)', fontWeight: 620, letterSpacing: '-.04em', lineHeight: 1 },
   '& > li > span:last-of-type': { color: theme.palette.text.secondary, fontSize: '.8125rem', lineHeight: 1.3 },
-  [NARROW]: { '& > li > span:first-of-type': { fontSize: '1.625rem' }, '& > li > span:last-of-type': { fontSize: '.75rem' } },
+  '& [data-phone]': { display: 'none' },
+  [NARROW]: { '& > li > span:first-of-type': { fontSize: '1.625rem' }, '& > li > span:last-of-type': { fontSize: '.75rem' }, '& [data-wide]': { display: 'none' }, '& [data-phone]': { display: 'inline' } },
   [LANDSCAPE]: { '& > li': { gap: '.1rem' }, '& > li > span:first-of-type': { fontSize: '1.25rem' }, '& > li > span:last-of-type': { fontSize: '.6875rem' } }
 } ) );

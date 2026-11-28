@@ -33,10 +33,11 @@ export default function Home() {
   // The home page is static, so these figures are fixed at build time; whole years keep them stable.
   const career = buildCareerTimeline( experiences, projects );
   const current = career.roles.find( role => role.isCurrent );
+  // [value, label, phone label]: the market codes don't fit a phone-width column.
   const stats = [
-    [`${career.totalYears}+`, 'Years'],
-    [career.companyCount, 'Companies'],
-    [career.marketCount, 'Markets']
+    [`${career.totalYears}+`, 'Years', 'Years'],
+    [career.companyCount, 'Companies', 'Companies'],
+    [career.marketCount, career.marketCodes.join( ' · ' ), 'Markets']
   ];
 
   return (
@@ -49,7 +50,7 @@ export default function Home() {
           { ' ' }
           { profile.role }
         </Eyebrow>
-        <HomeTitle component="h1" id="home-title">Clear interfaces for complex product systems.</HomeTitle>
+        <HomeTitle component="h1" id="home-title">Complex forms and API‑driven workflows for banking and commerce.</HomeTitle>
         <Positioning component="p">Frontend engineering across banking, commerce, and internal operations—where reliable workflows matter as much as visual polish.</Positioning>
         <HomeActions>
           <PrimaryAction component={ NextLink } href={ experienceHref }>View Experience</PrimaryAction>
@@ -104,10 +105,13 @@ export default function Home() {
         </CvRow>
 
         <StatGrid component="ul" aria-label="Career at a glance">
-          { stats.map( ( [value, label] ) => (
+          { stats.map( ( [value, label, phoneLabel] ) => (
             <Box component="li" key={ label }>
               <Typography component="span">{ value }</Typography>
-              <Typography component="span">{ label }</Typography>
+              <Typography component="span">
+                <Box component="span" data-wide>{ label }</Box>
+                <Box component="span" data-phone>{ phoneLabel }</Box>
+              </Typography>
             </Box>
           ) ) }
         </StatGrid>

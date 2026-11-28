@@ -8,12 +8,13 @@ import { BodyCopy, Kicker } from '../../styles/PublicLayout.styles';
 import { CompanyProjects, ExperienceViewRoot, FactLabel, FactValue, MyPart, NumberedList, OverviewBlock, PanelTab, PanelTabs, ProjectMeta, ProjectSelector, ProjectSummary, RoleDetail, RoleFacts, RoleOverview, RolePanel, RoleTitle, TagList } from './ExperienceView.styles';
 import { RESUME_PANELS } from '../../constants/resume';
 import { capitalize } from '../../utils/text';
-import { shortYears } from '../../utils/career';
+import { yearRange } from '../../utils/career';
 import CareerTrack from '../CareerTrack';
 
-/** Facts a recruiter scans first: how long, where, what kind of product, and which products. */
+/** Facts a recruiter scans first: when, where, what kind of product, and which products. */
 const roleFacts = role => [
-  ['Tenure', role.isCurrent ? `${role.duration} · ongoing` : role.duration],
+  // Date range, not a computed duration: counting conventions differ (LinkedIn counts the end month).
+  ['Period', `${role.startLabel} – ${role.endLabel}`],
   ['Market', role.markets.join( ', ' )],
   ['Domain', role.domains.join( ', ' )],
   ['Projects', role.projectTitles.join( ' · ' )]
@@ -44,10 +45,7 @@ export default function ExperienceView( { roles, role, panel, projects: companyP
         <Box component="header">
           <Kicker component="p">
             { role.company }
-            { ' ' }
-            ·
-            { ' ' }
-            { role.dates }
+            <Box component="span" data-dates>{ ` · ${role.dates}` }</Box>
           </Kicker>
           <RoleTitle component="h2" ref={ headingRef } tabIndex="-1">{ role.role }</RoleTitle>
           <RoleFacts component="ul" aria-label="Role at a glance">
@@ -122,10 +120,7 @@ export default function ExperienceView( { roles, role, panel, projects: companyP
                         aria-current={ item.slug === project.slug ? 'true' : undefined }
                       >
                         { item.title }
-                        { ' ' }
-                        ·
-                        { ' ' }
-                        { shortYears( item.period ) }
+                        <Box component="span" data-years>{ ` · ${yearRange( item.period )}` }</Box>
                       </Button>
                     </Box>
                   ) ) }

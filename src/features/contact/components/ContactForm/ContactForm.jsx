@@ -176,7 +176,7 @@ export default function FormContainer() {
             <ServiceField value={ data.service } error={ errors.service } onChange={ updateField } fieldRef={ node => { fields.current.service = node; } } />
           </FieldGrid>
           <FormActions $single>
-            <PrivacyNote component="p">No phone number required. Your details stay out of the URL.</PrivacyNote>
+            <PrivacyNote component="p">No phone number required.</PrivacyNote>
             <Button type="button" variant="contained" endIcon={ <ArrowForwardRounded /> } onClick={ continueToMessage }>Continue to Message</Button>
           </FormActions>
         </FormStep>

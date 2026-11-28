@@ -47,7 +47,7 @@ export default function ResumeContentView() {
     [`${career.totalYears}+ yrs`, 'experience'],
     [career.companyCount, 'companies'],
     [career.projectCount, 'products'],
-    [career.marketCount, 'markets']
+    [career.marketCount, career.marketCodes.join( ' · ' )]
   ];
 
   // Tabs, roles and projects are views of one page: replace the URL so Back leaves the résumé.
@@ -118,16 +118,8 @@ export default function ResumeContentView() {
             { /* Phones: the same facts in one line, plus the CV the header no longer has room for. */ }
             <CompactCareer>
               <Typography component="span">
-                { career.totalYears }
-                + yrs ·
-                { ' ' }
-                { career.companyCount }
-                { ' ' }
-                companies ·
-                { ' ' }
-                { career.marketCount }
-                { ' ' }
-                markets
+                { `${career.totalYears}+ yrs · ${career.companyCount} companies` }
+                <Box component="span" data-markets>{ ` · ${career.marketCount} markets` }</Box>
               </Typography>
               <Box>
                 <ResumeLink as={ CvButton } download data-filled>

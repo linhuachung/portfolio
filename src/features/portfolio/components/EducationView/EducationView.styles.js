@@ -120,6 +120,8 @@ export const CertificateThumb = styled( Box )( ( { theme } ) => ( {
   borderRadius: 6,
   boxShadow: `0 6px 16px ${alpha( theme.palette.text.primary, .12 )}`,
   '& img': { display: 'block', width: '100%', height: '100%', objectFit: 'cover' },
+  // The diploma cover is landscape; certificates are portrait.
+  '&[data-shape="landscape"]': { width: 112, height: 80 },
   [ROOMY]: { display: 'block' }
 } ) );
 

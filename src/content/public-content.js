@@ -166,18 +166,22 @@ export const experiences = [
 export const resumeSections = ['experience', 'skills', 'education', 'about'];
 
 export const skills = [
-  { group: 'Frontend', items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Redux', 'AngularJS'] },
+  { group: 'Frontend', items: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Redux'] },
   { group: 'Interface', items: ['HTML', 'CSS', 'Ant Design', 'Tailwind CSS', 'Responsive UI', 'Accessibility'] },
-  { group: 'Integration', items: ['REST APIs', 'Node.js', 'Express', 'Drupal', 'Jest'] }
+  { group: 'Integration', items: ['REST APIs', 'Node.js', 'Express', 'Jest'] }
 ];
+
+// Used in earlier roles but not part of the current toolkit.
+export const skillsAlsoUsed = ['AngularJS', 'Drupal'];
 
 export const education = [
   {
     slug: 'open-university',
     school: 'Ho Chi Minh City Open University',
-    kind: 'University degree',
+    // "Bằng cử nhân" on the diploma cover; the preview is the cover only (no personal details).
+    kind: 'Bachelor\'s degree',
     programs: [
-      { name: 'Computer Science', credential: '/assets/files/BangDaiHọc_LinHuaChung.pdf', credentialLabel: 'View diploma' }
+      { name: 'Computer Science', credential: '/assets/files/BangDaiHọc_LinHuaChung.pdf', credentialLabel: 'View diploma', preview: '/assets/files/diploma-cover.jpg', previewShape: 'landscape' }
     ],
     dates: '2016–2022',
     location: 'Ho Chi Minh City, Vietnam',
@@ -201,11 +205,11 @@ export const education = [
 export const about = {
   summary: 'Frontend Engineer with product experience in banking, commerce, and internal operations. I work across interface architecture, API integration, and delivery with distributed teams.',
   domains: ['Banking', 'Commerce', 'Internal Operations'],
-  facts: [['Based in', 'Ho Chi Minh City, Vietnam'], ['Experience', 'Frontend engineering since 2021'], ['Languages', 'Vietnamese, English'], ['Focus', 'Reliable product interfaces']]
+  facts: [['Based in', 'Ho Chi Minh City, Vietnam'], ['Experience', 'Frontend engineering since 2021'], ['Languages', 'Vietnamese, English'], ['Focus', 'Reliable product interfaces'], ['This site', 'Next.js 15 · MUI · React Hook Form + Yup · Prisma · node:test + Playwright']]
 };
 
 export const services = [
-  { slug: 'frontend', number: '01', title: 'Frontend Engineering', description: 'Build maintainable product interfaces from architecture through delivery.', capabilities: ['React and Next.js implementation', 'Typed component architecture', 'API and state integration'], project: 'nab' },
+  { slug: 'frontend', number: '01', title: 'Frontend Engineering', description: 'Build maintainable product interfaces from architecture through delivery.', capabilities: ['React and TypeScript implementation', 'TypeScript component architecture (NAB)', 'API and state integration'], project: 'nab' },
   { slug: 'ui', number: '02', title: 'UI & Performance', description: 'Translate product designs into responsive, accessible and fast interfaces.', capabilities: ['Responsive layout systems', 'Reusable UI components', 'Accessible interaction states', 'Rendering and asset improvements'], project: 'mercatus' },
   { slug: 'fullstack', number: '03', title: 'Full-stack Integration', description: 'Connect frontend journeys to dependable Node.js services and REST APIs.', capabilities: ['REST API integration', 'Node.js and Express features', 'Validation and error states'], project: 'bintech' }
 ];

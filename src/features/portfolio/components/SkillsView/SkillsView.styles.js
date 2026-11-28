@@ -78,7 +78,22 @@ export const SkillItem = styled( Box )( ( { theme } ) => ( {
   [TIGHT_CHIPS]: { padding: '.15rem .45rem', '& svg': { display: 'none' } }
 } ) );
 
-// Company logos and the time spent in roles that used the skill, e.g. "4+ yrs".
+// Earlier tools, kept apart so the main groups read as the current toolkit.
+export const AlsoUsed = styled( Box )( ( { theme } ) => ( {
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: '.4rem .9rem',
+  borderTop: `1px solid ${theme.palette.divider}`,
+  paddingTop: '.6rem',
+  '& h3': { margin: 0, color: theme.palette.text.secondary, fontFamily: 'var(--portfolio-mono), monospace', fontSize: '.6875rem', fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase' },
+  '& ul': { display: 'flex', flexWrap: 'wrap', gap: '.35rem', margin: 0, padding: 0, listStyle: 'none' },
+  '& li': { display: 'inline-flex', alignItems: 'center', gap: '.35rem', border: `1px solid ${theme.palette.divider}`, borderRadius: 6, padding: '.15rem .5rem', color: theme.palette.text.secondary, fontSize: '.8125rem' },
+  '& li svg': { width: '.85rem', height: '.85rem' },
+  [TIGHT_CHIPS]: { paddingTop: '.4rem', '& li': { padding: '.1rem .4rem', fontSize: '.75rem' }, '& li svg': { display: 'none' } }
+} ) );
+
+// Logos of the employers whose stack or projects list the skill.
 export const Usage = styled( Box )( ( { theme } ) => ( {
   display: 'inline-flex',
   alignItems: 'center',
