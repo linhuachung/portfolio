@@ -15,28 +15,44 @@ A modern, responsive portfolio website built with Next.js 14, showcasing my work
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **State Management**: Redux Toolkit
-- **UI Components**: Custom component library
-- **Icons**: React Icons
-- **Database**: Prisma with SQLite
-- **Authentication**: JWT-based admin system
+- **Framework**: Next.js 15 (App Router)
+- **UI**: MUI with Emotion styled components (theme in `src/shared/theme`)
+- **Forms**: React Hook Form + Yup
+- **Database**: Prisma with MongoDB
+- **Email**: Resend
+- **Authentication**: HS256 tokens in httpOnly cookies, verified in middleware and in each admin route
 
 ## 📁 Project Structure
 
+Code is organised by feature. Each feature owns its UI, hooks, client API calls and server logic.
+
 ```
-chung-portfolio/
-├── app/
-│   ├── (user)/          # Public portfolio pages
-│   ├── (admin)/         # Admin panel
-│   └── api/             # API routes
-├── components/          # Reusable UI components
-├── lib/                 # Utility functions
-├── store/              # Redux store configuration
-└── public/             # Static assets
+src/
+├── app/                    # Routes only: thin page.jsx, layouts, API route handlers
+├── features/
+│   ├── <feature>/
+│   │   ├── components/<Name>/   # <Name>.jsx, optional <Name>.styles.js, index.js
+│   │   ├── hooks/<useName>/     # useName.js, index.js
+│   │   ├── api/                 # client calls to the API routes
+│   │   ├── server/              # server-only logic; server/index.js is the entry point
+│   │   ├── constants/ schemas/ styles/ utils/
+│   ├── admin-shell   auth   dashboard   inbox   profile   content-studio
+│   └── portfolio   contact   analytics   uploads
+├── shared/                 # Used by several features; must stay client-safe
+│   ├── components/         # Toast, Loader, form/<Field>/
+│   ├── hooks/  providers/  theme/  api/ (http client)  constants/  utils/  assets/
+├── server/                 # Server infrastructure: db, http, email, security, utils
+├── content/                # Static portfolio content (public-content.js)
+└── middleware.js
+prisma/  tests/  public/
 ```
+
+Rules:
+
+- `src/app` files only wire routes; a page re-exports a feature component.
+- Inside one feature or shared module, import with relative paths. Across modules, use `@/` (maps to `src/`).
+- Components, hooks, `api/` and `shared/` never import `server/` code. ESLint enforces this (`no-restricted-imports`).
+- Modules covered by `npm test` (Node's test runner) use relative imports only, because Node does not resolve `@/`.
 
 ## 🚀 Getting Started
 
@@ -78,10 +94,9 @@ chung-portfolio/
 
 The portfolio is designed to be easily customizable:
 
-- Update personal information in `app/(user)/resume/data.js`
-- Modify project data in `app/(user)/work/data.js`
-- Customize styling in `tailwind.config.js`
-- Add new components in the `components/` directory
+- Update profile, experience, projects and education in `src/content/public-content.js`
+- Customize colors and typography in `src/shared/theme/createAppTheme.js`
+- Add a feature under `src/features/<name>/` following the structure above
 
 ## 📧 Contact
 

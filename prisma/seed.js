@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { PrismaClient, ProjectCategory, SkillCategory, SkillLevel, UserRole } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { SEED_CONSTANTS } from './seed-constants.js';
 
 const prisma = new PrismaClient();

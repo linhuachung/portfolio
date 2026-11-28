@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/test-results/
 
 # scripts (may contain test files with secrets)
 /scripts
@@ -27,6 +28,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/.npm-cache/
 
 # local env files
 .env
@@ -39,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local scratch and editor files
+/.tmp-*/
+/.vscode/
